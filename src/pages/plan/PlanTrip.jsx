@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import "./PlanTrip.css";
+import React, { useEffect, useState } from 'react';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './PlanTrip.css';
 
 function PlanTrip() {
     // Google Maps API 로드
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: "AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI", // API 키
+        googleMapsApiKey: 'AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI', // API 키
     });
 
     // 네비게이션과 위치 상태
     const navigate = useNavigate();
     const location = useLocation();
-    const { cityName, startDate, endDate } = location.state || {};
+    const { cityName, regionId, startDate, endDate } = location.state || {};
 
     // 상태 변수
     const [allPlaces, setAllPlaces] = useState([]); // 전체 장소 목록
@@ -37,7 +37,7 @@ function PlanTrip() {
         const dates = [];
         let currentDate = new Date(startDate);
         while (currentDate <= new Date(endDate)) {
-            dates.push(new Date(currentDate).toISOString().split("T")[0]);
+            dates.push(new Date(currentDate).toISOString().split('T')[0]);
             currentDate.setDate(currentDate.getDate() + 1);
         }
         return dates;
@@ -45,15 +45,39 @@ function PlanTrip() {
 
     // 백엔드에서 장소 데이터 불러오기
     useEffect(() => {
-        if (cityName) {
+        if (regionId) {
+            console.log('regionId:', regionId); // regionId 값 확인
             axios
-                .get("http://localhost:5050/api/locations/by-region", {
-                    params: { cityName: cityName },
+                .get('http://localhost:5050/api/locations/by-region', {
+                    params: { regionId }, // regionId 값 전달
                 })
-                .then((response) => setAllPlaces(response.data))
-                .catch((error) => console.error("장소 데이터 오류:", error));
+                .then((response) => {
+                    console.log('응답 데이터:', response.data); // API 응답 데이터 확인
+                    setAllPlaces(response.data); // 상태 업데이트
+                })
+                .catch((error) => {
+                    console.error('장소 데이터 오류:', error); // 에러 로그 출력
+                });
+        } else {
+            console.error('regionId 값이 없습니다.'); // regionId가 없을 경우 로그 출력
         }
-    }, [cityName]);
+    }, [regionId]);
+
+    //   useEffect(() => {
+    //     if (regionId) {
+    //       axios
+    //         .get('http://localhost:5050/api/locations/by-region', {
+    //           params: { regionId },
+    //         })
+    //         .then((response) => {
+    //           console.log('API 응답 데이터:', response.data); // API에서 전달된 데이터 출력
+    //           setPlaces(response.data); // allPlaces 상태 업데이트
+    //         })
+    //         .catch((error) => {
+    //           console.error('장소 데이터 오류:', error);
+    //         });
+    //     }
+    //   }, [regionId]);
 
     // 날짜별 장소 추가 핸들러
     const handleAddPlace = (date, place) => {
@@ -103,7 +127,10 @@ function PlanTrip() {
                         {allPlaces.map((place) => (
                             <li key={place.locationId} className="placeItem">
                                 <span>{place.locationName}</span>
-                                <select onChange={(e) => handleAddPlace(e.target.value, place)} defaultValue="">
+                                <select
+                                    onChange={(e) => handleAddPlace(e.target.value, place)}
+                                    defaultValue=""
+                                >
                                     <option value="" disabled>
                                         날짜 선택
                                     </option>
@@ -128,7 +155,11 @@ function PlanTrip() {
                                 places.map((place) => (
                                     <div key={place.locationId} className="selectedPlaceCard">
                                         <span>{place.locationName}</span>
-                                        <button onClick={() => handleRemovePlace(date, place.locationId)}>삭제</button>
+                                        <button
+                                            onClick={() => handleRemovePlace(date, place.locationId)}
+                                        >
+                                            삭제
+                                        </button>
                                     </div>
                                 ))
                             ) : (
@@ -140,7 +171,11 @@ function PlanTrip() {
 
                 {/* 우측: 지도 */}
                 <div className="mapContainer">
-                    <GoogleMap mapContainerClassName="mapContainer" center={center} zoom={12}>
+                    <GoogleMap
+                        mapContainerClassName="mapContainer"
+                        center={center}
+                        zoom={12}
+                    >
                         {Object.values(dailyPlans)
                             .flat()
                             .map((place) => (

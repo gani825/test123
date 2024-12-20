@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, { createContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Plan from './pages/plan/Plan';
@@ -13,7 +13,6 @@ import PlanTrip from './pages/plan/PlanTrip';
 export const AuthContext = createContext();
 
 function App() {
-    // 사용자 상태 및 인증 상태를 관리하기 위한 state 추가
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
