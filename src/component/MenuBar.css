@@ -1,0 +1,21 @@
+.active-link {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.MenuBar {
+    height: 83px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #D6D6D6;
+    font-size: 19px;
+}
+
+.MenuBar .navigation{
+    display: flex;
+    gap: 72px;
+    margin-right: 50px;
+}
