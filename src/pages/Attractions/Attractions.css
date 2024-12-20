@@ -1,0 +1,68 @@
+/* styles.css */
+
+/* 전체 컨테이너 중앙 정렬 (위 200px 여백) */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* 가로 중앙 정렬 */
+    justify-content: flex-start;  /* 위쪽으로 배치 */
+    min-height: 100vh;  /* 최소 화면 높이 (100vh로 설정) */
+    padding-top: 50px;  /* 위쪽에 200px 여백 추가 */
+    text-align: center;
+  }
+  
+  .search-input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    width: 80%;  /* 검색창 너비 */
+    max-width: 400px;  /* 최대 너비 설정 */
+    font-size: 16px;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .button {
+    background-color: #e0e0e0;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button.selected {
+    background-color: #4caf50;
+  }
+  
+  .button:hover {
+    background-color: #d1d1d1;
+  }
+  
+  .button.selected:hover {
+    background-color: #45a049;
+  }
+  
+  .button:disabled {
+    background-color: #bdbdbd;
+    cursor: not-allowed;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  h3, h4 {
+    margin-bottom: 20px;
+  }
+  
