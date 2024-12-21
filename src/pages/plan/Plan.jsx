@@ -18,19 +18,19 @@ function Plan() {
             description: '도쿄는 현대와 전통이 공존하는 일본의 수도입니다.',
         },
         {
-            id: 2,
+            id: 3,
             name: '오사카',
             image: Osaka,
             description: '오사카는 활기찬 거리와 먹거리로 유명합니다.',
         },
         {
-            id: 3,
+            id: 4,
             name: '쿄토',
             image: KyotoCity,
             description: '쿄토는 아름다운 사찰과 정원이 가득한 도시입니다.',
         },
         {
-            id: 4,
+            id: 2,
             name: '후쿠오카',
             image: Fukuoka,
             description: '후쿠오카는 역사적 명소와 현대가 어우러진 곳입니다.',
