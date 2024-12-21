@@ -153,15 +153,21 @@
 /* 각 카테고리 태그 스타일 */
 .categoryTag {
     width: 100px;
-    height: 30px;
+    height: 35px;
     font-size: 14px;
     background-color: #fff;
-    border: 1px solid #aaa;
-    border-radius: 8px;
+    border: 1px solid #DEE5EC;
+    border-radius: 22px;
     cursor: pointer;
     color: #222;
     text-align: center;
     line-height: 30px; /* 텍스트를 세로 중앙에 오도록 설정 */
+}
+
+/* 선택된 카테고리 태그 스타일 */
+.categoryTag.selected {
+    background-color: #DEE5EC;
+    color: #222;
 }
 
 /* 장소 아이템 스타일 */
@@ -230,7 +236,7 @@
 }
 
 .placeItem button:hover {
-    background: #aaa;
+    background: #DEE5EC;
 }
 
 /* 오른쪽 섹션: 지도 */
@@ -250,7 +256,7 @@
 /* 장소 목록 이미지 스타일 */
 .placeImage {
     width: 85px;
-    height: 90  px;
+    height: 90px;
     object-fit: cover;
     border-radius: 3px;
     margin-right: 10px;
@@ -281,3 +287,5 @@
     max-width: 170px;
     text-align: center;
 }
+
+

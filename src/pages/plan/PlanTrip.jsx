@@ -27,6 +27,8 @@ function PlanTrip() {
     const [categoryFilter, setCategoryFilter] = useState('전체'); // 상태 변수: 선택된 카테고리
     const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
     const [placeDetailsMap, setPlaceDetailsMap] = useState({}); // 각 장소의 상세 정보 저장
+    const [selectedCategory, setSelectedCategory] = useState('전체'); // 선택된 카테고리 저장
+
 
     // 출발일과 도착일 기준으로 날짜 생성
     useEffect(() => {
@@ -38,6 +40,7 @@ function PlanTrip() {
         }
     }, [startDate, endDate]);
 
+    // 전체 장소의 세부 정보를 가져오기 위한 API 호출
     useEffect(() => {
         const fetchPlaceDetails = async () => {
             const detailsMap = {};
@@ -105,6 +108,7 @@ function PlanTrip() {
     //     }
     //   }, [regionId]);
 
+    // 장소의 세부 정보를 확장하거나 접는 함수
     const toggleExpand = (placeId) => {
         setExpandedPlaceId((prevId) => (prevId === placeId ? null : placeId));
     };
@@ -136,6 +140,11 @@ function PlanTrip() {
         return matchesSearchTerm && matchesCategory;
     });
 
+    // 카테고리 클릭 핸들러
+    const handleCategoryClick = (category) => {
+        setSelectedCategory(category); // 선택된 카테고리 상태 업데이트
+        setCategoryFilter(category); // 기존 필터 상태도 업데이트
+    };
 
     // 여행지 추가 버튼 클릭 시 장소 목록 표시
     const handleShowPlaceList = (day) => {
@@ -237,13 +246,15 @@ function PlanTrip() {
 
                         {/* 카테고리 태그 필터 */}
                         <div className="categoryTags">
-                            <button className="categoryTag" onClick={() => setCategoryFilter('전체')}>전체</button>
-                            <button className="categoryTag" onClick={() => setCategoryFilter('관광명소')}>관광명소</button>
-                            <button className="categoryTag" onClick={() => setCategoryFilter('음식')}>음식</button>
-                            <button className="categoryTag" onClick={() => setCategoryFilter('쇼핑')}>쇼핑</button>
-                            <button className="categoryTag" onClick={() => setCategoryFilter('문화')}>문화</button>
-                            <button className="categoryTag" onClick={() => setCategoryFilter('랜드마크')}>랜드마크</button>
-                            <button className="categoryTag" onClick={() => setCategoryFilter('놀이시설')}>놀이시설</button>
+                            {['전체', '관광명소', '음식', '쇼핑', '문화', '랜드마크', '놀이시설'].map((category) => (
+                                <button
+                                    key={category}
+                                    className={`categoryTag ${selectedCategory === category ? 'selected' : ''}`}
+                                    onClick={() => handleCategoryClick(category)}
+                                >
+                                    {selectedCategory === category ? category : `#${category}`}
+                                </button>
+                            ))}
                         </div>
 
                         <ul>
