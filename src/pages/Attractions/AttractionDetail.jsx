@@ -1,55 +1,76 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import './AttractionDetail.css';
 
 const AttractionDetail = () => {
-  const { locationId } = useParams();  // URL에서 locationId 파라미터를 받아옴
+  const { locationId } = useParams();
   const [location, setLocation] = useState(null);
-  const [nearByLocations,setNearByLocations] = useState([])
+  const [nearbyLocations, setNearbyLocations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [distance, setDistance] = useState(5);
 
   useEffect(() => {
     const fetchLocationDetail = async () => {
       try {
         const response = await axios.get(`http://localhost:5050/api/locations/${locationId}`);
-        setLocation(response.data);  // 상세 정보 저장
-        console.log(response);
-                // 상세 정보에서 위도와 경도를 가져옴
-        const { latitude, longitude } = response.data;
-
-        // 근처 장소 정보 가져오기
-        const nearByResponse = await axios.get('http://localhost:5050/api/locations/getNearby', {
-          params: {
-            latitude,
-            longitude,
-            distance: 5, // 반경 5km
-            sortValue: 'googleRating', // 평점 순 정렬
-            sortDirection: 'desc', // 내림차순
-          },
-        });
-        setNearByLocations(nearByResponse.data);
-        console.log(nearByResponse)
+        setLocation(response.data);
+        setLatitude(response.data.latitude);
+        setLongitude(response.data.longitude);
       } catch (error) {
         console.error('Error fetching location details:', error);
       } finally {
-        setLoading(false);  // 로딩 끝
+        setLoading(false);
       }
     };
 
     fetchLocationDetail();
-  }, [locationId]);  // locationId가 변경될 때마다 요청 다시 보내기
+  }, [locationId]);
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      const fetchNearbyLocations = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5050/api/locations/getNearby`, {
+            params: {
+              latitude,
+              longitude,
+              distance,
+              sortValue: 'googleRating',
+              sortDirection: 'desc',
+            },
+          });
+
+          const nearbyLocationsWithDistance = response.data
+            .map((location) => ({
+              ...location,
+              distanceInMeters: Math.round(location.distance * 1000),
+            }))
+            .filter((location) => location.distanceInMeters > 0);
+
+          setNearbyLocations(nearbyLocationsWithDistance);
+        } catch (error) {
+          console.error('Error fetching nearby locations:', error);
+        }
+      };
+
+      fetchNearbyLocations();
+    }
+  }, [latitude, longitude, distance]);
 
   if (loading) {
-    return <div>Loading...</div>;  // 로딩 중 표시
+    return <div>Loading...</div>;
   }
 
   if (!location) {
-    return <div>No details available for this location.</div>;  // location이 없을 경우 표시
+    return <div>No details available for this location.</div>;
   }
 
   return (
-    <div>
+    <div className="attraction-detail-container">
       <h2>{location.locationName}</h2>
       <h3>{location.regionName}</h3>
       <img src={location.placeImgUrl} alt={location.locationName} />
@@ -59,21 +80,35 @@ const AttractionDetail = () => {
       <p>주소 : {location.formattedAddress}</p>
       <p>전화번호 : {location.phoneNumber}</p>
       <p>운영 시간 : {location.openingHours}</p>
-      <p>웹사이트 주소 : <a href={location.website} target="_blank" rel="noopener noreferrer">{location.website}</a></p>
+      <p>
+        웹사이트 주소 :{' '}
+        <a href={location.website} target="_blank" rel="noopener noreferrer">
+          {location.website}
+        </a>
+      </p>
 
-      <h3>근처의 다른 장소</h3>
-      {nearByLocations.length > 0 ? (
-        <ul>
-          {nearByLocations.map((nearby) => (
-            <li key={nearby.id}>
-              <h4>{nearby.locationName}</h4>
-              <p>{nearby.formattedAddress}</p>
-              <p>평점: {nearby.googleRating}</p>
+      {/* 근처 장소 정보 표시 */}
+      <h3>주변 장소</h3>
+      {nearbyLocations.length > 0 ? (
+        <ul className="nearby-locations-list">
+          {nearbyLocations.slice(0, 4).map((nearbyLocation) => (
+            <li key={nearbyLocation.locationId} className="nearby-location-item">
+              <Link to={`/attractionDetail/${nearbyLocation.locationId}`} className="nearby-link">
+                <img src={nearbyLocation.placeImgUrl} alt={nearbyLocation.locationName} />
+                <h4>{nearbyLocation.locationName}</h4>
+                <p>{nearbyLocation.regionName}</p>
+                <p>별점 : {nearbyLocation.googleRating}</p>
+                <p className="description">
+                  {nearbyLocation.description.length > 50
+                    ? `${nearbyLocation.description.substring(0, 50)}...`
+                    : nearbyLocation.description}
+                </p>
+              </Link>
             </li>
           ))}
         </ul>
       ) : (
-        <p>근처에 표시할 장소가 없습니다.</p>
+        <p>근처에 다른 장소가 없습니다.</p>
       )}
     </div>
   );
