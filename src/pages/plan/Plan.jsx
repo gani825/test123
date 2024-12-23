@@ -25,9 +25,9 @@ function Plan() {
     },
     {
       id: 4,
-      name: '쿄토',
+      name: '교토',
       image: KyotoCity,
-      description: '쿄토는 아름다운 사찰과 정원이 가득한 도시입니다.',
+      description: '교토는 아름다운 사찰과 정원이 가득한 도시입니다.',
     },
     {
       id: 2,

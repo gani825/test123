@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const PlanDetails = () => {
   const { id } = useParams(); // URL에서 id 가져오기
   const [planner, setPlanner] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 서버에서 ID로 플랜 정보 가져오기
@@ -15,7 +16,7 @@ const PlanDetails = () => {
         );
         setPlanner(response.data); // 데이터 저장
       } catch (error) {
-        console.error("플랜 불러오기 실패:", error);
+        console.error('플랜 불러오기 실패:', error);
       }
     };
 
@@ -42,6 +43,10 @@ const PlanDetails = () => {
           </ul>
         </div>
       ))}
+      {/* PlannerList 페이지로 이동하는 버튼 */}
+      <button onClick={() => navigate('/planner-list')}>
+        플래너 목록으로 이동
+      </button>
     </div>
   );
 };

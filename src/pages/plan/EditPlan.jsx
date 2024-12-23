@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useLoadScript } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  InfoWindow,
+  Marker,
+  useLoadScript,
+} from '@react-google-maps/api';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './PlanTrip.css';
-import MapRenderer from '../../component/PlanTrip/MapRenderer';
-import usePlanData from '../../component/PlanTrip/usePlanData';
 
 function PlanTrip() {
   // Google Maps API 로드
@@ -20,6 +23,7 @@ function PlanTrip() {
   // 상태 변수
   const [plannerTitle, setPlannerTitle] = useState(''); // 사용자 입력 상태
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false); // 플랜 저장 모달 상태
+  const [locations, setLocations] = useState([]); // 장소 데이터
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 }); // 지도 중심
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
   const [selectedPlace, setSelectedPlace] = useState(null); // InfoWindow에서 표시할 선택된 장소
@@ -31,14 +35,46 @@ function PlanTrip() {
   const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
   const [selectedCategory, setSelectedCategory] = useState('전체'); // 선택된 카테고리 저장
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
 
   // 장소 데이터 가져오기
-  const { locations, totalPages } = usePlanData(
-    regionId,
-    currentPage,
-    searchTerm,
-    categoryFilter
-  );
+  const fetchLocations = (reset = false) => {
+    if (regionId) {
+      axios
+        .get('http://localhost:5050/api/locations/searchLocation', {
+          params: {
+            regionId, // 지역 ID 전달
+            page: currentPage - 1, // 0-based index
+            pageSize: 10,
+            keyword: searchTerm, // 검색어
+            tagNames: categoryFilter === '전체' ? '' : categoryFilter, // 카테고리 필터
+          },
+        })
+        .then((response) => {
+          console.log('백엔드에서 받은 데이터:', response.data.content); // 받은 데이터 확인
+          if (reset) {
+            setLocations(response.data.content); // 새 데이터로 초기화
+          } else {
+            setLocations((prev) => [...prev, ...response.data.content]); // 기존 데이터에 추가
+          }
+          setTotalPages(response.data.totalPages); // 총 페이지 수 업데이트
+        })
+        .catch((error) => console.error('데이터 로드 실패:', error));
+    } else {
+      console.error('regionId 값이 없습니다.');
+    }
+  };
+
+  // 페이지 변경 시 데이터 요청
+  useEffect(() => {
+    fetchLocations();
+  }, [currentPage]);
+
+  // 검색어나 카테고리 변경 시 데이터 초기화
+  useEffect(() => {
+    setCurrentPage(1); // 페이지 초기화
+    fetchLocations(true); // 초기화 후 데이터 요청
+  }, [searchTerm, categoryFilter]);
 
   // dailyPlans 상태 변경 감지 및 Marker 렌더링
   useEffect(() => {
@@ -301,6 +337,7 @@ function PlanTrip() {
                             : '더보기'}
                         </span>
                       </div>
+                      dailyPlans
                       <button
                         className="addButton"
                         onClick={() => handleAddPlace(place)}
@@ -326,13 +363,42 @@ function PlanTrip() {
         )}
 
         <div className="mapContainer">
-          <MapRenderer
+          <GoogleMap
+            mapContainerClassName="mapContainer"
             center={center}
-            markers={Object.values(dailyPlans).flat()}
-            selectedPlace={selectedPlace}
-            onMarkerClick={handleMarkerClick}
-            onCloseInfoWindow={handleCloseModal}
-          />
+            zoom={12}
+            options={{ mapTypeControl: false }}
+          >
+            {Object.entries(dailyPlans).flatMap(([date, places]) =>
+              places.map((place) => (
+                <Marker
+                  key={`${date}-${place.locationId}`} // 날짜와 장소 ID를 결합하여 고유 Key 생성
+                  position={{ lat: place.latitude, lng: place.longitude }}
+                  onClick={() => handleMarkerClick(place)}
+                />
+              ))
+            )}
+
+            {selectedPlace && (
+              <InfoWindow
+                position={{
+                  lat: selectedPlace.latitude,
+                  lng: selectedPlace.longitude,
+                }}
+                onCloseClick={() => setSelectedPlace(null)}
+              >
+                <div className="infoWindowContent">
+                  <img
+                    src={selectedPlace.placeImgUrl || '/images/placeholder.jpg'}
+                    alt={selectedPlace.locationName}
+                    className="infoWindowImage"
+                  />
+                  <h3>{selectedPlace.locationName}</h3>
+                  <p>주소: {selectedPlace.formattedAddress}</p>
+                </div>
+              </InfoWindow>
+            )}
+          </GoogleMap>
         </div>
       </div>
 
