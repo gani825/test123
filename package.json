@@ -9,14 +9,14 @@
     "cors": "^2.8.5",
     "cra-template": "1.2.0",
     "date-fns": "^4.1.0",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
+    "loadash": "^1.0.0",
     "react": "^18.3.1",
     "react-calendar": "^5.1.0",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.0",
     "react-scripts": "5.0.1",
+    "styled-components": "^6.1.13",
     "swiper": "^11.1.15"
   },
   "scripts": {

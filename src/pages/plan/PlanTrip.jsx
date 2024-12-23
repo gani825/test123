@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   GoogleMap,
   InfoWindow,
   Marker,
   useLoadScript,
-} from '@react-google-maps/api';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './PlanTrip.css';
+} from "@react-google-maps/api";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./PlanTrip.css";
 
 function PlanTrip() {
   // Google Maps API 로드
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI', // API 키
+    googleMapsApiKey: "AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI", // API 키
   });
 
   // 네비게이션과 위치 상태
@@ -26,12 +26,12 @@ function PlanTrip() {
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
   const [selectedPlace, setSelectedPlace] = useState(null); // InfoWindow에서 표시할 선택된 장소
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
   const [selectedDay, setSelectedDay] = useState(null); // 선택된 Day
   const [showPlaceList, setShowPlaceList] = useState(false); // 장소 목록 표시 여부
-  const [categoryFilter, setCategoryFilter] = useState('전체'); // 필터링된 카테고리
+  const [categoryFilter, setCategoryFilter] = useState("전체"); // 필터링된 카테고리
   const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
-  const [selectedCategory, setSelectedCategory] = useState('전체'); // 선택된 카테고리 저장
+  const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리 저장
 
   // 출발일과 도착일 기준으로 날짜 생성
   useEffect(() => {
@@ -48,7 +48,7 @@ function PlanTrip() {
     const dates = [];
     let currentDate = new Date(startDate);
     while (currentDate <= new Date(endDate)) {
-      dates.push(new Date(currentDate).toISOString().split('T')[0]);
+      dates.push(new Date(currentDate).toISOString().split("T")[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return dates;
@@ -58,17 +58,17 @@ function PlanTrip() {
   useEffect(() => {
     if (regionId) {
       axios
-        .get('http://localhost:5050/api/locations/by-region', {
+        .get("http://localhost:5050/api/locations/by-region", {
           params: { regionId }, // regionId 전달
         })
         .then((response) => {
           setAllPlaces(response.data); // 상태 업데이트
         })
         .catch((error) => {
-          console.error('장소 데이터 오류:', error); // 에러 로그 출력
+          console.error("장소 데이터 오류:", error); // 에러 로그 출력
         });
     } else {
-      console.error('regionId 값이 없습니다.'); // regionId가 없을 경우 로그 출력
+      console.error("regionId 값이 없습니다."); // regionId가 없을 경우 로그 출력
     }
   }, [regionId]);
 
@@ -83,7 +83,7 @@ function PlanTrip() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesCategory =
-      categoryFilter === '전체' || place.tags.includes(categoryFilter);
+      categoryFilter === "전체" || place.tags.includes(categoryFilter);
     return matchesSearchTerm && matchesCategory;
   });
 
@@ -160,7 +160,7 @@ function PlanTrip() {
                   {places.map((place) => (
                     <li key={place.locationId} className="selectedPlaceCard">
                       <img
-                        src={place.placeImgUrl || '/images/placeholder.jpg'}
+                        src={place.placeImgUrl || "/images/placeholder.jpg"}
                         alt={place.locationName}
                         className="placeImage"
                       />
@@ -194,32 +194,26 @@ function PlanTrip() {
             />
 
             <div className="categoryTags">
-              {[
-                '전체',
-                '관광명소',
-                '음식',
-                '쇼핑',
-                '문화',
-                '랜드마크',
-                '놀이시설',
-              ].map((category) => (
-                <button
-                  key={category}
-                  className={`categoryTag ${
-                    selectedCategory === category ? 'selected' : ''
-                  }`}
-                  onClick={() => handleCategoryClick(category)}
-                >
-                  {selectedCategory === category ? category : `#${category}`}
-                </button>
-              ))}
+              {["전체", "관광명소", "음식", "쇼핑", "문화", "랜드마크"].map(
+                (category) => (
+                  <button
+                    key={category}
+                    className={`categoryTag ${
+                      selectedCategory === category ? "selected" : ""
+                    }`}
+                    onClick={() => handleCategoryClick(category)}
+                  >
+                    {selectedCategory === category ? category : `#${category}`}
+                  </button>
+                )
+              )}
             </div>
 
             <ul>
               {filteredPlaces.map((place) => (
                 <li key={place.locationId} className="placeItem">
                   <img
-                    src={place.placeImgUrl || '/images/placeholder.jpg'}
+                    src={place.placeImgUrl || "/images/placeholder.jpg"}
                     alt={place.locationName}
                     className="placeImage"
                   />
@@ -228,12 +222,12 @@ function PlanTrip() {
                     <div className="placeDetails">
                       <span className="placeName">{place.locationName}</span>
                       <p className="placeRating">
-                        평점: ⭐ {place.googleRating || '정보 없음'}
+                        평점: ⭐ {place.googleRating || "정보 없음"}
                       </p>
                       <p className="placeAddress">{place.formattedAddress}</p>
                       {expandedPlaceId === place.locationId && (
                         <p className="placeDescription">
-                          {place.description || '상세 설명이 없습니다.'}
+                          {place.description || "상세 설명이 없습니다."}
                         </p>
                       )}
                       <span
@@ -241,8 +235,8 @@ function PlanTrip() {
                         onClick={() => toggleExpand(place.locationId)}
                       >
                         {expandedPlaceId === place.locationId
-                          ? '접기'
-                          : '더보기'}
+                          ? "접기"
+                          : "더보기"}
                       </span>
                     </div>
                     <button
@@ -285,7 +279,7 @@ function PlanTrip() {
               >
                 <div className="infoWindowContent">
                   <img
-                    src={selectedPlace.placeImgUrl || '/images/placeholder.jpg'}
+                    src={selectedPlace.placeImgUrl || "/images/placeholder.jpg"}
                     alt={selectedPlace.locationName}
                     className="infoWindowImage"
                   />
