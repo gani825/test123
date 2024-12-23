@@ -270,47 +270,53 @@ function PlanTrip() {
                 )
               )}
             </div>
-
             <ul>
-              {locations.map((place) => (
-                <li key={place.locationId} className="placeItem">
-                  <img
-                    src={place.placeImgUrl || "/images/placeholder.jpg"}
-                    alt={place.locationName}
-                    className="placeImage"
-                  />
-
-                  <div className="placeInfo">
-                    <div className="placeDetails">
-                      <span className="placeName">{place.locationName}</span>
-                      <p className="placeRating">
-                        평점: ⭐ {place.googleRating || "정보 없음"}
-                      </p>
-                      <p className="placeAddress">{place.formattedAddress}</p>
-                      {expandedPlaceId === place.locationId && (
-                        <p className="placeDescription">
-                          {place.description || "상세 설명이 없습니다."}
+              {locations
+                .filter(
+                  (place) =>
+                    !(dailyPlans[selectedDay] || []).some(
+                      (addedPlace) => addedPlace.locationId === place.locationId
+                    )
+                )
+                .map((place) => (
+                  <li key={place.locationId} className="placeItem">
+                    <img
+                      src={place.placeImgUrl || "/images/placeholder.jpg"}
+                      alt={place.locationName}
+                      className="placeImage"
+                    />
+                    <div className="placeInfo">
+                      <div className="placeDetails">
+                        <span className="placeName">{place.locationName}</span>
+                        <p className="placeRating">
+                          평점: ⭐ {place.googleRating || "정보 없음"}
                         </p>
-                      )}
-                      <span
-                        className="toggleText"
-                        onClick={() => toggleExpand(place.locationId)}
+                        <p className="placeAddress">{place.formattedAddress}</p>
+                        {expandedPlaceId === place.locationId && (
+                          <p className="placeDescription">
+                            {place.description || "상세 설명이 없습니다."}
+                          </p>
+                        )}
+                        <span
+                          className="toggleText"
+                          onClick={() => toggleExpand(place.locationId)}
+                        >
+                          {expandedPlaceId === place.locationId
+                            ? "접기"
+                            : "더보기"}
+                        </span>
+                      </div>
+                      <button
+                        className="addButton"
+                        onClick={() => handleAddPlace(place)}
                       >
-                        {expandedPlaceId === place.locationId
-                          ? "접기"
-                          : "더보기"}
-                      </span>
+                        +
+                      </button>
                     </div>
-                    <button
-                      className="addButton"
-                      onClick={() => handleAddPlace(place)}
-                    >
-                      +
-                    </button>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                ))}
             </ul>
+
             <div className="loadMoreContainer">
               {currentPage < totalPages && (
                 <button
@@ -331,15 +337,15 @@ function PlanTrip() {
             zoom={12}
             options={{ mapTypeControl: false }}
           >
-            {Object.values(dailyPlans)
-              .flat()
-              .map((place) => (
+            {Object.entries(dailyPlans).flatMap(([date, places]) =>
+              places.map((place) => (
                 <Marker
-                  key={place.locationId}
+                  key={`${date}-${place.locationId}`} // 날짜와 장소 ID를 결합하여 고유 Key 생성
                   position={{ lat: place.latitude, lng: place.longitude }}
                   onClick={() => handleMarkerClick(place)}
                 />
-              ))}
+              ))
+            )}
 
             {selectedPlace && (
               <InfoWindow
