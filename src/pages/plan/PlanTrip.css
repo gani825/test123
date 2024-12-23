@@ -113,6 +113,20 @@
     font-size: 14px;
 }
 
+.completeButton {
+    margin: 10px 0 0 10px;
+    width: 320px;
+    height: 52px;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    background-color: #222;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 
 /* 중앙 섹션: 장소 목록 */
 .placeList {
@@ -239,17 +253,43 @@
     background: #DEE5EC;
 }
 
-/* 오른쪽 섹션: 지도 */
 .mapContainer {
-    flex: 1;
+    flex: 1; /* 지도 크기 조절 */
     height: 100%;
-    background-color: #e9ecef;
 }
 
 .mapContainer .fullMap {
     width: 100%;
     height: 100%;
 }
+
+.viewPlanButtonContainer {
+    position: relative; /* 부모 컨테이너 안에 배치 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 10px; /* 지도 아래 여백 */
+    left: 590px;
+}
+
+.viewPlanButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #222; /* 기본 색상 */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/*.viewPlanButtonContainer {*/
+/*    position: relative;*/
+/*    flex: 0; !* 버튼 높이 차지 *!*/
+/*    display: flex;*/
+/*    justify-content: center; !* 버튼 가운데 정렬 *!*/
+/*    align-items: center;*/
+/*    margin-top: 10px;*/
+/*}*/
+
 
 /* 이미지 전체 css */
 

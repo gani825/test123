@@ -17,6 +17,7 @@
     background: #fff;
     padding: 20px 40px;
     width: 450px;
+    height: 660px;
     position: relative;
 }
 
@@ -29,6 +30,7 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+    padding-top: 8px;
 }
 
 /* 뒤로 가기 버튼 스타일 */

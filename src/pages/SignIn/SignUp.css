@@ -1,0 +1,103 @@
+/* 모달 오버레이 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* 모달 창 */
+.Join-modal-content {
+    background: #fff;
+    padding: 20px 40px;
+    width: 450px;
+    height: 660px;
+    position: relative;
+}
+
+.Join-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding-top: 8px;
+}
+
+.SignUpInputName {
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-with-button input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.check-button {
+    margin-bottom: 15px;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.password-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.check-button.disabled,
+.submit-button.disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.Join-back-button {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 10px;
+    cursor: pointer;
+    color: black;
+}
+
+.Join-back-button:hover {
+    color: gray;
+}
+
