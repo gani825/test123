@@ -21,7 +21,7 @@ function PlanTrip() {
   const { cityName, regionId, startDate, endDate } = location.state || {};
 
   // 상태 변수
-  const [allPlaces, setAllPlaces] = useState([]); // 전체 장소 목록
+  const [locations, setLocations] = useState([]); // 장소 데이터
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 }); // 지도 중심
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
   const [selectedPlace, setSelectedPlace] = useState(null); // InfoWindow에서 표시할 선택된 장소
@@ -32,6 +32,59 @@ function PlanTrip() {
   const [categoryFilter, setCategoryFilter] = useState("전체"); // 필터링된 카테고리
   const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
   const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리 저장
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+
+  // 장소 데이터 가져오기
+  const fetchLocations = (reset = false) => {
+    if (regionId) {
+      axios
+        .get("http://localhost:5050/api/locations/searchLocation", {
+          params: {
+            regionId, // 지역 ID 전달
+            page: currentPage - 1, // 0-based index
+            pageSize: 10,
+            keyword: searchTerm, // 검색어
+            tagNames: categoryFilter === "전체" ? "" : categoryFilter, // 카테고리 필터
+          },
+        })
+        .then((response) => {
+          console.log("백엔드에서 받은 데이터:", response.data.content); // 받은 데이터 확인
+          if (reset) {
+            setLocations(response.data.content); // 새 데이터로 초기화
+          } else {
+            setLocations((prev) => [...prev, ...response.data.content]); // 기존 데이터에 추가
+          }
+          setTotalPages(response.data.totalPages); // 총 페이지 수 업데이트
+        })
+        .catch((error) => console.error("데이터 로드 실패:", error));
+    } else {
+      console.error("regionId 값이 없습니다.");
+    }
+  };
+
+  // 페이지 변경 시 데이터 요청
+  useEffect(() => {
+    fetchLocations();
+  }, [currentPage]);
+
+  // 검색어나 카테고리 변경 시 데이터 초기화
+  useEffect(() => {
+    setCurrentPage(1); // 페이지 초기화
+    fetchLocations(true); // 초기화 후 데이터 요청
+  }, [searchTerm, categoryFilter]);
+
+  // dailyPlans 상태 변경 감지 및 Marker 렌더링
+  useEffect(() => {
+    const allPlaces = Object.values(dailyPlans).flat(); // 날짜별 모든 장소 합치기
+    if (allPlaces.length > 0) {
+      const lastAddedPlace = allPlaces[allPlaces.length - 1]; // 가장 마지막으로 추가된 장소
+      setCenter({
+        lat: lastAddedPlace.latitude,
+        lng: lastAddedPlace.longitude,
+      }); // 지도 중심 업데이트
+    }
+  }, [dailyPlans]);
 
   // 출발일과 도착일 기준으로 날짜 생성
   useEffect(() => {
@@ -54,38 +107,10 @@ function PlanTrip() {
     return dates;
   };
 
-  // 백엔드에서 장소 데이터 불러오기
-  useEffect(() => {
-    if (regionId) {
-      axios
-        .get("http://localhost:5050/api/locations/by-region", {
-          params: { regionId }, // regionId 전달
-        })
-        .then((response) => {
-          setAllPlaces(response.data); // 상태 업데이트
-        })
-        .catch((error) => {
-          console.error("장소 데이터 오류:", error); // 에러 로그 출력
-        });
-    } else {
-      console.error("regionId 값이 없습니다."); // regionId가 없을 경우 로그 출력
-    }
-  }, [regionId]);
-
   // 장소의 세부 정보를 확장하거나 접는 함수
   const toggleExpand = (placeId) => {
     setExpandedPlaceId((prevId) => (prevId === placeId ? null : placeId));
   };
-
-  // 카테고리와 검색어로 장소 목록 필터링
-  const filteredPlaces = allPlaces.filter((place) => {
-    const matchesSearchTerm = place.locationName
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "전체" || place.tags.includes(categoryFilter);
-    return matchesSearchTerm && matchesCategory;
-  });
 
   // 카테고리 클릭 핸들러
   const handleCategoryClick = (category) => {
@@ -128,6 +153,42 @@ function PlanTrip() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedPlace(null);
+  };
+
+  // 플랜 저장 핸들러
+  const handleSavePlan = async () => {
+    const plannerData = {
+      plannerTitle: `${cityName} 여행 계획`,
+      plannerStartDate: startDate,
+      plannerEndDate: endDate,
+      regionName: cityName,
+      dailyPlans: Object.entries(dailyPlans).map(([date, places]) => ({
+        planDate: date,
+        toDos: places.map((place) => ({
+          locationId: place.locationId,
+          locationName: place.locationName,
+          formattedAddress: place.formattedAddress,
+          latitude: place.latitude,
+          longitude: place.longitude,
+        })),
+      })),
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5050/api/planner/save",
+        plannerData
+      );
+
+      const savedPlannerId = response.data;
+      console.log("저장된 플래너 ID ", savedPlannerId);
+
+      alert("플랜이 성공적으로 저장되었습니다!");
+      navigate(`/planner-details/${savedPlannerId}`);
+    } catch (error) {
+      console.error("플랜 저장 실패:", error);
+      alert("플랜 저장 중 오류가 발생했습니다.");
+    }
   };
 
   // 데이터 로딩 상태
@@ -180,6 +241,7 @@ function PlanTrip() {
               )}
             </div>
           ))}
+          <button onClick={handleSavePlan}>플랜 저장</button>
         </div>
 
         {showPlaceList && (
@@ -210,7 +272,7 @@ function PlanTrip() {
             </div>
 
             <ul>
-              {filteredPlaces.map((place) => (
+              {locations.map((place) => (
                 <li key={place.locationId} className="placeItem">
                   <img
                     src={place.placeImgUrl || "/images/placeholder.jpg"}
@@ -249,6 +311,16 @@ function PlanTrip() {
                 </li>
               ))}
             </ul>
+            <div className="loadMoreContainer">
+              {currentPage < totalPages && (
+                <button
+                  className="loadMoreButton"
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                >
+                  더보기
+                </button>
+              )}
+            </div>
           </div>
         )}
 
