@@ -37,11 +37,8 @@ function App() {
                             <Route path="/attractions" element={<Attractions />} />
                             <Route path="/community" element={<Community />} />
                             <Route path="/signin" element={<SignIn />} />
-<<<<<<< HEAD
                             <Route path="/signup" element={<SignUp />} />
-=======
                             <Route path="/attractionDetail/:locationId" element={<AttractionDetail />} />
->>>>>>> eae3194598202ae5b1d86d6793032271baf7dd5c
                         </Routes>
                     </div>
                 </Router>
