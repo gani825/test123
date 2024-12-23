@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Plan from './pages/plan/Plan';
 import Attractions from './pages/Attractions/Attractions';
+import AttractionDetail from './pages/Attractions/AttractionDetail';
 import Community from './pages/community/Community';
 import SignIn from './pages/SignIn/SignIn';
 import MenuBar from './component/MenuBar';
@@ -36,7 +37,11 @@ function App() {
                             <Route path="/attractions" element={<Attractions />} />
                             <Route path="/community" element={<Community />} />
                             <Route path="/signin" element={<SignIn />} />
+<<<<<<< HEAD
                             <Route path="/signup" element={<SignUp />} />
+=======
+                            <Route path="/attractionDetail/:locationId" element={<AttractionDetail />} />
+>>>>>>> eae3194598202ae5b1d86d6793032271baf7dd5c
                         </Routes>
                     </div>
                 </Router>
