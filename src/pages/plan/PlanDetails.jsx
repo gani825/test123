@@ -47,6 +47,10 @@ const PlanDetails = () => {
       <button onClick={() => navigate('/planner-list')}>
         플래너 목록으로 이동
       </button>
+      {/* 수정 페이지로 이동 */}
+      <button onClick={() => navigate(`/planner/edit/${id}`)}>
+        플래너 수정하기
+      </button>
     </div>
   );
 };

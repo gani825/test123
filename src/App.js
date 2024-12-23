@@ -13,6 +13,7 @@ import ViewPlan from './pages/plan/ViewPlan';
 import SignUp from './pages/SignIn/SignUp';
 import PlanDetails from './pages/plan/PlanDetails';
 import PlannerList from './pages/test/PlannerList';
+import EditPlan from './pages/plan/EditPlan';
 
 // AuthContext 생성
 export const AuthContext = createContext();
@@ -48,6 +49,7 @@ function App() {
               />
               <Route path="/planner-list" element={<PlannerList />} />
               <Route path="/planner-details/:id" element={<PlanDetails />} />
+              <Route path="/planner/edit/:id" element={<EditPlan />} />
             </Routes>
           </div>
         </Router>
