@@ -8,6 +8,8 @@ import SignIn from './pages/SignIn/SignIn';
 import MenuBar from './component/MenuBar';
 import SelectDates from './pages/plan/SelectDates';
 import PlanTrip from './pages/plan/PlanTrip';
+import ViewPlan from "./pages/plan/ViewPlan";
+import SignUp from "./pages/SignIn/SignUp";
 
 // AuthContext 생성
 export const AuthContext = createContext();
@@ -30,9 +32,11 @@ function App() {
                             <Route path="/plan" element={<Plan />} />
                             <Route path="/select-dates" element={<SelectDates />} />
                             <Route path="/plan-trip" element={<PlanTrip />} />
+                            <Route path="/view-plan" element={<ViewPlan />} />
                             <Route path="/attractions" element={<Attractions />} />
                             <Route path="/community" element={<Community />} />
                             <Route path="/signin" element={<SignIn />} />
+                            <Route path="/signup" element={<SignUp />} />
                         </Routes>
                     </div>
                 </Router>

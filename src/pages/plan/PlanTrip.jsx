@@ -107,9 +107,13 @@ function PlanTrip() {
             ...prev,
             [selectedDay]: [...(prev[selectedDay] || []), place],
         }));
+
         setCenter({ lat: place.latitude, lng: place.longitude });
-        setShowPlaceList(false); // 장소를 추가한 후 목록 닫기
+
+        // 장소 목록이 닫히지 않도록 setShowPlaceList(false)를 제거하거나 조건을 추가
+        // setShowPlaceList(false); // 이 줄을 삭제 또는 주석 처리
     };
+
 
     // 날짜별 장소 삭제 핸들러
     const handleRemovePlace = (date, locationId) => {
@@ -117,6 +121,11 @@ function PlanTrip() {
             ...prev,
             [date]: prev[date].filter((p) => p.locationId !== locationId),
         }));
+    };
+
+    // 완료 버튼 핸들러
+    const handleCompletePlan = () => {
+        navigate('/view-plan', { state: { dailyPlans, cityName } });
     };
 
     // 마커 클릭 (InfoWindow 열기)
@@ -180,6 +189,11 @@ function PlanTrip() {
                             )}
                         </div>
                     ))}
+                    <div className="completeButtonContainer">
+                        <button onClick={handleCompletePlan} className="completeButton">
+                            완료
+                        </button>
+                    </div>
                 </div>
 
                 {showPlaceList && (
@@ -263,14 +277,14 @@ function PlanTrip() {
                         mapContainerClassName="mapContainer"
                         center={center}
                         zoom={12}
-                        options={{ mapTypeControl: false }}
+                        options={{mapTypeControl: false}}
                     >
                         {Object.values(dailyPlans)
                             .flat()
                             .map((place) => (
                                 <Marker
                                     key={place.locationId}
-                                    position={{ lat: place.latitude, lng: place.longitude }}
+                                    position={{lat: place.latitude, lng: place.longitude}}
                                     onClick={() => handleMarkerClick(place)}
                                 />
                             ))}
@@ -294,6 +308,15 @@ function PlanTrip() {
                                 </div>
                             </InfoWindow>
                         )}
+                        {/* "내 여행 계획 보기" 버튼 추가 */}
+                        <div className="viewPlanButtonContainer">
+                            <button
+                                className="viewPlanButton"
+                                onClick={() => navigate('/view-plan', {state: {dailyPlans, cityName}})}
+                            >
+                                내 여행 계획 보기
+                            </button>
+                        </div>
                     </GoogleMap>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import './SignIn.css';
 import kakao from '../../img/kakao.png';
 import naver from '../../img/naver.png';
 import google from '../../img/google.png';
+import cross from "../../img/cross.png";
 
 const SignIn = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const SignIn = () => {
         <div className="modal-overlay" onClick={handleClose}>
             <div className="Login-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={handleClose}>
-                    ✖
+                    <img src={cross} alt="close"/>
                 </button>
                 <h2 className="modal-title">LOGO</h2>
                 <form>
