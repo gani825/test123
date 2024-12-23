@@ -21,6 +21,8 @@ function PlanTrip() {
   const { cityName, regionId, startDate, endDate } = location.state || {};
 
   // 상태 변수
+  const [plannerTitle, setPlannerTitle] = useState(""); // 사용자 입력 상태
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false); // 플랜 저장 모달 상태
   const [locations, setLocations] = useState([]); // 장소 데이터
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 }); // 지도 중심
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
@@ -158,7 +160,7 @@ function PlanTrip() {
   // 플랜 저장 핸들러
   const handleSavePlan = async () => {
     const plannerData = {
-      plannerTitle: `${cityName} 여행 계획`,
+      plannerTitle: plannerTitle || `${cityName} 여행 계획`, // 기본값 처리
       plannerStartDate: startDate,
       plannerEndDate: endDate,
       regionName: cityName,
@@ -181,13 +183,13 @@ function PlanTrip() {
       );
 
       const savedPlannerId = response.data;
-      console.log("저장된 플래너 ID ", savedPlannerId);
-
       alert("플랜이 성공적으로 저장되었습니다!");
       navigate(`/planner-details/${savedPlannerId}`);
     } catch (error) {
       console.error("플랜 저장 실패:", error);
       alert("플랜 저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsSaveModalOpen(false); // 모달 닫기
     }
   };
 
@@ -241,8 +243,30 @@ function PlanTrip() {
               )}
             </div>
           ))}
-          <button onClick={handleSavePlan}>플랜 저장</button>
+          <button onClick={() => setIsSaveModalOpen(true)}>플랜 저장</button>
         </div>
+        {/* 플랜 저장 모달 */}
+        {isSaveModalOpen && (
+          <div
+            className="modalOverlay"
+            onClick={() => setIsSaveModalOpen(false)}
+          >
+            <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+              <h2>플래너 제목 입력</h2>
+              <input
+                type="text"
+                value={plannerTitle}
+                onChange={(e) => setPlannerTitle(e.target.value)}
+                placeholder={`${cityName} 여행 계획`}
+                className="plannerTitleInput"
+              />
+              <div className="modalButtons">
+                <button onClick={handleSavePlan}>저장</button>
+                <button onClick={() => setIsSaveModalOpen(false)}>취소</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {showPlaceList && (
           <div className="placeList">

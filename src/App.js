@@ -10,6 +10,7 @@ import MenuBar from "./component/MenuBar";
 import SelectDates from "./pages/plan/SelectDates";
 import PlanTrip from "./pages/plan/PlanTrip";
 import PlanDetails from "./pages/plan/PlanDetails";
+import PlannerList from "./pages/test/PlannerList";
 
 // AuthContext 생성
 export const AuthContext = createContext();
@@ -38,6 +39,7 @@ function App() {
               <Route path="/attractions" element={<Attractions />} />
               <Route path="/community" element={<Community />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="planners" element={<PlannerList />} />
               <Route
                 path="/attractionDetail/:locationId"
                 element={<AttractionDetail />}

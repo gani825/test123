@@ -26,11 +26,10 @@ const PlanDetails = () => {
 
   return (
     <div>
-      <h1>{planner.plannerTitle}</h1>
+      <h2>{planner.plannerTitle}</h2>
       <p>시작 날짜: {planner.plannerStartDate}</p>
       <p>종료 날짜: {planner.plannerEndDate}</p>
       <p>지역: {planner.regionName}</p>
-      <h2>일별 계획</h2>
       {planner.dailyPlans.map((day, index) => (
         <div key={index}>
           <h3>{day.planDate}</h3>
