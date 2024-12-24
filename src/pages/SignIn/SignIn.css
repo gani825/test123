@@ -17,6 +17,7 @@
     background: #fff;
     padding: 20px 40px;
     width: 450px;
+    height: 660px;
     position: relative;
 }
 
@@ -32,9 +33,22 @@
     padding-top: 8px;
 }
 
+/* 뒤로 가기 버튼 스타일 */
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #222;
+}
+
 /* 제목 스타일 */
 .modal-title {
     text-align: center;
+    margin-bottom: 50px;
     margin: 50px 0;
 }
 

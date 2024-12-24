@@ -7,46 +7,46 @@ import KyotoCity from '../../img/KyotoCity.jpg';
 import Fukuoka from '../../img/Fukuoka.jpg';
 
 function Plan() {
-    const [showModal, setShowModal] = useState(false);
-    const [selectedCity, setSelectedCity] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCity, setSelectedCity] = useState('');
 
-    const cities = [
-        {
-            id: 1,
-            name: '도쿄',
-            image: Tokyo,
-            description: '도쿄는 현대와 전통이 공존하는 일본의 수도입니다.',
-        },
-        {
-            id: 3,
-            name: '오사카',
-            image: Osaka,
-            description: '오사카는 활기찬 거리와 먹거리로 유명합니다.',
-        },
-        {
-            id: 4,
-            name: '교토',
-            image: KyotoCity,
-            description: '교토는 아름다운 사찰과 정원이 가득한 도시입니다.',
-        },
-        {
-            id: 2,
-            name: '후쿠오카',
-            image: Fukuoka,
-            description: '후쿠오카는 역사적 명소와 현대가 어우러진 곳입니다.',
-        },
-    ];
+  const cities = [
+    {
+      id: 1,
+      name: '도쿄',
+      image: Tokyo,
+      description: '도쿄는 현대와 전통이 공존하는 일본의 수도입니다.',
+    },
+    {
+      id: 3,
+      name: '오사카',
+      image: Osaka,
+      description: '오사카는 활기찬 거리와 먹거리로 유명합니다.',
+    },
+    {
+      id: 4,
+      name: '교토',
+      image: KyotoCity,
+      description: '교토는 아름다운 사찰과 정원이 가득한 도시입니다.',
+    },
+    {
+      id: 2,
+      name: '후쿠오카',
+      image: Fukuoka,
+      description: '후쿠오카는 역사적 명소와 현대가 어우러진 곳입니다.',
+    },
+  ];
 
-    const openModal = (city) => {
-        console.log('선택된 도시:', city);
-        setSelectedCity({ name: city.name, id: city.id });
-        setShowModal(true);
-    };
+  const openModal = (city) => {
+    console.log('선택된 도시:', city);
+    setSelectedCity({ name: city.name, id: city.id });
+    setShowModal(true);
+  };
 
-    const closeModal = () => {
-        setShowModal(false);
-        setSelectedCity('');
-    };
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedCity('');
+  };
 
     return (
         <div className="choiceAll">
