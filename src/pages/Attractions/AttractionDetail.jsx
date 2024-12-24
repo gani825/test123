@@ -3,22 +3,29 @@ import { useParams, Link } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import axios from 'axios';
 import './AttractionDetail.css';
+import ReviewCreateModal from '../../component/ReviewCreateModal';
 
+       
 const AttractionDetail = () => {
   const { locationId } = useParams();  // URL에서 locationId 파라미터를 받아옵니다.
   const [location, setLocation] = useState(null);  // 장소의 상세 정보 상태
   const [nearbyLocations, setNearbyLocations] = useState([]);  // 근처 장소 목록 상태
   const [loading, setLoading] = useState(true);  // 로딩 상태
 
+  // 근처 여행지를 불러 오는대 필요한 값
   const [latitude, setLatitude] = useState(null);  // 위도
   const [longitude, setLongitude] = useState(null);  // 경도
   const [distance, setDistance] = useState(5);  // 근처 장소를 찾을 최대 거리 (기본값: 5km)
 
+  // 불러온 여행지 정보
   const [targetTagName, setTargetTagName] = useState("음식");  // 예시로 "음식" 태그 필터링
   const [nearbyLocationsExcludeTag,setNearbyLocationsExcludeTag] = useState(null);
   const [nearbyLocationsIncludeTag,setNearbyLocationsIncludeTag] = useState(null);
 
-
+  // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   // 장소 상세 정보 요청
   useEffect(() => {
@@ -54,7 +61,7 @@ const AttractionDetail = () => {
             },
           });
 
-          console.log(response.data)
+          // console.log(response.data)
 
           // locationResponseDtoExcludeTag와 locationResponseDtoIncludeTag 배열 모두에 대해 km를 m 변환
           const excludeTagLocationsWithDistance = response.data.locationResponseDtoExcludeTag
@@ -200,6 +207,12 @@ const AttractionDetail = () => {
           <p>태그가 포함된 장소가 없습니다.</p>
         )}
       </div>
+
+      <button onClick={openModal} className="review-button">리뷰 작성</button>
+
+      {isModalOpen && (
+        <ReviewCreateModal locationId={locationId} onClose={closeModal} />
+      )}
     </div>
   );
 };
