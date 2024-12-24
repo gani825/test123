@@ -1,0 +1,233 @@
+/* 모달 오버레이 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* 모달 창 */
+.Login-modal-content {
+    background: #fff;
+    padding: 20px 40px;
+    width: 450px;
+    height: 660px;
+    position: relative;
+}
+
+/* 닫기 버튼 */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding-top: 8px;
+}
+
+/* 뒤로 가기 버튼 스타일 */
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #222;
+}
+
+/* 제목 스타일 */
+.modal-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.inputName {
+    margin-bottom: 6px;
+}
+
+/* 입력 필드 스타일 */
+form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+}
+
+/* 로그인 버튼 스타일 */
+.submit-button {
+    font-size: 16px;
+    width: 100%;
+    height: 48px;
+    background-color: #222;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 17px 0;
+}
+
+/* 로그인 링크 컨테이너 */
+.login-links-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* 회원가입 링크 스타일 */
+.signup-link {
+    color: #222;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* 아이디 찾기 및 비밀번호 찾기 링크 컨테이너 */
+.find-links {
+    color: #aaa;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+}
+
+/* 각 링크 스타일 */
+.find-id-link,
+.find-password-link {
+    cursor: pointer;
+}
+
+/* 구분자 스타일 */
+.divider {
+    color: #aaa;
+}
+
+/* 링크 호버 효과 */
+.signup-link:hover,
+.find-id-link:hover,
+.find-password-link:hover {
+    text-decoration: underline;
+}
+
+
+/* 구분자 스타일 */
+.divider {
+    color: #ccc;
+}
+
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li {
+    cursor: pointer;
+}
+
+.login-menu:hover {
+    text-decoration: underline;
+}
+
+/* 소셜 로그인 섹션 */
+.social-login {
+    text-align: center;
+}
+
+.social-icons img {
+    width: 40px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+/* 전체 컨테이너 */
+.social-login-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+/* 좌우 선 스타일 */
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background-color: #D6D6D6; /* 연한 회색 선 */
+}
+
+/* 텍스트 스타일 */
+.divider-text {
+    padding: 0 15px; /* 좌우 간격을 줘서 텍스트와 선을 분리 */
+    color: #D6D6D6;     /* 텍스트 색상 */
+    font-size: 14px;
+}
+
+/* 소셜 로그인 아이콘 컨테이너 */
+.social-icons {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 25px 0;
+}
+
+/* 아이콘 박스 스타일 */
+.kakao-box {
+    width: 50px;
+    height: 50px;
+    background-color: #FFDD1A; /* 박스 배경색 */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 8px; /* 박스 테두리 둥글게 */
+    cursor: pointer;
+}
+
+.naver-box {
+    width: 50px;
+    height: 50px;
+    background-color: #03C75B; /* 박스 배경색 */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 8px; /* 박스 테두리 둥글게 */
+    cursor: pointer;
+}
+
+.google-box {
+    width: 50px;
+    height: 50px;
+    background-color: #FCFCFC; /* 박스 배경색 */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 8px; /* 박스 테두리 둥글게 */
+    cursor: pointer;
+}
+
+/* 아이콘 이미지 스타일 */
+.naver-box img {
+    width: 26px;
+    height: 26px;
+}
+.google-box img {
+    width: 30px;
+    height: 30px;
+}
+
+.kakao-box img {
+    width: 32px;
+    height: 32px;
+}
+
+

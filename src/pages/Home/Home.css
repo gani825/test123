@@ -1,0 +1,455 @@
+.Home h3 {
+    font-size: 30px;
+    margin-bottom: 16px;
+    margin-top: 100px;
+}
+
+.Home span {
+    font-size: 18px;
+    color: #474747;
+}
+
+.Home .slide {
+    width: 100%;
+    height: 500px;
+    max-width: 1920px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.Home .slide-item {
+    width: 100%;
+    height: 720px;
+}
+
+.Home .slide-content {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.Home .slide-content a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.Home .slide-content span {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    transform: translate(-50%, -50%);
+    /*text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);*/
+}
+
+.swiper-button-prev, .swiper-button-next {
+    color: white !important;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: white !important;
+}
+
+/* 문구랑 검색창 */
+.Home .section {
+    max-width: 1440px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+.Home .search {
+    text-align: center;
+}
+
+.Home .search h3 {
+    text-align: center;
+    margin-top: 80px;
+    font-size: 30px;
+}
+
+.Home .search input {
+    font-size: 17px;
+    border-radius: 6px;
+    width: 771px;
+    height: 53px;
+    margin-top: 30px;
+}
+
+.Home .search-bar {
+    justify-content: center;
+}
+
+.Home .recommended {
+    margin-top: 140px;
+}
+
+/* 인기 여행지 추천 */
+
+.Home .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.Home .card-container {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* 카테고리 전체 */
+
+/* 카테고리 섹션 스타일 */
+.Home .category-container {
+    display: flex;
+    gap: 24px; /* 큰 카드와 작은 카드 컨테이너 사이의 간격 */
+    max-width: 100%; /* 섹션의 최대 너비 설정 */
+    margin: 0 auto;
+    margin-top: 22px;
+}
+
+/* 큰 카드 스타일 */
+.Home .category-card-large {
+    width: calc(100% / 3); /* 큰 카드 너비 */
+    height: 513px; /* 큰 카드 높이 */
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* 작은 카드 컨테이너 스타일 */
+.Home .small-cards-container {
+    width: calc(100% / 3 * 2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px; /* 작은 카드들 사이의 간격 */
+    /*width: 100%; !* 작은 카드 컨테이너 너비 *!*/
+}
+
+/* 공통 작은 카드 스타일 */
+.Home .category-card {
+    width: calc(50% - 12px);
+    /*width: calc(50% - 10px); !* 두 개씩 나란히 배치 (간격 고려) *!*/
+    height: 246px; /* 작은 카드 높이 */
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* 카드 제목 스타일 */
+.Home .category-title {
+    /* 사진 넣으면 컬러 바꿔야 함 */
+}
+
+/* 여행 계획 섹션 스타일 */
+
+.Home .travel-plan-container {
+    margin: 40px 0;
+    border: 1px solid #D6D6D6;
+    height: 515px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* 여행 일정 스타일 */
+.Home .travel-plan {
+    width: 45%;
+    padding: 20px;
+}
+
+.Home .plan-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.Home .plan-dayAll {
+    display: flex;
+    gap: 255px;
+}
+
+.Home .plan-day {
+    margin-bottom: 20px;
+    counter-reset: step-counter; /* 각 날짜에서 숫자를 1부터 시작 */
+
+}
+
+.Home .plan-day h5 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.Home .plan-day ul {
+    list-style: none;
+    padding: 0;
+}
+
+.Home .plan-day li {
+    font-size: 16px;
+    line-height: 1.5;
+    position: relative;
+    padding-left: 38px;
+    margin-bottom: 60px;
+}
+
+/* 원형 숫자 스타일 */
+.Home .plan-day li::before {
+    content: counter(step-counter);
+    counter-increment: step-counter; /* 숫자를 증가 */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background-color: #474747;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+/* 원형 숫자 밑에 선 스타일 */
+.Home .plan-day li::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 31px;
+    bottom: 31px;
+    height: 70px;
+    width: 2px;
+    background-color: #ccc;
+}
+
+.Home .plan-day li span {
+    display: block;
+    color: #939393;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* 랜드마크 태그 스타일 */
+.Home .plan-day li span.landmark-tag {
+    width: 69px;
+    background-color: #F7F8F9;
+    color: #aaa;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+/* 지도 컨테이너 스타일 */
+.Home .map-container {
+    width: 55%;
+}
+
+.Home .map-image {
+    width: 100%;
+    height: 513px;
+}
+
+/* 시작하기 버튼 스타일 */
+.Home .start-button {
+    width: 132px;
+    display: block;
+    margin: 10px auto 0;
+    padding: 10px 20px;
+    background-color: #F5F6FB;
+    color: #474747;
+    border: none;
+    border-radius: 22px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.Home .start-button:hover {
+    background-color: #f5f5f6;
+}
+
+/* 사용자 리뷰 전체 */
+
+.Home .reviews {
+    width: 1920px;
+    height: 1059px;
+    background-color: #D8E8F2;
+    margin: 100px auto;
+}
+
+/* 리뷰 섹션 스타일 */
+.Home .reviews {
+    width: 100%;
+    max-width: 1920px;
+    height: 1059px;
+    background-color: #D8E8F2;
+}
+
+.Home .review-title {
+    margin-left: 200px;
+    position: relative;
+    top: 200px;
+}
+
+.Home .Title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.Home .reviews .Subheading {
+    font-size: 18px;
+    color: #474747;
+    display: block;
+    margin-bottom: 30px;
+}
+
+/* 리뷰 카드 레이아웃 */
+.Home .innerWrap {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 1열 그리드 */
+    gap: 30px;
+    justify-items: center;
+}
+
+.Home .review-card {
+    background-color: #fff;
+    width: 100%;
+    max-width: 569px;
+    height: 280px;
+    display: flex;
+    overflow: hidden;
+}
+
+.Home .innerWrap .review-card:nth-child(2) {
+    position: relative;
+    left: 400px;
+}
+
+/* 리뷰 이미지 스타일 */
+.Home .review-image {
+    width: 224px;
+    height: 224px;
+    object-fit: cover;
+    margin: 25px;
+}
+
+/* 리뷰 내용 스타일 */
+.Home .review-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Home .review-content h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.Home .review-content p {
+    font-size: 14px;
+    margin: 5px 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;         /* 최대 4줄까지 표시 */
+    -webkit-box-orient: vertical;  /* 수직 방향 설정 */
+    text-overflow: ellipsis;
+    line-height: 1.5;              /* 줄 간격 설정 */
+    max-height: calc(1.5em * 4);   /* line-height × 4줄 */
+}
+
+.Home .review-content strong {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.Home .review-content span {
+    color: #aaa;
+    font-size: 16px;
+}
+
+/* 푸터 전체 */
+.Home .footer {
+    width: 100%;
+    height: 298px;
+    background-color: #F7F8F9;
+}
+
+.Home .footer {
+    width: 100%;
+    max-width: 1920px;
+    height: 298px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 0 auto;
+}
+
+.Home .footer-content {
+    text-align: left;
+    max-width: 80%;
+    margin-left: 265px;
+}
+
+.Home .footer-logo {
+    font-size: 35px;
+    font-weight: bold;
+    color: #AAA;
+    margin-bottom: 10px;
+}
+
+.Home .footer-contact {
+    font-size: 16px;
+    color: #AAA;
+    line-height: 180%;
+    margin-bottom: 10px;
+}
+
+.Home .footer-links {
+    font-size: 14px;
+    color: #AAA;
+    margin-bottom: 20px;
+}
+
+.Home .footer-links a {
+    color: #666;
+    text-decoration: none;
+}
+
+.Home  .footer-links a:hover {
+    text-decoration: underline;
+}
+
+.Home  .footer-icons {
+    font-size: 24px;
+    color: #474747;
+}
+
+.Home .social-icon {
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.Home .footer-icons {
+    display: flex;
+    gap: 34px;
+    position: relative;
+    bottom: 60px;
+    left: 900px;
+}
+
