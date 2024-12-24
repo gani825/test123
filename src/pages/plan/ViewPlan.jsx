@@ -14,6 +14,7 @@ function ViewPlan() {
                 <button className="planviewBackButton" onClick={() => navigate(-1)}>
                     돌아가기
                 </button>
+
             </div>
         );
     }
