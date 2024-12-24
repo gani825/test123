@@ -85,7 +85,7 @@ import { Link } from 'react-router-dom'
             tagNames : tagNamesString,  // 선택된 Tag데이터
             keyword : searchTerm,
             page : pageNumber,  //현재 페이지 (0부터 시작함) 
-            size: 20           // 페이지 크기 (한페이지에 몇개의 데이터를 나타낼것인지)
+            pageSize: 20           // 페이지 크기 (한페이지에 몇개의 데이터를 나타낼것인지)
             // sortValue : 정렬 기준( "googleRating"와 같은 실수타입만 가능) - default googleRating기준
             // sortDirection : 정렬 방향 ( "desc" (내림차순) 또는 "asc" (오름차순) ) - default desc기준
           }

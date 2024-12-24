@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './ReviewCreateModal.css'
 
-const ReviewCreateModal = ({ locationId, onClose }) => {
+const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
   const [title,setTitle] = useState('');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -35,17 +35,25 @@ const ReviewCreateModal = ({ locationId, onClose }) => {
 
 
   const handleSubmit = async () => {
+
+    const accessToken = localStorage.getItem('accessToken');
+
     const reviewDto = {
-      userId: 1, // 로그인 시스템 미구현으로 임시 값
       locationId: locationId,
       title: title,
       rating: rating,
       comment: comment,
-      imageFiles: imageFiles,
     };
 
     try {
-      await axios.post('http://localhost:5050/reviews/create', reviewDto);
+      await axios.post('http://localhost:5050/reviews/create', reviewDto,
+        {
+            headers:{
+                'Authorization': `Bearer ${accessToken}`, // accessToken 추가
+                'Content-Type': 'application/json',
+            }
+        }
+      );
       alert('리뷰가 작성되었습니다!');
       onClose(); // 모달 닫기
     } catch (error) {
@@ -159,8 +167,8 @@ const ReviewCreateModal = ({ locationId, onClose }) => {
 
         {/* 하단영역역 - 버튼 */}
         <div className="modal-footer">
-            <button onClick={handleSubmit} className="cancel-button">취소</button>
-            <button onClick={onClose} className="submit-button">저장</button>
+            <button onClick={onClose} className="cancel-button">취소</button>
+            <button onClick={handleSubmit} className="submit-button">저장</button>
         </div>
       
     </div>

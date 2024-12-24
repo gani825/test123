@@ -7,17 +7,17 @@ import ReviewCreateModal from '../../component/ReviewCreateModal';
 
        
 const AttractionDetail = () => {
+  // 여행지 상세 정보 불러오기 
   const { locationId } = useParams();  // URL에서 locationId 파라미터를 받아옵니다.
   const [location, setLocation] = useState(null);  // 장소의 상세 정보 상태
-  const [nearbyLocations, setNearbyLocations] = useState([]);  // 근처 장소 목록 상태
-  const [loading, setLoading] = useState(true);  // 로딩 상태
-
+  const [locationLoading, setLocationLoading] = useState(true);  // 로딩 상태
+  
   // 근처 여행지를 불러 오는대 필요한 값
   const [latitude, setLatitude] = useState(null);  // 위도
   const [longitude, setLongitude] = useState(null);  // 경도
   const [distance, setDistance] = useState(5);  // 근처 장소를 찾을 최대 거리 (기본값: 5km)
-
-  // 불러온 여행지 정보
+  
+  // 불러온 주위 여행지 정보
   const [targetTagName, setTargetTagName] = useState("음식");  // 예시로 "음식" 태그 필터링
   const [nearbyLocationsExcludeTag,setNearbyLocationsExcludeTag] = useState(null);
   const [nearbyLocationsIncludeTag,setNearbyLocationsIncludeTag] = useState(null);
@@ -26,6 +26,15 @@ const AttractionDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  // 불러온 리뷰 정보
+  const [reviews, setReviews] = useState([]);
+  const [userProfiles,setUserProfiles] = useState([]);
+  const [reviewLoading, setReviewLoading] = useState(true);
+  const [totalReviews,setTotalReviews] = useState(null);
+  // 리뷰 정렬 옵션
+  const [sortReviews,setSortReviews] = useState(null);
+  
 
   // 장소 상세 정보 요청
   useEffect(() => {
@@ -38,7 +47,7 @@ const AttractionDetail = () => {
       } catch (error) {
         console.error('Error fetching location details:', error);
       } finally {
-        setLoading(false);  // 로딩 완료
+        setLocationLoading(false);  // 로딩 완료
       }
     };
 
@@ -91,13 +100,56 @@ const AttractionDetail = () => {
     }
   }, [latitude, longitude, distance]);  // 위도, 경도, 거리 변경 시마다 요청
 
+  // 리뷰 목록 요청
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        const response = await axios.get('http://localhost:5050/reviews/getPagedReviews', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: {
+            locationId: locationId,
+            page: 0, // 첫 페이지
+            pageSize : 10,
+            sortValue: 'reviewCreatedAt',
+            sortDirection: 'desc',
+          },
+        });
+      console.log(response);
+      // 데이터 추출
+      const reviewWithUserProfileDtoList =
+        response.data._embedded?.reviewWithUserProfileDtoList || []; // 데이터가 없으면 빈 배열
+
+      // 리뷰와 사용자 프로필 데이터를 분리
+      const reviewList = reviewWithUserProfileDtoList.map((item) => item.reivewDto);
+      const userProfileList = reviewWithUserProfileDtoList.map((item) => item.userProfileDto);
+
+      setReviews(reviewList);
+      setUserProfiles(userProfileList);
+
+      // 전체리뷰갯수 저장
+      setTotalReviews(response.data.page.totalElements);
+
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        // 오류 발생 시 빈 배열로 설정
+        setReviews([]); 
+        setUserProfiles([]);
+      } finally {
+        setReviewLoading(false);
+      }
+    };
+    fetchReviews();
+  }, [locationId, isModalOpen]); // 모달이 닫힐 때 리뷰 갱신
+
+
   // Google Maps API를 로드하는 훅
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI',  // 발급받은 API 키 입력
+    googleMapsApiKey: 'AIzaSyA8aivSxIFr9kZQa0AhBcLlwbxSlXy7ICQ',  // 발급받은 API 키 입력
   });
 
   // 로딩 중일 경우
-  if (loading) {
+  if (locationLoading) {
     return <div>Loading...</div>;
   }
 
@@ -105,6 +157,7 @@ const AttractionDetail = () => {
   if (!location) {
     return <div>No details available for this location.</div>;
   }
+
 
   return (
     <div className="attraction-detail-container">
@@ -203,13 +256,112 @@ const AttractionDetail = () => {
         )}
       </div>
 
-      <button onClick={openModal} className="review-button">리뷰 작성</button>
-
       {isModalOpen && (
         <div className="modal-backdrop">
           <ReviewCreateModal locationId={locationId} onClose={closeModal} />
         </div>
       )}
+
+      {/* 리뷰 영역 */}
+      <div className="review-container">
+        <div className="review-section">
+          {/* 상단 헤더 영역 */}
+          <div className="review-header">
+            {/*  총 리뷰수 */}
+            <h3 className="review-header-title">총 리뷰 수 ({totalReviews})</h3>
+            
+            <div className="review-header-actions">
+              {/* 좌측: 정렬 옵션 */}
+              <div className="review-header-sort">
+                <button className="sort-button" onClick={() => sortReviews('rating')}>
+                  별점순 ▽
+                </button>
+                <div className="sort-divider" />
+                <button className="sort-button" onClick={() => sortReviews('reviewCreatedAt')}>
+                  최신순 ▽
+                </button>
+              </div>
+              {/* 우측: 리뷰 작성 버튼 */}
+              <button className="review-header-button" onClick={openModal}>
+                리뷰 작성하기
+              </button>
+            </div>
+          </div>
+
+          {/* 2. 중간 메인 영역 */}
+          <div className="review-main">
+            {reviewLoading ? (
+              <p>리뷰를 불러오는 중입니다...</p>
+            ) : reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <div key={review.reviewId} className="review-item">
+                  {/* 사용자 정보 */}
+                  <div className="review-user-info">
+                    <div className="user-profile-img">
+                      <img
+                        src={userProfiles[index]?.profileImageUrl || ""}
+                        // alt={`${userProfiles[index]?.userNickname || "익명"}의 프로필 이미지`}
+                      />
+                    </div>
+                    <p className="user-nickname">{userProfiles[index].userNickname}</p>
+                    <p className="review-date">
+                      {new Date(review.reviewCreatedAt).toLocaleDateString()}
+                    </p>
+                    <p className="review-rating">
+                      {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
+                    </p>
+                  </div>
+
+                  {/* 리뷰 내용 */}
+                  <div className="review-content">
+                    <h4 className="review-title">{review.title}</h4>
+                    <p className="review-text">{review.comment}</p>
+                    {/* 리뷰 이미지 */}
+                    <div className="review-images">
+                      {review.imageUrls.map((url, imgIndex) => (
+                        <img key={imgIndex} src={url || ""} alt={`리뷰 이미지 ${imgIndex + 1}`} />
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              ))
+            ) : (
+              <p>작성된 리뷰가 없습니다.</p>
+            )}
+          </div>
+
+          {/* 3. 하단 푸터 영역 */}
+          <div className="review-footer">
+            <button
+              onClick={() => {
+                // 이전 페이지 이동 로직 추가
+              }}
+            >
+              이전
+            </button>
+            {/* 페이지 번호 표시 */}
+            {Array.from({ length: 5 }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  // 특정 페이지로 이동 로직 추가
+                }}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => {
+                // 다음 페이지 이동 로직 추가
+              }}
+            >
+              다음
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
