@@ -139,26 +139,21 @@ const AttractionDetail = () => {
       <p>{location.description}</p>
       <p>별점 평균 : {location.googleRating}</p>
       <p>총 리뷰 수 : {location.userRatingsTotal}</p>
-      <p>주소 : {location.formattedAddress}</p>
       <p>전화번호 : {location.phoneNumber}</p>
       <p>운영 시간 : {location.openingHours}</p>
+      <p>주소 : {location.formattedAddress}</p>
       <p>
         웹사이트 주소 :{' '}
         <a href={location.website} target="_blank" rel="noopener noreferrer">
           {location.website}
         </a>
       </p>
-      <div className="attraction-detail-container">
-        {/* 장소 상세 정보 표시 */}
-        <h2>{location.locationName}</h2>
-        <h3>{location.regionName}</h3>
-        <img src={location.placeImgUrl} alt={location.locationName} />
-        
-        {/* 근처 장소 표시 */}
-        <h3>주변 장소</h3>
+
+      {/* 주변장소 컨테이너 */}
+      <div className="nearby-locations-container">
 
         {/* 태그가 포함되지 않은 근처 장소 */}
-        <h4>주의의 여행지</h4>
+        <h4>주위의 여행지</h4>
         {nearbyLocationsExcludeTag?.length > 0 ? (
           <ul className="nearby-locations-list">
             {nearbyLocationsExcludeTag.slice(0, 4).map((nearbyLocation) => (
