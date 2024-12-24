@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PlanDetails = () => {
   const { id } = useParams(); // URL에서 id 가져오기
@@ -16,7 +16,7 @@ const PlanDetails = () => {
         );
         setPlanner(response.data); // 데이터 저장
       } catch (error) {
-        console.error('플랜 불러오기 실패:', error);
+        console.error("플랜 불러오기 실패:", error);
       }
     };
 
@@ -44,11 +44,22 @@ const PlanDetails = () => {
         </div>
       ))}
       {/* PlannerList 페이지로 이동하는 버튼 */}
-      <button onClick={() => navigate('/planner-list')}>
+      <button onClick={() => navigate("/planner-list")}>
         플래너 목록으로 이동
       </button>
       {/* 수정 페이지로 이동 */}
-      <button onClick={() => navigate(`/planner/edit/${id}`)}>
+      <button
+        onClick={() =>
+          navigate(`/planner/edit/${id}`, {
+            state: {
+              regionId: planner.regionId,
+              startDate: planner.plannerStartDate,
+              endDate: planner.plannerEndDate,
+              cityName: planner.regionName,
+            },
+          })
+        }
+      >
         플래너 수정하기
       </button>
     </div>
