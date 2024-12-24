@@ -15,11 +15,21 @@ const ReviewCreateModal = ({ locationId, onClose }) => {
   // 이미지 파일 선택 처리
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    const filteredFiles = files.filter((file) => {
+      if (!validImageTypes.includes(file.type)) {
+        alert(`${file.name}은(는) 허용되지 않는 파일 형식입니다.`);
+        return false;
+      }
+      return true;
+    });
+
     if (files.length + imageFiles.length > 3) {
       alert('최대 3개의 이미지만 첨부할 수 있습니다.');
       return;
     }
-    setImageFiles((prevFiles) => [...prevFiles, ...files]);
+    setImageFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
   };
 
 

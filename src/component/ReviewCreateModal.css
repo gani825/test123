@@ -160,16 +160,23 @@
 .modal-footer {
   display: flex;
   justify-content: space-between;
+  align-items: center; 
+  gap: 10px; 
   margin-top: 20px;
 }
-
+ 
 .submit-button, .cancel-button {
   padding: 10px 20px;
   border: none;
   cursor: pointer;
-  border-radius: 4px;
-  width: 48%;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.5; 
+  flex: 1; 
   font-weight: 800;
+  text-align: center;
+  box-sizing: border-box; 
+  height: 48px; /* 버튼 높이를 고정 */
 }
 
 

@@ -211,7 +211,9 @@ const AttractionDetail = () => {
       <button onClick={openModal} className="review-button">리뷰 작성</button>
 
       {isModalOpen && (
-        <ReviewCreateModal locationId={locationId} onClose={closeModal} />
+        <div className="modal-backdrop">
+          <ReviewCreateModal locationId={locationId} onClose={closeModal} />
+        </div>
       )}
     </div>
   );
