@@ -32,8 +32,14 @@ const AttractionDetail = () => {
   const [userProfiles,setUserProfiles] = useState([]);
   const [reviewLoading, setReviewLoading] = useState(true);
   const [totalReviews,setTotalReviews] = useState(null);
+
   // 리뷰 정렬 옵션
-  const [sortReviews,setSortReviews] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState('reviewCreatedAt'); // 기본 정렬 기준
+  const [sortDirection, setSortDirection] = useState('desc'); // 기본 정렬 방향
+
+  // 페이지 관련
+  const [currentPage, setCurrentPage] = useState(0);  // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0);  // 전체 페이지 수
   
 
   // 장소 상세 정보 요청
@@ -100,47 +106,68 @@ const AttractionDetail = () => {
     }
   }, [latitude, longitude, distance]);  // 위도, 경도, 거리 변경 시마다 요청
 
-  // 리뷰 목록 요청
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken');
-        const response = await axios.get('http://localhost:5050/reviews/getPagedReviews', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          params: {
-            locationId: locationId,
-            page: 0, // 첫 페이지
-            pageSize : 10,
-            sortValue: 'reviewCreatedAt',
-            sortDirection: 'desc',
-          },
-        });
-      console.log(response);
-      // 데이터 추출
-      const reviewWithUserProfileDtoList =
-        response.data._embedded?.reviewWithUserProfileDtoList || []; // 데이터가 없으면 빈 배열
+  // 리뷰 요청 함수
+  const fetchReviews = async (pageNumber = 0) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
+      const response = await axios.get('http://localhost:5050/reviews/getPagedReviews', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          locationId,
+          page: pageNumber,
+          pageSize: 5, // 페이지 크기
+          sortValue: sortCriteria, // 정렬 기준
+          sortDirection, // 정렬 방향
+        },
+      });
 
-      // 리뷰와 사용자 프로필 데이터를 분리
-      const reviewList = reviewWithUserProfileDtoList.map((item) => item.reivewDto);
-      const userProfileList = reviewWithUserProfileDtoList.map((item) => item.userProfileDto);
+      if (response && response.data) {
+        const reviewWithUserProfileDtoList =
+          response.data._embedded?.reviewWithUserProfileDtoList || []; // 데이터가 없으면 빈 배열
 
-      setReviews(reviewList);
-      setUserProfiles(userProfileList);
+        // 리뷰와 사용자 프로필 데이터를 분리하여 저장
+        const reviewList = reviewWithUserProfileDtoList.map((item) => item.reivewDto);
+        const userProfileList = reviewWithUserProfileDtoList.map((item) => item.userProfileDto);
 
-      // 전체리뷰갯수 저장
-      setTotalReviews(response.data.page.totalElements);
-
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-        // 오류 발생 시 빈 배열로 설정
-        setReviews([]); 
-        setUserProfiles([]);
-      } finally {
-        setReviewLoading(false);
+        setReviews(reviewList);
+        setUserProfiles(userProfileList);
+        setTotalPages(response.data.page.totalPages); // 전체 페이지 수 저장
+        setTotalReviews(response.data.page.totalElements); // 전체 리뷰 수 저장
+        setCurrentPage(pageNumber); // 현재 페이지 업데이트
       }
-    };
-    fetchReviews();
-  }, [locationId, isModalOpen]); // 모달이 닫힐 때 리뷰 갱신
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      setReviews([]); // 에러 발생 시 빈 배열로 설정
+      setUserProfiles([]);
+    } finally {
+      setReviewLoading(false); // 로딩 상태 해제
+    }
+  };
+
+  // 리뷰 요청 호출
+  useEffect(() => {
+    fetchReviews(0); // 첫 페이지 데이터 요청
+  }, [locationId, sortCriteria, sortDirection]); // 정렬 옵션이 변경될 때마다 호출
+
+  // 정렬 버튼 클릭 핸들러
+  const handleSort = (criteria) => {
+    if (sortCriteria === criteria) {
+      // 기준이 같으면 방향을 토글
+      setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
+    } else {
+      // 기준이 다르면 새 기준으로 설정하고 방향은 내림차순으로 초기화
+      setSortCriteria(criteria);
+      setSortDirection('desc');
+    }
+  };
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 0 && pageNumber < totalPages) {
+      setReviewLoading(true); // 로딩 상태로 전환
+      fetchReviews(pageNumber); // 해당 페이지 데이터 요청
+    }
+  };
 
 
   // Google Maps API를 로드하는 훅
@@ -273,12 +300,18 @@ const AttractionDetail = () => {
             <div className="review-header-actions">
               {/* 좌측: 정렬 옵션 */}
               <div className="review-header-sort">
-                <button className="sort-button" onClick={() => sortReviews('rating')}>
-                  별점순 ▽
+                <button
+                  className="sort-button"
+                  onClick={() => handleSort('rating')}
+                >
+                  {`별점순 ${sortCriteria === 'rating' ? (sortDirection === 'asc' ? '△' : '▽') : ''}`}
                 </button>
                 <div className="sort-divider" />
-                <button className="sort-button" onClick={() => sortReviews('reviewCreatedAt')}>
-                  최신순 ▽
+                <button
+                  className="sort-button"
+                  onClick={() => handleSort('reviewCreatedAt')}
+                >
+                  {`최신순 ${sortCriteria === 'reviewCreatedAt' ? (sortDirection === 'asc' ? '△' : '▽') : ''}`}
                 </button>
               </div>
               {/* 우측: 리뷰 작성 버튼 */}
@@ -334,27 +367,39 @@ const AttractionDetail = () => {
           {/* 3. 하단 푸터 영역 */}
           <div className="review-footer">
             <button
-              onClick={() => {
-                // 이전 페이지 이동 로직 추가
-              }}
+              className="pagination-button"
+              disabled={currentPage === 0}
+              onClick={() => handlePageChange(currentPage - 1)}
             >
               이전
             </button>
-            {/* 페이지 번호 표시 */}
-            {Array.from({ length: 5 }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  // 특정 페이지로 이동 로직 추가
-                }}
-              >
-                {i + 1}
-              </button>
-            ))}
+
+            {/* 앞쪽 '...' 표시 */}
+            {currentPage > 2 && <span className="pagination-ellipsis">...</span>}
+
+            {/* 페이지 버튼 표시 */}
+            {(() => {
+              const startPage = Math.max(0, Math.min(currentPage - 2, totalPages - 5));
+              const endPage = Math.min(startPage + 5, totalPages);
+              return Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((page) => (
+                <button
+                  key={page}
+                  className={`pagination-button ${page === currentPage ? 'active' : ''}`}
+                  onClick={() => handlePageChange(page)}
+                  disabled={page === currentPage} // 현재 페이지 비활성화
+                >
+                  {page + 1}
+                </button>
+              ));
+            })()}
+
+            {/* 뒤쪽 '...' 표시 */}
+            {currentPage < totalPages - 3 && <span className="pagination-ellipsis">...</span>}
+
             <button
-              onClick={() => {
-                // 다음 페이지 이동 로직 추가
-              }}
+              className="pagination-button"
+              disabled={currentPage === totalPages - 1}
+              onClick={() => handlePageChange(currentPage + 1)}
             >
               다음
             </button>
