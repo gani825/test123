@@ -1,0 +1,186 @@
+/* styles.css */
+
+/* 전체 컨테이너 중앙 정렬 */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: flex-start; 
+    min-height: 100vh;  
+    padding-top: 50px;  
+    text-align: center;
+  }
+
+  /* 검색창쪽 css */
+  /* 검색창 전체 컨테이이너 */
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;  
+    max-width: 800px; 
+    gap:10px;
+  }
+  /* 검색창창 */
+  .search-input {
+    padding: 10px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    width: 85%;  
+    font-size: 16px;
+  }
+  /* 지역 고르는 드롭다운 */
+  .region-select {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;  /* 드롭다운의 너비 설정 */
+  }
+   /* 검색버튼 */
+  .search-button {
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    padding : 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  /* 태그버튼들 */
+  .button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  /* 여기까지 검색창쪽 css */
+  
+
+  /* 여행지 정보 관련 css */
+  /* 전체 여행지 컨테이너 */
+  .locations-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* 여행지 카드 컨테이너 */
+  /* 5*2로 나눴음 */
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);  /* 5개 열 */
+    gap: 20px;  /* 카드 사이의 간격 */
+    width: 100%;
+    max-width: 1200px;  
+    margin: 0 auto;  
+    margin-bottom: 40px;  /* 카드와 페이지 정보 사이 간격 추가 */
+  }
+
+  /* 각 여행지 카드 */
+  .location-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    height: 400px; /* 카드의 고정된 높이 */
+    justify-content: space-between; /* 내용이 위쪽으로 밀리지 않게 조정 */
+  }
+
+  /* 카드 이미지 */
+  .location-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  /* 카드 내용 */
+  .location-info {
+    padding: 15px;
+    text-align: center;
+    flex-grow: 1;  /* 내용이 넘칠 경우 자동으로 공간 차지 */
+  }
+
+  /* 카드 제목 */
+  .location-info h3 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  /* 기타 텍스트 스타일 */
+  .location-info p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #555;
+  }
+  /* 여기까지 여행지 정보 관련 css */
+
+  
+  /* 페이지 정보 관련 css */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;  /* 페이지 네비게이션과 카드 간 간격 */
+  }
+  
+  .pagination button {
+    padding: 5px 10px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .pagination button:hover {
+    background-color: #d1d1d1;
+  }
+  
+  .pagination button:disabled {
+    background-color: #bdbdbd;
+    cursor: not-allowed;
+  }
+  
+  .pagination button.active {
+    background-color: #4caf50;
+    color: white;
+  }
+  /* 여기까지 페이지 정보 css */
+  
+  .button {
+    background-color: #e0e0e0;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button.selected {
+    background-color: #4caf50;
+  }
+  
+  .button:hover {
+    background-color: #d1d1d1;
+  }
+  
+  .button.selected:hover {
+    background-color: #45a049;
+  }
+  
+  .button:disabled {
+    background-color: #bdbdbd;
+    cursor: not-allowed;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  h3, h4 {
+    margin-bottom: 20px;
+  }
+  
