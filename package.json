@@ -6,6 +6,7 @@
     "@react-google-maps/api": "^2.20.3",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
+    "cors": "^2.8.5",
     "cra-template": "1.2.0",
     "date-fns": "^4.1.0",
     "loadash": "^1.0.0",
