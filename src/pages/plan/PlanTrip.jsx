@@ -10,7 +10,7 @@ import usePlanData from "../../component/PlanTrip/usePlanData";
 function PlanTrip() {
   // Google Maps API 로드
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI", // API 키
+    googleMapsApiKey: 'AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI', // API 키
   });
 
   // 네비게이션과 위치 상태
@@ -25,10 +25,10 @@ function PlanTrip() {
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
   const [selectedPlace, setSelectedPlace] = useState(null); // InfoWindow에서 표시할 선택된 장소
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
   const [selectedDay, setSelectedDay] = useState(null); // 선택된 Day
   const [showPlaceList, setShowPlaceList] = useState(false); // 장소 목록 표시 여부
-  const [categoryFilter, setCategoryFilter] = useState("전체"); // 필터링된 카테고리
+  const [categoryFilter, setCategoryFilter] = useState('전체'); // 필터링된 카테고리
   const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
   const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리 저장
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
@@ -68,7 +68,7 @@ function PlanTrip() {
     const dates = [];
     let currentDate = new Date(startDate);
     while (currentDate <= new Date(endDate)) {
-      dates.push(new Date(currentDate).toISOString().split("T")[0]);
+      dates.push(new Date(currentDate).toISOString().split('T')[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return dates;
@@ -267,12 +267,12 @@ function PlanTrip() {
             />
 
             <div className="categoryTags">
-              {["전체", "관광명소", "음식", "쇼핑", "문화", "랜드마크"].map(
+              {['전체', '관광명소', '음식', '쇼핑', '문화', '랜드마크'].map(
                 (category) => (
                   <button
                     key={category}
                     className={`categoryTag ${
-                      selectedCategory === category ? "selected" : ""
+                      selectedCategory === category ? 'selected' : ''
                     }`}
                     onClick={() => handleCategoryClick(category)}
                   >

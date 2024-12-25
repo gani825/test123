@@ -7,6 +7,7 @@ import './SignUp.css';
 import back from '../../img/icons/back.png';
 import cross from '../../img/icons/cross.png';
 
+
 const SignUp = () => {
     const navigate = useNavigate();
 
@@ -28,10 +29,12 @@ const SignUp = () => {
         navigate(-1); // 이전 페이지로 이동
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         // 비밀번호 확인
+
         if (password !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
@@ -78,6 +81,7 @@ const SignUp = () => {
 
     return (
         <div className="modal-overlay">
+
             <div className="Join-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="Join-close-button" onClick={handleClose}>
                     <img src={cross} alt="close" />
