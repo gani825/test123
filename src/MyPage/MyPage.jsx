@@ -13,6 +13,8 @@ const MyPage = () => {
     const [activeTab, setActiveTab] = useState("plans"); // 기본적으로 '나의 여행 계획' 탭 활성화
 
     const toggleOptions = (id) => {
+        console.log(id);
+        console.log(activeOptions);
         setActiveOptions((prev) => (prev === id ? null : id)); // 같은 ID 클릭 시 닫기
     };
 
@@ -33,12 +35,13 @@ const MyPage = () => {
         },
     ];
 
-    // 일단 제가 쓰려고 만들었는대 쓰려면 쓰세요
     // ⋮ 버튼 누르고 뜨는 메뉴 바깥을 눌렀을때 메뉴 사라지게
     useEffect(() => {
         const handleClickOutside = (event) => {
             // 메뉴와 버튼 영역을 제외한 바깥 클릭인지 확인
-            if (!event.target.closest(".myPage-review-options")) {
+            if (!event.target.closest(".myPage-review-options") &&
+                !event.target.closest(".options-button")) 
+            {
                 setActiveOptions(null); // 메뉴 닫기
             }
         };
@@ -270,7 +273,9 @@ const MyPage = () => {
                                         <button 
                                             className="myPage-review-options-button"
                                             onClick={() => toggleOptions(review.reviewId)}
-                                            >⋮</button>
+                                            >
+                                                ⋮
+                                            </button>
                                         {/* 옵션 메뉴가 열리면 수정 및 삭제 버튼 표시 */}
                                         {activeOptions === review.reviewId && (
                                             <div className="myPage-review-options-menu">
