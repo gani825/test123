@@ -111,6 +111,12 @@ function ViewPlan() {
         >
           계획 수정하기
         </button>
+        <button
+          className="planviewEditButton"
+          onClick={() => navigate(`/planner-list`, {})}
+        >
+          전체 계획 보기
+        </button>
       </div>
     </div>
   );
