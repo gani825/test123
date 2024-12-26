@@ -118,7 +118,7 @@ const AttractionDetail = () => {
     const fetchReviews = async (pageNumber = 0) => {
         try {
             const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
-            const response = await axios.get('http://localhost:5050/reviews/getPagedReviews', {
+            const response = await axios.get('http://localhost:5050/reviews/getReviewsWithUser', {
                 headers: { Authorization: `Bearer ${accessToken}` },
                 params: {
                     locationId,
@@ -134,7 +134,7 @@ const AttractionDetail = () => {
                     response.data._embedded?.reviewWithUserProfileDtoList || []; // 데이터가 없으면 빈 배열
 
                 // 리뷰와 사용자 프로필 데이터를 분리하여 저장
-                const reviewList = reviewWithUserProfileDtoList.map((item) => item.reivewDto);
+                const reviewList = reviewWithUserProfileDtoList.map((item) => item.reviewDto);
                 const userProfileList = reviewWithUserProfileDtoList.map((item) => item.userProfileDto);
 
                 setReviews(reviewList);
@@ -176,6 +176,12 @@ const AttractionDetail = () => {
             fetchReviews(pageNumber); // 해당 페이지 데이터 요청
         }
     };
+
+    const handleReviewSuccess = (status) => {
+      if (status === "success") {
+          fetchReviews(); // 리뷰 목록 갱신
+      }
+  };
 
 
     // Google Maps API를 로드하는 훅
@@ -331,7 +337,7 @@ const AttractionDetail = () => {
 
                 {isModalOpen && (
                     <div className="modal-backdrop">
-                        <ReviewCreateModal locationId={locationId} onClose={closeModal}/>
+                        <ReviewCreateModal locationId={locationId} onClose={closeModal} onSuccess={handleReviewSuccess} />
                     </div>
                 )}
 
