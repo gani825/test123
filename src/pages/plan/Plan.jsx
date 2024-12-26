@@ -48,32 +48,32 @@ function Plan() {
     setSelectedCity('');
   };
 
-    return (
-        <div className="choiceAll">
-            <h2 className="ChoiceTitle">떠날 여행지를 선택해보세요</h2>
-            <div className="Choice">
-                <div className="cityCards">
-                    {cities.map((city) => (
-                        <div
-                            key={city.id}
-                            className="cityCard"
-                            onClick={() => openModal(city)}
-                        >
-                            <img src={city.image} alt={city.name} className="City-img" />
-                            <span>{city.name}</span>
-                            <div className="tooltip">{city.description}</div>
-                        </div>
-                    ))}
+  return (
+      <div className="choiceAll">
+        <h2 className="ChoiceTitle">떠날 여행지를 선택해보세요</h2>
+        <div className="Choice">
+          <div className="cityCards">
+            {cities.map((city) => (
+                <div
+                    key={city.id}
+                    className="cityCard"
+                    onClick={() => openModal(city)}
+                >
+                  <img src={city.image} alt={city.name} className="City-img" />
+                  <span>{city.name}</span>
+                  <div className="tooltip">{city.description}</div>
                 </div>
-            </div>
-            <CalendarModal
-                show={showModal}
-                onClose={closeModal}
-                cityName={selectedCity.name}
-                regionId={selectedCity.id}
-            />
+            ))}
+          </div>
         </div>
-    );
+        <CalendarModal
+            show={showModal}
+            onClose={closeModal}
+            cityName={selectedCity.name}
+            regionId={selectedCity.id}
+        />
+      </div>
+  );
 }
 
 export default Plan;

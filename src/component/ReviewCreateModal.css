@@ -1,0 +1,193 @@
+/* 모달 창 중앙 배치 */
+.review-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* 정확한 중앙 정렬 */
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+
+/* 모달 창 상단영역 - 리뷰작성 글씨, X버튼튼 */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header p {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.close-button {
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+/* 모달 창 상단영역 끝 */
+
+
+/* 모달 창 메인 영역 */
+/* 제목영역, 평점영역, 코멘트영역, 이미지첨부영역 */
+.modal-main {
+  margin-top: 20px;
+  
+}
+
+.modal-main input,
+.modal-main textarea {
+  display: block;
+  width: 100%;
+  max-width: 96%; /* 적당한 최대 너비 */
+  margin: 0 auto;  /* 중앙 정렬 */
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.modal-main .rating-container,
+.modal-main .comment-container,
+.modal-main .image-container,
+.modal-main .title-container {
+  text-align: left; /* 각 컨테이너 내 텍스트 왼쪽 정렬 */
+  margin-bottom: 20px;
+}
+
+.modal-main label {
+  display: block;
+  text-align: left;
+  margin:10px 0;
+  font-weight: bold;
+  font-size: .9em;
+  padding-left: 3px;
+}
+
+.modal-main .rating-label{
+  margin:3px 0;
+}
+
+.modal-main title,
+.modal-main select,
+.modal-main textarea,
+.modal-main input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-main .stars {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.modal-main .star {
+  color: #ccc;
+}
+
+.modal-main .star.filled {
+  color: #f39c12;
+}
+
+.modal-main textarea {
+  height: 100px;
+}
+
+/* 이미지 업로드 영역을 감싸는 네모 영역 */
+.file-upload-container {
+  width: 100%;
+  margin: 0 auto; 
+  text-align: center;
+  background-color: #f0f0f0; 
+}
+
+/* "클릭하여 파일 사진 추가하기" 텍스트 스타일 */
+.file-upload-text {
+  color: black;
+  cursor: pointer;
+  font-size: 14px !important;
+  font-weight: 800;
+  margin-bottom: 10px;
+  display: inline-block; /* 인라인 블록으로 설정하여 중앙 정렬 */
+}
+
+.image-preview {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.file-upload-container label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.image-preview-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  position: relative;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: -5px;
+  right: -7px;
+  background: none;
+  border: none;
+  color: red;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;  
+}
+/* 모달 창 메인영역 끝끝 */
+
+/* 모달창 하단영역 - 저장버튼 취소버튼 */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  gap: 10px; 
+  margin-top: 20px;
+}
+ 
+.submit-button, .cancel-button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.5; 
+  flex: 1; 
+  font-weight: 800;
+  text-align: center;
+  box-sizing: border-box; 
+  height: 48px; /* 버튼 높이를 고정 */
+}
+
+
+.cancel-button {
+  background-color: #bdbdbd;
+  color: black;
+}
+
+.submit-button {
+  background-color: black;
+  color: #fff;
+}
+
+
