@@ -29,7 +29,7 @@ export const AuthContext = createContext({
 });
 
 function NavigationBar() {
-    return null;
+  return null;
 }
 
 function App() {
@@ -75,7 +75,7 @@ function App() {
               <Route path="/plan" element={<Plan />} />
               <Route path="/select-dates" element={<SelectDates />} />
               <Route path="/plan-trip" element={<PlanTrip />} />
-              <Route path="/view-plan" element={<ViewPlan />} />
+              <Route path="/view-plan/:plannerId" element={<ViewPlan />} />
               <Route path="/attractions" element={<Attractions />} />
               <Route path="/community" element={<Community />} />
               <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to="/" />} />

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useLoadScript } from "@react-google-maps/api";
-import axios from "axios";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import "./PlanTrip.css";
-import MapRenderer from "../../component/PlanTrip/MapRenderer";
-import usePlanData from "../../component/PlanTrip/usePlanData";
+import React, { useEffect, useState } from 'react';
+import { useLoadScript } from '@react-google-maps/api';
+import axios from 'axios';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import './PlanTrip.css';
+import MapRenderer from '../../component/PlanTrip/MapRenderer';
+import usePlanData from '../../component/PlanTrip/usePlanData';
 
 function EditPlan() {
   const { id } = useParams(); // URL에서 id 가져오기
   // Google Maps API 로드
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI", // API 키
+    googleMapsApiKey: 'AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI', // API 키
   });
 
   // 네비게이션과 위치 상태
@@ -19,18 +19,18 @@ function EditPlan() {
   const { cityName, regionId, startDate, endDate } = location.state || {};
 
   // 상태 변수
-  const [plannerTitle, setPlannerTitle] = useState(""); // 사용자 입력 상태
+  const [plannerTitle, setPlannerTitle] = useState(''); // 사용자 입력 상태
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false); // 플랜 저장 모달 상태
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 }); // 지도 중심
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
   const [selectedPlace, setSelectedPlace] = useState(null); // InfoWindow에서 표시할 선택된 장소
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
   const [selectedDay, setSelectedDay] = useState(null); // 선택된 Day
   const [showPlaceList, setShowPlaceList] = useState(false); // 장소 목록 표시 여부
-  const [categoryFilter, setCategoryFilter] = useState("전체"); // 필터링된 카테고리
+  const [categoryFilter, setCategoryFilter] = useState('전체'); // 필터링된 카테고리
   const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
-  const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리 저장
+  const [selectedCategory, setSelectedCategory] = useState('전체'); // 선택된 카테고리 저장
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
   // 장소 데이터 가져오기
@@ -42,10 +42,10 @@ function EditPlan() {
   );
 
   useEffect(() => {
-    console.log("Locations from usePlanData:", locations);
+    console.log('Locations from usePlanData:', locations);
     console.log(regionId);
 
-    console.log("Total pages from usePlanData:", totalPages);
+    console.log('Total pages from usePlanData:', totalPages);
   }, [locations, totalPages]);
 
   // 플래너 데이터 로드
@@ -57,7 +57,7 @@ function EditPlan() {
         );
         const plannerData = response.data;
 
-        setPlannerTitle(plannerData.plannerTitle || "");
+        setPlannerTitle(plannerData.plannerTitle || '');
 
         // 플랜 데이터를 상태로 설정
         const plans = plannerData.dailyPlans.reduce((acc, plan) => {
@@ -73,7 +73,7 @@ function EditPlan() {
           setCenter({ lat: firstPlace.latitude, lng: firstPlace.longitude });
         }
       } catch (error) {
-        console.error("플래너 데이터를 불러오는 데 실패했습니다:", error);
+        console.error('플래너 데이터를 불러오는 데 실패했습니다:', error);
       }
     };
 
@@ -107,7 +107,7 @@ function EditPlan() {
     const dates = [];
     let currentDate = new Date(startDate);
     while (currentDate <= new Date(endDate)) {
-      dates.push(new Date(currentDate).toISOString().split("T")[0]);
+      dates.push(new Date(currentDate).toISOString().split('T')[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return dates;
@@ -182,27 +182,27 @@ function EditPlan() {
     };
 
     console.log(
-      "전송할 Planner Data (Update):",
+      '전송할 Planner Data (Update):',
       JSON.stringify(UpdatePlanner, null, 2)
     );
 
     // URL 경로에서 id 제거
-    const url = "http://localhost:5050/api/planner/update";
+    const url = 'http://localhost:5050/api/planner/update';
 
     try {
       const response = await axios.put(url, UpdatePlanner);
-      console.log("서버 응답 데이터 (Update):", response.data); // 서버 응답 확인
+      console.log('서버 응답 데이터 (Update):', response.data); // 서버 응답 확인
 
-      alert("플랜이 성공적으로 수정되었습니다!");
-      navigate(`/planner-details/${id}`);
+      alert('플랜이 성공적으로 수정되었습니다!');
+      navigate(`/view-plan/${id}`);
     } catch (error) {
-      console.error("플랜 수정 실패:", error); // 에러 로그 확인
-      console.error("Axios Error Details:", {
+      console.error('플랜 수정 실패:', error); // 에러 로그 확인
+      console.error('Axios Error Details:', {
         message: error.message,
         code: error.code,
         response: error.response,
       });
-      alert("플랜 수정 중 오류가 발생했습니다.");
+      alert('플랜 수정 중 오류가 발생했습니다.');
     }
   };
 
@@ -236,7 +236,7 @@ function EditPlan() {
                   {places.map((place) => (
                     <li key={place.locationId} className="selectedPlaceCard">
                       <img
-                        src={place.placeImgUrl || "/images/placeholder.jpg"}
+                        src={place.placeImgUrl || '/images/placeholder.jpg'}
                         alt={place.locationName}
                         className="placeImage"
                       />
@@ -295,12 +295,12 @@ function EditPlan() {
             />
 
             <div className="categoryTags">
-              {["전체", "관광명소", "음식", "쇼핑", "문화", "랜드마크"].map(
+              {['전체', '관광명소', '음식', '쇼핑', '문화', '랜드마크'].map(
                 (category) => (
                   <button
                     key={category}
                     className={`categoryTag ${
-                      selectedCategory === category ? "selected" : ""
+                      selectedCategory === category ? 'selected' : ''
                     }`}
                     onClick={() => handleCategoryClick(category)}
                   >
@@ -320,7 +320,7 @@ function EditPlan() {
                 .map((place) => (
                   <li key={place.locationId} className="placeItem">
                     <img
-                      src={place.placeImgUrl || "/images/placeholder.jpg"}
+                      src={place.placeImgUrl || '/images/placeholder.jpg'}
                       alt={place.locationName}
                       className="placeImage"
                     />
@@ -328,12 +328,12 @@ function EditPlan() {
                       <div className="placeDetails">
                         <span className="placeName">{place.locationName}</span>
                         <p className="placeRating">
-                          평점: ⭐ {place.googleRating || "정보 없음"}
+                          평점: ⭐ {place.googleRating || '정보 없음'}
                         </p>
                         <p className="placeAddress">{place.formattedAddress}</p>
                         {expandedPlaceId === place.locationId && (
                           <p className="placeDescription">
-                            {place.description || "상세 설명이 없습니다."}
+                            {place.description || '상세 설명이 없습니다.'}
                           </p>
                         )}
                         <span
@@ -341,8 +341,8 @@ function EditPlan() {
                           onClick={() => toggleExpand(place.locationId)}
                         >
                           {expandedPlaceId === place.locationId
-                            ? "접기"
-                            : "더보기"}
+                            ? '접기'
+                            : '더보기'}
                         </span>
                       </div>
                       <button
