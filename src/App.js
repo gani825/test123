@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import './styles/reset.css';
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
@@ -17,6 +18,7 @@ import PlanDetails from './pages/plan/PlanDetails';
 import PlannerList from './pages/test/PlannerList';
 import EditPlan from './pages/plan/EditPlan';
 import MyPage from './MyPage/MyPage';
+import Footer from "./component/Footer";
 
 // AuthContext 생성
 export const AuthContext = createContext({
@@ -29,7 +31,7 @@ export const AuthContext = createContext({
 });
 
 function NavigationBar() {
-  return null;
+    return null;
 }
 
 function App() {
@@ -63,39 +65,39 @@ function App() {
     return (
         <div className="App">
             <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated, saveUser, clearUser }}>
-            <Router>
+                <Router>
 
                     <div className="header">
                         <MenuBar />
                         <NavigationBar /> {/* NavigationBar 추가 */}
                     </div>
-          <div className="main">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/plan" element={<Plan />} />
-              <Route path="/select-dates" element={<SelectDates />} />
-              <Route path="/plan-trip" element={<PlanTrip />} />
-              <Route path="/view-plan/:plannerId" element={<ViewPlan />} />
-              <Route path="/attractions" element={<Attractions />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to="/" />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/mypage" element={<MyPage />} /> {/* 마이페이지 라우트 추가 */}
-              <Route
-                path="/attractionDetail/:locationId"
-                element={<AttractionDetail />}
-              />                                        
-              <Route path="/planner-list" element={<PlannerList />} />
-              <Route path="/planner-details/:id" element={<PlanDetails />} />
-              <Route path="/planner/edit/:id" element={<EditPlan />} />
-                
-            </Routes>
-          </div>
-        </Router>
-      </AuthContext.Provider>
-    </div>
-  );
+                    <div className="main">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/plan" element={<Plan />} />
+                            <Route path="/select-dates" element={<SelectDates />} />
+                            <Route path="/plan-trip" element={<PlanTrip />} />
+                            <Route path="/view-plan/:plannerId" element={<ViewPlan />} />
+                            <Route path="/attractions" element={<Attractions />} />
+                            <Route path="/community" element={<Community />} />
+                            <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to="/" />} />
+                            <Route path="/signin" element={<SignIn />} />
+                            <Route path="/mypage" element={<MyPage />} /> {/* 마이페이지 라우트 추가 */}
+                            <Route
+                                path="/attractionDetail/:locationId"
+                                element={<AttractionDetail />}
+                            />
+                            <Route path="/planner-list" element={<PlannerList />} />
+                            <Route path="/planner-details/:id" element={<PlanDetails />} />
+                            <Route path="/planner/edit/:id" element={<EditPlan />} />
+
+                        </Routes>
+                    </div>
+                    <Footer />
+                </Router>
+            </AuthContext.Provider>
+        </div>
+    );
 }
 
 export default App;
-
