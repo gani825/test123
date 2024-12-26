@@ -76,7 +76,6 @@ const AttractionDetail = () => {
             },
           });
 
-          // console.log(response.data)
 
           // locationResponseDtoExcludeTag와 locationResponseDtoIncludeTag 배열 모두에 대해 km를 m 변환
           const excludeTagLocationsWithDistance = response.data.locationResponseDtoExcludeTag
@@ -110,7 +109,7 @@ const AttractionDetail = () => {
   const fetchReviews = async (pageNumber = 0) => {
     try {
       const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
-      const response = await axios.get('http://localhost:5050/reviews/getPagedReviews', {
+      const response = await axios.get('http://localhost:5050/reviews/getReviewsWithUser', {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: {
           locationId,
@@ -121,12 +120,13 @@ const AttractionDetail = () => {
         },
       });
 
+
       if (response && response.data) {
         const reviewWithUserProfileDtoList =
           response.data._embedded?.reviewWithUserProfileDtoList || []; // 데이터가 없으면 빈 배열
 
         // 리뷰와 사용자 프로필 데이터를 분리하여 저장
-        const reviewList = reviewWithUserProfileDtoList.map((item) => item.reivewDto);
+        const reviewList = reviewWithUserProfileDtoList.map((item) => item.reviewDto);
         const userProfileList = reviewWithUserProfileDtoList.map((item) => item.userProfileDto);
 
         setReviews(reviewList);
@@ -166,6 +166,14 @@ const AttractionDetail = () => {
     if (pageNumber >= 0 && pageNumber < totalPages) {
       setReviewLoading(true); // 로딩 상태로 전환
       fetchReviews(pageNumber); // 해당 페이지 데이터 요청
+    }
+  };
+
+
+  const handleCreateReviewSuccess = (status) => {
+    if(status === "success"){
+        // 수정된 리뷰 데이터 다시 불러오기 (새로고침 효과)
+        fetchReviews(currentPage);
     }
   };
 
@@ -254,7 +262,7 @@ const AttractionDetail = () => {
             ))}
           </ul>
         ) : (
-          <p>태그가 포함되지 않은 장소가 없습니다.</p>
+          <p>주위에 여행지가 없습니다.</p>
         )}
 
         {/* 태그가 포함된 근처 장소 */}
@@ -279,13 +287,13 @@ const AttractionDetail = () => {
             ))}
           </ul>
         ) : (
-          <p>태그가 포함된 장소가 없습니다.</p>
+          <p>주위에 음식점이 없습니다.</p>
         )}
       </div>
 
       {isModalOpen && (
         <div className="modal-backdrop">
-          <ReviewCreateModal locationId={locationId} onClose={closeModal} />
+          <ReviewCreateModal locationId={locationId} onClose={closeModal} onSuccess={handleCreateReviewSuccess} />
         </div>
       )}
 
