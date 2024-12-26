@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from './firebase'; // Firebase 설정 경로
+import { getDatabase, ref, set } from 'firebase/database'; // Firebase Realtime Database
 import './SignUp.css';
 import back from '../../img/icons/back.png';
 import cross from '../../img/icons/cross.png';
+
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -25,10 +29,12 @@ const SignUp = () => {
         navigate(-1); // 이전 페이지로 이동
     };
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // 비밀번호 확인
+
         if (password !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
@@ -40,13 +46,42 @@ const SignUp = () => {
             return;
         }
 
-        // 회원가입 성공 메시지 (서버 연동 없음)
-        alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        navigate('/signin');
+        try {
+            // Firebase Authentication으로 사용자 생성
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+            // 사용자 정보 업데이트 (닉네임 추가)
+            await updateProfile(userCredential.user, {
+                displayName: nickname,
+            });
+
+            // Firebase Realtime Database에 추가 데이터 저장
+            const db = getDatabase();
+            await set(ref(db, `users/${userCredential.user.uid}`), {
+                email: email,
+                nickname: nickname,
+                phoneNumber: phoneNumber,
+                createdAt: new Date().toISOString(), // 생성일시 추가
+            });
+
+            alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+            navigate('/signin');
+        } catch (error) {
+            if (error.code === 'auth/email-already-in-use') {
+                alert('이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.');
+            } else if (error.code === 'auth/invalid-email') {
+                alert('유효하지 않은 이메일 주소입니다.');
+            } else if (error.code === 'auth/weak-password') {
+                alert('비밀번호가 너무 약합니다.');
+            } else {
+                alert(`회원가입에 실패했습니다: ${error.message}`);
+            }
+        }
     };
 
     return (
         <div className="modal-overlay">
+
             <div className="Join-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="Join-close-button" onClick={handleClose}>
                     <img src={cross} alt="close" />

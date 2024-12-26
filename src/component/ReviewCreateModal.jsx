@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './ReviewCreateModal.css'
 
-const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
-  const [title,setTitle] = useState('');
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSuccess, accessToken }) => {
+  const currentMode = mode || 'create' ;
+  const [reviewId,setReviewId] = useState(initialData.reviewId || '');
+  const [title,setTitle] = useState(initialData.title || '');
+  const [rating, setRating] = useState(initialData.rating || 0);
+  const [comment, setComment] = useState(initialData.comment || '');
   const [imageUrls, setImageUrls] = useState(['', '', '']); // 최대 3개의 이미지 URL
   const [imageFiles, setImageFiles] = useState([]); // 이미지 파일 상태 추가
   
-
-
   // 이미지 파일 선택 처리
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -35,10 +35,10 @@ const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
 
 
   const handleSubmit = async () => {
-
     const accessToken = localStorage.getItem('accessToken');
 
     const reviewDto = {
+      reviewId : reviewId,
       locationId: locationId,
       title: title,
       rating: rating,
@@ -46,19 +46,43 @@ const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
     };
 
     try {
-      await axios.post('http://localhost:5050/reviews/create', reviewDto,
-        {
+
+      // 반환상태를 부모 컴포넌트로 전달할거임
+      let responseStatus = "fail"; // 기본적으로 실패 상태로 설정
+
+      if(currentMode === 'create'){
+        await axios.post('http://localhost:5050/reviews/create', reviewDto,
+          {
             headers:{
-                'Authorization': `Bearer ${accessToken}`, // accessToken 추가
+                'Authorization': `Bearer ${accessToken}`, // accessToken
                 'Content-Type': 'application/json',
             }
-        }
-      );
-      alert('리뷰가 작성되었습니다!');
+          });
+
+        alert('리뷰가 작성되었습니다!');
+        responseStatus = "success"; // 성공 시 상태 변경
+
+      } else if (currentMode === 'edit'){
+        await axios.put(`http://localhost:5050/reviews/${initialData.reviewId}/edit`, reviewDto,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`, // accessToken 
+            'Content-Type': 'application/json',
+          }
+        });
+
+        alert('리뷰가 수정되었습니다!');
+        responseStatus = "success"; // 성공 시 상태 변경
+
+      }
+
+      // 부모로 상태 전달
+      onSuccess(responseStatus);
       onClose(); // 모달 닫기
+
     } catch (error) {
       console.error('리뷰 작성 중 오류 발생:', error);
-      alert('리뷰 작성에 실패했습니다.');
+      alert('리뷰 처리에 실패했습니다.');
     }
   };
 
@@ -71,10 +95,10 @@ const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
 
   return (
     <div className="review-modal">
-        {/* 상단영역역 - 리뷰 작성 글씨, X버튼 */}
+        {/* 상단영역 - 리뷰 작성 글씨, X버튼 */}
         <div className="modal-header">
-            <p> 리뷰 작성 </p>
-            <button className="close-button" onClick={onClose}>X</button>
+          <p>{currentMode === 'create' ? '리뷰 작성' : '리뷰 수정'}</p>
+          <button className="close-button" onClick={onClose}>X</button>
         </div>
         
         {/* 메인영역 - 제목, 별점, 코멘트작성, 이미지 첨부 영역역 */}
@@ -168,7 +192,9 @@ const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
         {/* 하단영역역 - 버튼 */}
         <div className="modal-footer">
             <button onClick={onClose} className="cancel-button">취소</button>
-            <button onClick={handleSubmit} className="submit-button">저장</button>
+            <button onClick={handleSubmit} className="submit-button">
+              {currentMode === 'create' ? '저장' : '수정 완료'}
+            </button>
         </div>
       
     </div>

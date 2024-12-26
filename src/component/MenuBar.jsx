@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+
 import './MenuBar.css';
 import { AuthContext } from '../App'; // AuthContext 가져오기
 import person from '../img/icons/person.png';
 
 const MenuBar = () => {
     const navigate = useNavigate();
-    const { isAuthenticated, user, setIsAuthenticated, setUser } = useContext(AuthContext);
+    const { isAuthenticated, user, setIsAuthenticated, setUser, clearUser } = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false); // 드롭다운 상태 관리
 
     const toggleDropdown = () => {
@@ -14,8 +15,7 @@ const MenuBar = () => {
     };
 
     const handleLogout = () => {
-        setUser(null);
-        setIsAuthenticated(false);
+        clearUser();
         alert('로그아웃되었습니다.');
         navigate('/'); // 로그아웃 후 홈으로 이동
     };
