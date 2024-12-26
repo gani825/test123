@@ -1,8 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebase'; // Firebase 설정 파일 경로
-import { AuthContext } from '../../App'; // AuthContext 가져오기
 import './SignIn.css';
 import kakao from '../../img/icons/kakao.png';
 import naver from '../../img/icons/naver.png';
@@ -12,28 +9,7 @@ import cross from "../../img/icons/cross.png";
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { setUser, setIsAuthenticated } = useContext(AuthContext); // AuthContext에서 상태 업데이트 함수 가져오기
     const navigate = useNavigate();
-
-    const handleSignIn = async (e) => {
-        e.preventDefault();
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user); // 로그인된 사용자 정보 저장
-            setIsAuthenticated(true); // 로그인 상태 true로 설정
-            alert('로그인이 완료되었습니다!');
-            navigate('/'); // 로그인 성공 시 홈으로 이동
-        } catch (error) {
-            console.error('로그인 실패:', error.message);
-            if (error.code === 'auth/user-not-found') {
-                alert('등록되지 않은 이메일입니다.');
-            } else if (error.code === 'auth/wrong-password') {
-                alert('비밀번호가 틀렸습니다.');
-            } else {
-                alert(`로그인에 실패했습니다: ${error.message}`);
-            }
-        }
-    };
 
     const handleClose = () => {
         navigate('/'); // 홈으로 이동
@@ -46,7 +22,7 @@ const SignIn = () => {
                     <img src={cross} alt="close" />
                 </button>
                 <h2 className="modal-title">LOGO</h2>
-                <form onSubmit={handleSignIn}>
+                <form>
                     <h4 className="inputName">이메일</h4>
                     <input
                         type="email"

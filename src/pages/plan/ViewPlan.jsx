@@ -1,11 +1,39 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import "./ViewPlan.css";
+
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import './ViewPlan.css';
+import axios from 'axios';
 
 function ViewPlan() {
-    const location = useLocation();
+    const { plannerId } = useParams(); // URL에서 plannerId 가져오기
     const navigate = useNavigate();
-    const { dailyPlans, cityName, plannerTitle } = location.state || {};
+    const [planner, setPlanner] = useState(null); // 서버에서 불러온 플래너 데이터
+    const [loading, setLoading] = useState(true); // 로딩 상태
+
+    useEffect(() => {
+        const fetchPlannerData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:5050/api/planner/${plannerId}`
+                );
+                console.log('서버 응답 데이터:', response.data); // 서버 응답 데이터 확인
+                setPlanner(response.data); // 서버 응답 데이터 저장
+            } catch (error) {
+                console.error('플래너 데이터 불러오기 실패:', error);
+            } finally {
+                setLoading(false); // 로딩 상태 해제
+            }
+        };
+
+        fetchPlannerData();
+    }, [plannerId]);
+
+    // 로딩 중 또는 데이터가 없을 경우 처리
+    if (loading) return <p>Loading...</p>;
+    if (!planner) return <p>플래너를 찾을 수 없습니다.</p>;
+
+    // 서버에서 불러온 데이터에서 필요한 값 추출
+    const { dailyPlans, regionName: cityName, plannerTitle } = planner;
 
     if (!dailyPlans || !cityName) {
         return (
@@ -14,51 +42,54 @@ function ViewPlan() {
                 <button className="planviewBackButton" onClick={() => navigate(-1)}>
                     돌아가기
                 </button>
-
             </div>
         );
     }
 
-    // 날짜별 그룹화 (한 줄에 3개의 Day씩 나누기)
-    const dailyPlansArray = Object.entries(dailyPlans);
+    // 날짜별 그룹화 로직 (한 줄에 3개의 Day씩 나누기)
     const groupedPlans = [];
-    for (let i = 0; i < dailyPlansArray.length; i += 3) {
-        groupedPlans.push(dailyPlansArray.slice(i, i + 3));
+    for (let i = 0; i < dailyPlans.length; i += 3) {
+        groupedPlans.push(dailyPlans.slice(i, i + 3));
     }
 
     return (
         <div className="planviewContainer">
             <header className="planviewHeader">
-                <h2>{plannerTitle || "나만의 여행계획"}</h2>
+                <h2>{plannerTitle || '나만의 여행계획'}</h2>
             </header>
 
             <div className="planviewDateRange">
-                <p>2024-12-24 ~ 2024-12-26</p>
+                <p>
+                    {planner.plannerStartDate} ~ {planner.plannerEndDate}
+                </p>
             </div>
 
             {/* 그룹화된 Day들 출력 */}
             {groupedPlans.map((group, groupIndex) => (
                 <div key={groupIndex} className="planviewDaysRow">
-                    {group.map(([date, places], index) => (
-                        <div key={date} className="planviewDailyPlan">
+                    {group.map((dailyPlan, index) => (
+                        <div key={dailyPlan.planDate} className="planviewDailyPlan">
                             <div className="planviewDayHeader">
                                 <h3>{`DAY ${groupIndex * 3 + index + 1}`}</h3>
-                                <span>{date}</span>
+                                <span>{dailyPlan.planDate}</span>
                             </div>
                             <div className="planviewPlacesContainer">
-                                {places.map((place) => (
-                                    <div key={place.locationId} className="planviewPlaceCard">
-                                        <img
-                                            src={place.placeImgUrl || "/images/placeholder.jpg"}
-                                            alt={place.locationName}
-                                            className="planviewPlaceImage"
-                                        />
-                                        <div className="planviewPlaceInfo">
-                                            <h4>{place.locationName}</h4>
-                                            <p>{place.formattedAddress}</p>
+                                {/* dailyPlan.toDos가 배열인지 확인 후 렌더링 */}
+                                {(Array.isArray(dailyPlan.toDos) ? dailyPlan.toDos : []).map(
+                                    (todo) => (
+                                        <div key={todo.locationId} className="planviewPlaceCard">
+                                            <img
+                                                src={todo.placeImgUrl || '/images/placeholder.jpg'}
+                                                alt={todo.locationName}
+                                                className="planviewPlaceImage"
+                                            />
+                                            <div className="planviewPlaceInfo">
+                                                <h4>{todo.locationName}</h4>
+                                                <p>{todo.formattedAddress}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    )
+                                )}
                             </div>
                         </div>
                     ))}
@@ -69,8 +100,13 @@ function ViewPlan() {
                 <button
                     className="planviewEditButton"
                     onClick={() =>
-                        navigate("/edit-plan", {
-                            state: {dailyPlans, cityName, plannerTitle},
+                        navigate(`/planner/edit/${plannerId}`, {
+                            state: {
+                                regionId: planner.regionId,
+                                startDate: planner.plannerStartDate,
+                                endDate: planner.plannerEndDate,
+                                cityName: planner.regionName,
+                            }, // 수정 페이지로 데이터 전달
                         })
                     }
                 >
