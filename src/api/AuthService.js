@@ -32,6 +32,7 @@ export const fetchProtectedResource = async (url) => {
 // **로그인 요청**
 export const login = async (credentials) => {
     try {
+        
         const response = await axios.post('/login', {
             userEmail: credentials.userEmail,
             userPassword: credentials.userPassword,

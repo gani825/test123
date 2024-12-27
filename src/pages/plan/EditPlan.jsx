@@ -256,6 +256,7 @@ function EditPlan() {
                   )}
                 </div>
             ))}
+
             <button onClick={() => setIsSaveModalOpen(true)}>
               플랜 수정하기
             </button>

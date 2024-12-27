@@ -6,6 +6,10 @@ import './AttractionDetail.css';
 import ReviewCreateModal from '../../component/ReviewCreateModal';
 import arrowSmallLeft from "../../img/icons/arrowSmallLeft.png";
 import starColor from "../../img/icons/starColor.png";
+import star from "../../img/icons/star.png";
+import angleSmallLeft from "../../img/icons/angleSmallLeft.png";
+import angleSmallRight from "../../img/icons/angleSmallRight.png";
+
 
        
 const AttractionDetail = () => {
@@ -46,7 +50,7 @@ const AttractionDetail = () => {
     // 뒤로가기
     const navigate = useNavigate();
     const handleBackClick = () => {
-        navigate(-1); // 이전 페이지로 이동
+        navigate('/attractions'); // 이전 페이지로 이동
     };
 
 
@@ -119,6 +123,7 @@ const AttractionDetail = () => {
         try {
             const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
             const response = await axios.get('http://localhost:5050/reviews/getReviewsWithUser', {
+
                 headers: { Authorization: `Bearer ${accessToken}` },
                 params: {
                     locationId,
@@ -193,12 +198,10 @@ const AttractionDetail = () => {
     if (locationLoading) {
         return <div>Loading...</div>;
     }
-
     // 장소 상세 정보가 없을 경우
     if (!location) {
         return <div>No details available for this location.</div>;
     }
-
 
     return (
         <div className="AttractionDetail">
@@ -221,15 +224,18 @@ const AttractionDetail = () => {
                     <div className="overview-info">
                         <h2>{location.locationName}</h2>
                         <p>{'#' + location.tags.join(' #')}</p>
-                        <p>
-                            <h4>소개</h4>{location.description}
-                        </p>
-                        <p>
+                        <div className="overview-info-item">
+                            <h4>소개</h4>
+                            <p>{location.description}</p>
+                        </div>
+                        <div className="overview-info-item">
                             <h4>별점 및 리뷰</h4>
-                            <img src={starColor} alt="별 아이콘" className="star-icon" style={{width: "14px"}}/>
-                            {location.googleRating}
-                            <span>({location.userRatingsTotal} 건의 리뷰)</span>
-                        </p>
+                            <p>
+                                <img src={starColor} alt="별 아이콘" className="star-icon" style={{width: "14px"}}/>
+                                <span>{location.googleRating}</span>
+                                <span>({location.userRatingsTotal} 건의 리뷰)</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -290,20 +296,31 @@ const AttractionDetail = () => {
                                     key={nearbyLocation.locationId}
                                     className="nearby-location-item"
                                 >
-                                    <Link to={`/attractionDetail/${nearbyLocation.locationId}`} className="nearby-link">
+                                    {/*<Link to={`/attractionDetail/${nearbyLocation.locationId}`} className="nearby-link">*/}
+                                    <a
+                                        href={`/attractionDetail/${nearbyLocation.locationId}`}
+
+                                        rel="noopener noreferrer"
+                                        className="nearby-link"
+                                    >
                                         <img src={nearbyLocation.placeImgUrl} alt={nearbyLocation.locationName}/>
                                         <h4>{nearbyLocation.locationName}</h4>
                                         <p>{nearbyLocation.regionName}</p>
-                                        <p>별점 : {nearbyLocation.googleRating}</p>
-                                        <p>거리 {nearbyLocation.distanceInMeters} m</p>
-                                        <p className="description">
-                                            {nearbyLocation.description.length > 50
-                                                ? `${nearbyLocation.description.substring(0, 50)}...`
-                                                : nearbyLocation.description}
+                                        <p>
+                                            <img src={starColor} alt="별 아이콘" className="star-icon"/>
+                                            <span>{nearbyLocation.googleRating}</span>
+                                            ({nearbyLocation.userRatingsTotal})
                                         </p>
-                                    </Link>
+                                        <p>거리 {nearbyLocation.distanceInMeters} m</p>
+                                        {/*<p className="description">*/}
+                                        {/*    {nearbyLocation.description.length > 50*/}
+                                        {/*        ? `${nearbyLocation.description.substring(0, 50)}...`*/}
+                                        {/*        : nearbyLocation.description}*/}
+                                        {/*</p>*/}
+                                        {/*</Link>*/}
+                                    </a>
                                 </li>
-                            ))}
+                                ))}
                         </ul>
                     ) : (
                         <p>태그가 포함되지 않은 장소가 없습니다.</p>
@@ -319,13 +336,17 @@ const AttractionDetail = () => {
                                         <img src={nearbyLocation.placeImgUrl} alt={nearbyLocation.locationName}/>
                                         <h4>{nearbyLocation.locationName}</h4>
                                         <p>{nearbyLocation.regionName}</p>
-                                        <p>별점 : {nearbyLocation.googleRating}</p>
-                                        <p>거리 {nearbyLocation.distanceInMeters} m</p>
-                                        <p className="description">
-                                            {nearbyLocation.description.length > 50
-                                                ? `${nearbyLocation.description.substring(0, 50)}...`
-                                                : nearbyLocation.description}
+                                        <p>
+                                            <img src={starColor} alt="별 아이콘" className="star-icon"/>
+                                            <span>{nearbyLocation.googleRating}</span>
+                                            ({nearbyLocation.userRatingsTotal})
                                         </p>
+                                        <p>거리 {nearbyLocation.distanceInMeters} m</p>
+                                        {/*<p className="description">*/}
+                                        {/*    {nearbyLocation.description.length > 50*/}
+                                        {/*        ? `${nearbyLocation.description.substring(0, 50)}...`*/}
+                                        {/*        : nearbyLocation.description}*/}
+                                        {/*</p>*/}
                                     </Link>
                                 </li>
                             ))}
@@ -337,7 +358,7 @@ const AttractionDetail = () => {
 
                 {isModalOpen && (
                     <div className="modal-backdrop">
-                        <ReviewCreateModal locationId={locationId} onClose={closeModal} onSuccess={handleReviewSuccess} />
+                    <ReviewCreateModal locationId={locationId} onClose={closeModal}/>
                     </div>
                 )}
 
@@ -347,24 +368,23 @@ const AttractionDetail = () => {
                         {/* 상단 헤더 영역 */}
                         <div className="review-header">
                             {/*  총 리뷰수 */}
-                            <h3 className="review-header-title">총 리뷰 수 ({totalReviews})</h3>
-
+                            <h3 className="review-header-title">리뷰 (총 <span>{totalReviews}</span>건 )</h3>
                             <div className="review-header-actions">
                                 {/* 좌측: 정렬 옵션 */}
                                 <div className="review-header-sort">
                                     <button
-                                        className="sort-button"
+                                        className={sortCriteria === 'reviewCreatedAt' ? "sort-button active" : "sort-button"}
+                                        onClick={() => handleSort('reviewCreatedAt')}
+                                    >
+                                        {`최신순 ${sortCriteria === 'reviewCreatedAt' ? (sortDirection === 'asc' ? '△' : '▽') : ''}`}
+                                    </button>
+                                    <button
+                                        className={sortCriteria === 'rating' ? "sort-button active" : "sort-button"}
                                         onClick={() => handleSort('rating')}
                                     >
                                         {`별점순 ${sortCriteria === 'rating' ? (sortDirection === 'asc' ? '△' : '▽') : ''}`}
                                     </button>
                                     <div className="sort-divider"/>
-                                    <button
-                                        className="sort-button"
-                                        onClick={() => handleSort('reviewCreatedAt')}
-                                    >
-                                        {`최신순 ${sortCriteria === 'reviewCreatedAt' ? (sortDirection === 'asc' ? '△' : '▽') : ''}`}
-                                    </button>
                                 </div>
                                 {/* 우측: 리뷰 작성 버튼 */}
                                 <button className="review-header-button" onClick={openModal}>
@@ -389,16 +409,21 @@ const AttractionDetail = () => {
                                                 />
                                             </div>
                                             <p className="user-nickname">{userProfiles[index].userNickname}</p>
-                                            <p className="review-date">
-                                                {new Date(review.reviewCreatedAt).toLocaleDateString()}
-                                            </p>
-                                            <p className="review-rating">
-                                                {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
-                                            </p>
                                         </div>
 
                                         {/* 리뷰 내용 */}
                                         <div className="review-content">
+                                            <div className="review-rating">
+                                                {Array(5).fill(0).map((_, i) => (
+                                                    <img
+                                                        key={i}
+                                                        src={i < review.rating ? starColor : star}
+                                                        alt={i < review.rating ? "채워진 별" : "빈 별"}
+                                                        className="star-icon"
+                                                        style={{width: '14px'}}
+                                                    />
+                                                ))}
+                                            </div>
                                             <h4 className="review-title">{review.title}</h4>
                                             <p className="review-text">{review.comment}</p>
                                             {/* 리뷰 이미지 */}
@@ -407,8 +432,10 @@ const AttractionDetail = () => {
                                                     <img key={imgIndex} src={url || ""} alt={`리뷰 이미지 ${imgIndex + 1}`}/>
                                                 ))}
                                             </div>
+                                            <p className="review-date">
+                                                {new Date(review.reviewCreatedAt).toLocaleDateString()}
+                                            </p>
                                         </div>
-
                                     </div>
                                 ))
                             ) : (
@@ -423,7 +450,7 @@ const AttractionDetail = () => {
                                 disabled={currentPage === 0}
                                 onClick={() => handlePageChange(currentPage - 1)}
                             >
-                                이전
+                                <img src={angleSmallLeft} alt="이전"/>
                             </button>
 
                             {/* 앞쪽 '...' 표시 */}
@@ -438,7 +465,8 @@ const AttractionDetail = () => {
                                         key={page}
                                         className={`pagination-button ${page === currentPage ? 'active' : ''}`}
                                         onClick={() => handlePageChange(page)}
-                                        disabled={page === currentPage} // 현재 페이지 비활성화
+
+                                        // disabled={page === currentPage} // 현재 페이지 비활성화
                                     >
                                         {page + 1}
                                     </button>
@@ -453,11 +481,11 @@ const AttractionDetail = () => {
                                 disabled={currentPage === totalPages - 1}
                                 onClick={() => handlePageChange(currentPage + 1)}
                             >
-                                다음
+                                <img src={angleSmallRight} alt="다음"/>
                             </button>
                         </div>
                     </div>
-            </div>
+                </div>
             </div>
         </div>
     );

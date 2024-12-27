@@ -56,7 +56,6 @@ const Attractions = () => {
 
                 setTags(response.data); // 가져온 데이터를 상태에 저장
 
-                console.log(response);
             } catch (error) {
                 console.error('Error fetching tags:', error);
             }
@@ -112,9 +111,8 @@ const Attractions = () => {
                     // sortValue : 정렬 기준( "googleRating"와 같은 실수타입만 가능) - default googleRating기준
                     // sortDirection : 정렬 방향 ( "desc" (내림차순) 또는 "asc" (오름차순) ) - default desc기준
                 }
-
             });
-            
+
             // 서버에서 받은 응답을 처리
             if (response && response.data) {
                 setLocations(response.data.content);   //지역정보 데이터 저장
