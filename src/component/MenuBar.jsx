@@ -1,41 +1,26 @@
-import React, { useState, useContext } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import './MenuBar.css';
-import { AuthContext } from '../App'; // AuthContext 가져오기
-import person from '../img/icons/person.png';
-import Logo from '../img/MainLogo.png';
+import "./MenuBar.css";
+import { AuthContext } from "../App"; // AuthContext 가져오기
+import person from "../img/icons/person.png";
+import Logo from "../img/MainLogo.png";
 
 const MenuBar = () => {
-<<<<<<< HEAD
   const navigate = useNavigate();
-  const { isAuthenticated, user, setIsAuthenticated, setUser } =
+  const { isAuthenticated, user, setIsAuthenticated, setUser, clearUser } =
     useContext(AuthContext);
   const [isDropdownOpen, setDropdownOpen] = useState(false); // 드롭다운 상태 관리
-=======
-    const navigate = useNavigate();
-    const { isAuthenticated, user, setIsAuthenticated, setUser, clearUser } = useContext(AuthContext);
-    const [isDropdownOpen, setDropdownOpen] = useState(false); // 드롭다운 상태 관리
->>>>>>> 0e35a66b36694efa6f73ae2075c77fbdee8d04e0
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
-<<<<<<< HEAD
   const handleLogout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    alert('로그아웃되었습니다.');
-    navigate('/'); // 로그아웃 후 홈으로 이동
+    clearUser();
+    alert("로그아웃되었습니다.");
+    navigate("/"); // 로그아웃 후 홈으로 이동
   };
-=======
-    const handleLogout = () => {
-        clearUser();
-        alert('로그아웃되었습니다.');
-        navigate('/'); // 로그아웃 후 홈으로 이동
-    };
->>>>>>> 0e35a66b36694efa6f73ae2075c77fbdee8d04e0
 
   return (
     <div className="MenuBar">
@@ -45,25 +30,25 @@ const MenuBar = () => {
       <div className="navigation">
         <NavLink
           to="/"
-          className={({ isActive }) => (isActive ? 'active-link' : '')}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           홈
         </NavLink>
         <NavLink
           to="/plan"
-          className={({ isActive }) => (isActive ? 'active-link' : '')}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           여행 계획
         </NavLink>
         <NavLink
           to="/attractions"
-          className={({ isActive }) => (isActive ? 'active-link' : '')}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           관광지
         </NavLink>
         <NavLink
           to="/community"
-          className={({ isActive }) => (isActive ? 'active-link' : '')}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           커뮤니티
         </NavLink>
@@ -80,14 +65,14 @@ const MenuBar = () => {
               <div className="dropdown-menu">
                 <div
                   className="dropdown-item"
-                  onClick={() => navigate('/mypage')}
+                  onClick={() => navigate("/mypage")}
                 >
                   마이페이지
                 </div>
                 <div
                   className="dropdown-item"
                   onClick={handleLogout}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
                   로그아웃
                 </div>
@@ -97,8 +82,8 @@ const MenuBar = () => {
         ) : (
           <div
             className="login-link"
-            onClick={() => navigate('/signin')}
-            style={{ cursor: 'pointer' }}
+            onClick={() => navigate("/signin")}
+            style={{ cursor: "pointer" }}
           >
             로그인
           </div>
