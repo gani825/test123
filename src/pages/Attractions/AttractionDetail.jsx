@@ -358,7 +358,11 @@ const AttractionDetail = () => {
 
                 {isModalOpen && (
                     <div className="modal-backdrop">
-                    <ReviewCreateModal locationId={locationId} onClose={closeModal}/>
+                        <ReviewCreateModal 
+                            locationId={locationId} 
+                            onClose={closeModal} 
+                            onSuccess={handleReviewSuccess} // onSuccess 전달
+                        />
                     </div>
                 )}
 

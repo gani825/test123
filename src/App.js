@@ -1,37 +1,37 @@
-import React, { createContext, useState } from 'react';
-import './styles/reset.css';
+import React, { createContext, useState } from "react";
+import "./styles/reset.css";
 
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-import Home from './pages/Home/Home';
-import Plan from './pages/plan/Plan';
-import Attractions from './pages/Attractions/Attractions';
-import AttractionDetail from './pages/Attractions/AttractionDetail';
-import Community from './pages/community/Community';
-import SignIn from './pages/User/SignIn';
-import SignUp from './pages/User/SignUp';
-import SelectDates from './pages/plan/SelectDates';
-import PlanTrip from './pages/plan/PlanTrip';
-import MenuBar from './component/MenuBar';
-import ViewPlan from './pages/plan/ViewPlan';
-import PlanDetails from './pages/plan/PlanDetails';
-import PlannerList from './pages/test/PlannerList';
-import EditPlan from './pages/plan/EditPlan';
-import MyPage from './MyPage/MyPage';
+import Home from "./pages/Home/Home";
+import Plan from "./pages/plan/Plan";
+import Attractions from "./pages/Attractions/Attractions";
+import AttractionDetail from "./pages/Attractions/AttractionDetail";
+import Community from "./pages/community/Community";
+import SignIn from "./pages/User/SignIn";
+import SignUp from "./pages/User/SignUp";
+import SelectDates from "./pages/plan/SelectDates";
+import PlanTrip from "./pages/plan/PlanTrip";
+import MenuBar from "./component/MenuBar";
+import ViewPlan from "./pages/plan/ViewPlan";
+import PlannerList from "./pages/test/PlannerList";
+import EditPlan from "./pages/plan/EditPlan";
+import MyPage from "./MyPage/MyPage";
 import Footer from "./component/Footer";
+import FindId from "./pages/User/FindId"
 
 // AuthContext 생성
 export const AuthContext = createContext({
-    user: null,
-    setUser: () => {}, // 기본값
-    isAuthenticated: false,
-    setIsAuthenticated: () => {},
-    saveUser: () => {},
-    clearUser: () => {},
+  user: null,
+  setUser: () => {}, // 기본값
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
+  saveUser: () => {},
+  clearUser: () => {},
 });
 
 function NavigationBar() {
-    return null;
+  return null;
 }
 
 function App() {
@@ -48,27 +48,27 @@ function App() {
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
-    // 인증 여부 초기화 시 만료 시간 고려
-    const [isAuthenticated, setIsAuthenticated] = useState(() => {
-        const tokenExpiry = localStorage.getItem('accessTokenExpiry');
-        return !!localStorage.getItem('accessToken') && Date.now() < tokenExpiry;
-    });
+  // 인증 여부 초기화 시 만료 시간 고려
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const tokenExpiry = localStorage.getItem("accessTokenExpiry");
+    return !!localStorage.getItem("accessToken") && Date.now() < tokenExpiry;
+  });
 
-    const saveUser = (user) => {
-        localStorage.setItem('user', JSON.stringify(user));
-        setUser(user);
-        setIsAuthenticated(true);
-    };
+  const saveUser = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    setUser(user);
+    setIsAuthenticated(true);
+  };
 
-    const clearUser = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('accessTokenExpiry'); // 만료 시간도 삭제
-        localStorage.removeItem('userEmail'); // userEmail 삭제
-        setUser(null);
-        setIsAuthenticated(false);
-    };
+  const clearUser = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("accessTokenExpiry"); // 만료 시간도 삭제
+    localStorage.removeItem("userEmail"); // userEmail 삭제
+    setUser(null);
+    setIsAuthenticated(false);
+  };
 
     return (
         <div className="App">
@@ -94,8 +94,8 @@ function App() {
                                 element={<AttractionDetail />}
                             />
                             <Route path="/planner-list" element={<PlannerList />} />
-                            <Route path="/planner-details/:id" element={<PlanDetails />} />
                             <Route path="/planner/edit/:id" element={<EditPlan />} />
+                            <Route path="/find-id" element={<FindId/>} />
                         </Routes>
                     </div>
                     {/* 특정 페이지 Footer 렌더링 제외 */}

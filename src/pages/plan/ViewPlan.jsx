@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import './ViewPlan.css';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import "./ViewPlan.css";
+import axios from "axios";
 
 function ViewPlan() {
   const { plannerId } = useParams(); // URL에서 plannerId 가져오기
@@ -12,13 +12,24 @@ function ViewPlan() {
   useEffect(() => {
     const fetchPlannerData = async () => {
       try {
+        const token = localStorage.getItem("accessToken");
+
+        if (!token) {
+          alert("로그인이 필요합니다.");
+        }
         const response = await axios.get(
-          `http://localhost:5050/api/planner/${plannerId}`
+          `http://localhost:5050/api/planner/${plannerId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        console.log('서버 응답 데이터:', response.data); // 서버 응답 데이터 확인
+
+        console.log("서버 응답 데이터:", response.data); // 서버 응답 데이터 확인
         setPlanner(response.data); // 서버 응답 데이터 저장
       } catch (error) {
-        console.error('플래너 데이터 불러오기 실패:', error);
+        console.error("플래너 데이터 불러오기 실패:", error);
       } finally {
         setLoading(false); // 로딩 상태 해제
       }
@@ -54,7 +65,7 @@ function ViewPlan() {
   return (
     <div className="planviewContainer">
       <header className="planviewHeader">
-        <h2>{plannerTitle || '나만의 여행계획'}</h2>
+        <h2>{plannerTitle || "나만의 여행계획"}</h2>
       </header>
 
       <div className="planviewDateRange">
@@ -78,7 +89,7 @@ function ViewPlan() {
                   (todo) => (
                     <div key={todo.locationId} className="planviewPlaceCard">
                       <img
-                        src={todo.placeImgUrl || '/images/placeholder.jpg'}
+                        src={todo.placeImgUrl || "/images/placeholder.jpg"}
                         alt={todo.locationName}
                         className="planviewPlaceImage"
                       />
@@ -110,6 +121,12 @@ function ViewPlan() {
           }
         >
           계획 수정하기
+        </button>
+        <button
+          className="planviewEditButton"
+          onClick={() => navigate(`/planner-list`, {})}
+        >
+          전체 계획 보기
         </button>
       </div>
     </div>

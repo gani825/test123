@@ -1,5 +1,5 @@
 /* 모달 오버레이 */
-.SignUp .modal-overlay {
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
 }
 
 /* 모달 창 */
-.SignUp .Join-modal-content {
+.Join-modal-content {
     background: #fff;
     padding: 20px 40px;
     width: 450px;
@@ -21,7 +21,7 @@
     position: relative;
 }
 
-.SignUp .Join-close-button {
+.Join-close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -32,7 +32,7 @@
     padding-top: 8px;
 }
 
-.SignUp .SignUpInputName {
+.SignUpInputName {
     text-align: left;
     margin-top: 10px;
     margin-bottom: 5px;
@@ -40,18 +40,19 @@
 }
 
 /* 이메일 적는 칸 */
-.SignUp .signUp-email-input{
+.signUp-email-input{
     margin-bottom : 5px;
 }
 
-.SignUp .verificationCode-input{
+.verificationCode-input{
     margin : 5px 0;
 }
 
 /* 중복 확인 버튼 */
+/* 인증 번호 요청 버튼 */
 /* 인증 번호 확인 버튼 */
-.SignUp .duplicate-check-button,
-.SignUp .verify-code-button {
+.duplicate-check-button,
+.verify-code-button {
     padding: 5px 10px;
     background-color: #007bff;
     color: white;
@@ -62,9 +63,8 @@
     margin-bottom: 15px;
 }
 /* 인증 번호 요청 버튼 */
-/* 인증 초기화 (변경하기) 버튼튼 */
-.SignUp .verification-request-button,
-.SignUp .reset-verified-button{
+.verification-request-button,
+.reset-verified-button{
     padding: 5px 10px;
     background-color: #007bff;
     color: white;
@@ -76,10 +76,12 @@
 }
 
 
+
+
 /* 이메일 중복 확인인 메시지 */
 /* 인증 이메일 발송 메시지 */
-.SignUp .email-check-message,
-.SignUp .verification-status-message {
+.email-check-message,
+.verification-status-message {
     font-size: 14px;
     margin-left: 10px;
     display: inline-block;
@@ -90,37 +92,36 @@
 /* 중복 확인 버튼 */
 /* 인증 번호 요청 버튼 */
 /* 인증 번호 확인 버튼 */
-/* 변경하기 버튼튼 */
-.SignUp .duplicate-check-button:hover,
-.SignUp .verification-request-button:hover,
-.SignUp .verify-code-button:hover,
-.SignUp .reset-verified-button:hover {
+.duplicate-check-button:hover,
+.verification-request-button:hover,
+.verify-code-button:hover,
+.reset-verified-button:hover {
     background-color: #0056b3;
 }
 
 /* 인증 번호 요청 버튼 */
 /* 인증 번호 확인 버튼 */
-.SignUp .verification-request-button:disabled,
-.SignUp .verify-code-button:disabled {
+.verification-request-button:disabled,
+.verify-code-button:disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
 
 
-.SignUp .input-with-button {
+.input-with-button {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.SignUp .input-with-button input {
+.input-with-button input {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.SignUp .check-button {
+.check-button {
     margin-bottom: 15px;
     background-color: #222;
     color: white;
@@ -130,7 +131,7 @@
     cursor: pointer;
 }
 
-.SignUp .password-input {
+.password-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -138,15 +139,14 @@
 }
 
 
-.SignUp .phone-input {
+.phone-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-
-.SignUp .submit-button {
+.submit-button {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
@@ -157,13 +157,13 @@
     cursor: pointer;
 }
 
-.SignUp .check-button.disabled,
-.SignUp .submit-button.disabled {
+.check-button.disabled,
+.submit-button.disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
 
-.SignUp .Join-back-button {
+.Join-back-button {
     position: absolute;
     top: 20px;
     left: 10px;
@@ -174,7 +174,6 @@
     color: black;
 }
 
-.SignUp .Join-back-button:hover {
+.Join-back-button:hover {
     color: gray;
 }
-

@@ -3,70 +3,95 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './ReviewCreateModal.css'
 
-const ReviewCreateModal = ({ locationId, onClose, accessToken }) => {
-    const [title,setTitle] = useState('');
-    const [rating, setRating] = useState(0);
-    const [comment, setComment] = useState('');
-    const [imageUrls, setImageUrls] = useState(['', '', '']); // 최대 3개의 이미지 URL
-    const [imageFiles, setImageFiles] = useState([]); // 이미지 파일 상태 추가
+const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSuccess, accessToken }) => {
+  const currentMode = mode || 'create' ;
+  const [reviewId,setReviewId] = useState(initialData.reviewId || '');
+  const [title,setTitle] = useState(initialData.title || '');
+  const [rating, setRating] = useState(initialData.rating || 0);
+  const [comment, setComment] = useState(initialData.comment || '');
+  const [imageUrls, setImageUrls] = useState(['', '', '']); // 최대 3개의 이미지 URL
+  const [imageFiles, setImageFiles] = useState([]); // 이미지 파일 상태 추가
   
+  // 이미지 파일 선택 처리
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    const filteredFiles = files.filter((file) => {
+      if (!validImageTypes.includes(file.type)) {
+        alert(`${file.name}은(는) 허용되지 않는 파일 형식입니다.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (files.length + imageFiles.length > 3) {
+      alert('최대 3개의 이미지만 첨부할 수 있습니다.');
+      return;
+    }
+    setImageFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
+  };
 
 
-    // 이미지 파일 선택 처리
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-        const filteredFiles = files.filter((file) => {
-            if (!validImageTypes.includes(file.type)) {
-                alert(`${file.name}은(는) 허용되지 않는 파일 형식입니다.`);
-                return false;
+  const handleSubmit = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    const reviewDto = {
+      reviewId : reviewId,
+      locationId: locationId,
+      title: title,
+      rating: rating,
+      comment: comment,
+    };
+
+    try {
+
+      // 반환상태를 부모 컴포넌트로 전달할거임
+      let responseStatus = "fail"; // 기본적으로 실패 상태로 설정
+
+      if(currentMode === 'create'){
+        await axios.post('http://localhost:5050/reviews/create', reviewDto,
+          {
+            headers:{
+                'Authorization': `Bearer ${accessToken}`, // accessToken
+                'Content-Type': 'application/json',
             }
-            return true;
+          });
+
+        alert('리뷰가 작성되었습니다!');
+        responseStatus = "success"; // 성공 시 상태 변경
+
+      } else if (currentMode === 'edit'){
+        await axios.put(`http://localhost:5050/reviews/${initialData.reviewId}/edit`, reviewDto,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`, // accessToken 
+            'Content-Type': 'application/json',
+          }
         });
 
-        if (files.length + imageFiles.length > 3) {
-            alert('최대 3개의 이미지만 첨부할 수 있습니다.');
-            return;
-        }
-        setImageFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
-    };
+        alert('리뷰가 수정되었습니다!');
+        responseStatus = "success"; // 성공 시 상태 변경
 
+      }
 
+      // 부모로 상태 전달
+      onSuccess(responseStatus);
+      onClose(); // 모달 닫기
 
-    const handleSubmit = async () => {
+    } catch (error) {
+        console.error('리뷰 작성 중 오류 발생:', error?.response || error.message || error);
+      alert('리뷰 처리에 실패했습니다.');
+    }
+  };
 
-        const accessToken = localStorage.getItem('accessToken');
-
-        const reviewDto = {
-            locationId: locationId,
-            title: title,
-            rating: rating,
-            comment: comment,
-        };
-
-        try {
-            await axios.post('http://localhost:5050/reviews/create', reviewDto,
-                {
-                    headers:{
-                        'Authorization': `Bearer ${accessToken}`, // accessToken 추가
-                        'Content-Type': 'application/json',
-                    }
-                });
-                alert('리뷰가 작성되었습니다!');
-                onClose(); // 모달 닫기
-        } catch (error) {
-            console.error('리뷰 작성 중 오류 발생:', error);
-            alert('리뷰 작성에 실패했습니다.');
-        }
-    };
-
-    // 미리보기 이미지 삭제
-    const removeImage = (index) => {
-        const newImageFiles = [...imageFiles];
-        newImageFiles.splice(index, 1); // index 위치의 이미지 삭제
-        setImageFiles(newImageFiles); // 상태 업데이트
-    };
+  // 미리보기 이미지 삭제
+  const removeImage = (index) => {
+    const newImageFiles = [...imageFiles];
+    newImageFiles.splice(index, 1); // index 위치의 이미지 삭제
+    setImageFiles(newImageFiles); // 상태 업데이트
+  };
 
     return (
         <div className="reviewCreateModal">

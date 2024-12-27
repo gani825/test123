@@ -1,57 +1,62 @@
 .active-link {
-    font-weight: bold;
-    text-decoration: underline;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 .MenuBar {
-    height: 83px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #D6D6D6;
-    font-size: 19px;
+  height: 83px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 20px;
+  border-bottom: 1px solid #d6d6d6;
+  font-size: 19px;
 }
 
-.MenuBar .navigation{
-    display: flex;
-    gap: 72px;
-    margin-right: 50px;
+.MenuBar .navigation {
+  display: flex;
+  gap: 72px;
+  margin-right: 50px;
+}
+
+.MainLogo img {
+  height: 45px; /* 로고 크기 조정 */
+  width: auto; /* 비율 유지 */
 }
 
 .profile {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .profile-icon {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border-radius: 50%;
 }
 
 .dropdown-menu {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    min-width: 120px;
-    padding: 5px 0;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 120px;
+  padding: 5px 0;
 }
 
 .dropdown-item {
-    padding: 10px 15px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.2s ease;
+  padding: 10px 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
 }
 
 .dropdown-item:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
