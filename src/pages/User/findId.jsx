@@ -18,7 +18,7 @@ function FindId() {
     const handleBackToSignIn = () => {
         navigate(-1); // 이전 페이지로 이동
     };
-
+    
     return (
         <div className="modal-overlay">
             <div className="findId-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -28,7 +28,7 @@ function FindId() {
                 <button className="findId-back-button" onClick={handleBackToSignIn}>
                     <img src={back} alt="back" />
                 </button>
-                <h2 className="modal-title">아이디 찾기</h2>
+                <h2 className="modal-title">아이디 찾기..</h2>
                 {/* 여기에 원하는 내용 추가 */}
             </div>
         </div>
