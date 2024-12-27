@@ -1,4 +1,4 @@
-h2 {
+.ChoiceTitle {
     margin-top: 80px;
     text-align: center;
     font-size: 30px;
@@ -7,6 +7,7 @@ h2 {
 .Choice {
     margin: 0 auto;
     max-width: 1200px;
+    padding: 40px 0;
 }
 
 .City-img {

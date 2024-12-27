@@ -1,186 +1,248 @@
-/* styles.css */
-
-/* 전체 컨테이너 중앙 정렬 */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;  
-    justify-content: flex-start; 
-    min-height: 100vh;  
-    padding-top: 50px;  
-    text-align: center;
+.Attraction {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-items: center;  */
+    /*justify-content: flex-start;*/
+    margin: 0 auto;
+    padding: 0 40px;
+    max-width: 1280px;
+    min-height: 100vh;
   }
 
-  /* 검색창쪽 css */
-  /* 검색창 전체 컨테이이너 */
-  .search-container {
+.Attraction .title-container {
+    padding: 45px 0 30px 0;
+    border-bottom: 1px solid #aaa;
+}
+
+.Attraction .title-container h2 {
+    font-size: 30px;
+    text-align: left;
+}
+
+/* 지역버튼 및 태그버튼 */
+.Attraction h3 {
+    margin-bottom: 20px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.Attraction .button-container {
+    padding: 24px 0;
+    /*background: #DEE5EC;*/
+}
+
+.Attraction .tag-button-container, .Attraction .region-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 24px;
+}
+
+.Attraction .button {
+    background-color: #fff;
+    font-size: 18px;
+    padding: 8px 25px;
+    height: 44px;
+    border-radius: 22px;
+    border: 1px solid #d6d6d6;
+    cursor: pointer;
+    /*transition: background-color 0.3s;*/
+}
+
+.Attraction .button.selected {
+    background-color: #D8E8F2;
+    border: none;
+}
+
+.Attraction .button:disabled {
+    background-color: #bdbdbd;
+    border: none;
+    cursor: not-allowed;
+}
+
+/* 검색창쪽 css */
+/* 검색창 전체 컨테이너 */
+.Attraction .search-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    width: 100%;  
-    max-width: 800px; 
+    width: 100%;
     gap:10px;
-  }
-  /* 검색창창 */
-  .search-input {
-    padding: 10px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    width: 85%;  
-    font-size: 16px;
-  }
-  /* 지역 고르는 드롭다운 */
-  .region-select {
-    padding: 10px;
-    font-size: 16px;
-    width: 200px;  /* 드롭다운의 너비 설정 */
-  }
-   /* 검색버튼 */
-  .search-button {
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-    padding : 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  /* 태그버튼들 */
-  .button-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  /* 여기까지 검색창쪽 css */
-  
+}
 
-  /* 여행지 정보 관련 css */
-  /* 전체 여행지 컨테이너 */
-  .locations-container {
+.Attraction .search-container .result {
+    font-size: 16px;
+}
+
+.Attraction .search-container .result span {
+    font-weight: 500;
+}
+
+/* 검색창 */
+.Attraction .search-input {
+    margin-left: auto;
+    padding: 10px;
+    width: 300px;
+    border: none;
+    border-bottom: 1px solid #d6d6d6;
+    font-size: 16px;
+}
+
+.Attraction .search-input:focus {
+    outline: none;
+}
+
+/* 검색버튼 */
+.Attraction .search-button {
+    /*white-space: nowrap; !* 텍스트 줄바꿈 방지 *!*/
+    width: 50px;
+    height: 35px;
+    background: #222;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* 여행지 정보 관련 css */
+/* 전체 여행지 컨테이너 */
+.Attraction .locations-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
+}
 
-  /* 여행지 카드 컨테이너 */
-  /* 5*2로 나눴음 */
-  .card-container {
+/* 여행지 카드 컨테이너 */
+.Attraction .card-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);  /* 5개 열 */
-    gap: 20px;  /* 카드 사이의 간격 */
+    grid-template-columns: repeat(4, 1fr);  /* 4개 열 */
+    gap: 24px;  /* 카드 사이의 간격 */
     width: 100%;
     max-width: 1200px;  
     margin: 0 auto;  
     margin-bottom: 40px;  /* 카드와 페이지 정보 사이 간격 추가 */
-  }
+}
 
-  /* 각 여행지 카드 */
-  .location-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
+/* 각 여행지 카드 */
+.Attraction .location-card {
+    position: relative;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: white;
     display: flex;
     flex-direction: column;
-    height: 400px; /* 카드의 고정된 높이 */
     justify-content: space-between; /* 내용이 위쪽으로 밀리지 않게 조정 */
-  }
+    /*height: 376px; !* 카드의 고정된 높이 *!*/
+    margin-bottom: 63px;
+    background-color: #fff;
+}
 
-  /* 카드 이미지 */
-  .location-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  /* 카드 내용 */
-  .location-info {
-    padding: 15px;
+/* 좋아요 버튼 */
+.Attraction .like {
+    position: absolute;
+    top: 15px;
+    right: 12px;
+    padding-top: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 21px;
+    background: #fff;
     text-align: center;
+    cursor: pointer;
+}
+
+.Attraction .like:hover {
+    background: #F7F8F9;
+}
+
+.Attraction .like img {
+    width: 20px;
+    display: inline-block;
+}
+
+/* 카드 이미지 */
+.Attraction .location-image {
+    width: 100%;
+    height: 278px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* 카드 내용 */
+.Attraction .location-info {
+    padding-top: 8px;
     flex-grow: 1;  /* 내용이 넘칠 경우 자동으로 공간 차지 */
-  }
+}
 
-  /* 카드 제목 */
-  .location-info h3 {
+/* 카드 제목 */
+.Attraction .location-info h4 {
     font-size: 18px;
-    margin: 10px 0;
-  }
+}
 
-  /* 기타 텍스트 스타일 */
-  .location-info p {
+/* 카드 내용 */
+.Attraction .location-info p {
     font-size: 14px;
-    margin: 5px 0;
-    color: #555;
-  }
-  /* 여기까지 여행지 정보 관련 css */
+}
 
-  
-  /* 페이지 정보 관련 css */
-  .pagination {
+.Attraction .location-info .star-icon {
+    width: 14px;
+}
+
+/* 지역 */
+.Attraction .location-info p:first-of-type {
+    padding: 2px 0;
+    font-size: 16px;
+    color: #222;
+}
+
+/* 별점 */
+.Attraction .location-info p:nth-of-type(2) {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-bottom: 2px;
+    color: #939393;
+}
+
+/* 별점 점수 */
+.Attraction .location-info p:nth-of-type(2) span {
+    color: #666;
+    font-weight: 500;
+}
+
+/* 태그 */
+.Attraction .location-info p:nth-of-type(3) {
+    color: #aaa;
+}
+/**/
+
+/* 페이지 정보 관련 css */
+.Attraction .pagination {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;  /* 페이지 네비게이션과 카드 간 간격 */
+    gap: 5px;
+    margin: 40px 0 100px 0;  /* 페이지 네비게이션과 카드 간 간격 */
   }
-  
-  .pagination button {
-    padding: 5px 10px;
-    background-color: #e0e0e0;
-    border: 1px solid #ccc;
+
+.Attraction .pagination button {
+    width: 27px;
+    height: 27px;
+    background-color: #fff;
+    border: 1px solid #D9D9D9;
     cursor: pointer;
-  }
-  
-  .pagination button:hover {
-    background-color: #d1d1d1;
-  }
-  
-  .pagination button:disabled {
-    background-color: #bdbdbd;
-    cursor: not-allowed;
-  }
-  
-  .pagination button.active {
-    background-color: #4caf50;
+    font-size: 16px;
+}
+
+.Attraction .pagination button:disabled {
+    /*background-color: #D9D9D9;*/
+    /*border: none;*/
+    /*cursor: not-allowed;*/
+    display: none;
+}
+
+.Attraction .pagination button.active {
+    background-color: #222;
     color: white;
-  }
-  /* 여기까지 페이지 정보 css */
-  
-  .button {
-    background-color: #e0e0e0;
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 50px;
     border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .button.selected {
-    background-color: #4caf50;
-  }
-  
-  .button:hover {
-    background-color: #d1d1d1;
-  }
-  
-  .button.selected:hover {
-    background-color: #45a049;
-  }
-  
-  .button:disabled {
-    background-color: #bdbdbd;
-    cursor: not-allowed;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  h3, h4 {
-    margin-bottom: 20px;
-  }
-  
+}

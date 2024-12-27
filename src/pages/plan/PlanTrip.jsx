@@ -81,7 +81,8 @@ function PlanTrip() {
   // 카테고리 클릭 핸들러
   const handleCategoryClick = (category) => {
     setSelectedCategory(category); // 선택된 카테고리 상태 업데이트
-    setCategoryFilter(category); // 기존 필터 상태 업데이트
+    setCategoryFilter(category); // 필터 상태 업데이트
+    setCurrentPage(1); // 페이지 초기화
   };
 
   // 여행지 추가 버튼 클릭 시 장소 목록 표시
@@ -94,12 +95,19 @@ function PlanTrip() {
   const handleAddPlace = (place) => {
     if (!selectedDay) return; // 선택된 Day가 없으면 리턴
 
+    // selectedDay를 'Day 1', 'Day 2' 형식으로 변환
+    const dayIndex = Object.keys(dailyPlans).indexOf(selectedDay) + 1;
+    const dayLabel = `Day ${dayIndex}`;
+
+    // 알림창에 Day 형식으로 표시
+    const confirmAdd = window.confirm(`${dayLabel} 여행지를 추가하시겠습니까?`);
+    if (!confirmAdd) return; // 사용자가 취소를 누르면 추가하지 않음
+
     setDailyPlans((prev) => ({
       ...prev,
       [selectedDay]: [...(prev[selectedDay] || []), place],
     }));
     setCenter({ lat: place.latitude, lng: place.longitude });
-    // setShowPlaceList(false); // 장소를 추가한 후 목록 닫기
   };
 
   // 날짜별 장소 삭제 핸들러
@@ -121,9 +129,15 @@ function PlanTrip() {
     setSelectedPlace(null);
   };
 
+  // 플랜 저장 핸들러
   const handleSavePlan = async () => {
+    if (!plannerTitle.trim()) {
+      alert('플래너 제목을 입력해주세요.');
+      return;
+    }
+
     const plannerData = {
-      plannerTitle: plannerTitle || `${cityName} 여행 계획`, // 기본값 처리
+      plannerTitle: plannerTitle || `${cityName} 여행 계획`,
       plannerStartDate: startDate,
       plannerEndDate: endDate,
       regionName: cityName,
@@ -135,6 +149,7 @@ function PlanTrip() {
           formattedAddress: place.formattedAddress,
           latitude: place.latitude,
           longitude: place.longitude,
+          placeImgUrl: place.placeImgUrl || '/images/placeholder.jpg', // 기본 이미지 포함
         })),
       })),
     };
@@ -147,17 +162,14 @@ function PlanTrip() {
         plannerData
       );
       console.log('서버 응답 데이터:', response.data); // 서버 응답 확인
-
       const savedPlannerId = response.data;
+      console.log('플랜 저장 성공:', plannerData);
       alert('플랜이 성공적으로 저장되었습니다!');
-      navigate(`/planner-details/${savedPlannerId}`);
+
+      // ViewPlan 페이지로 이동하면서 데이터 전달
+      navigate(`/view-plan/${savedPlannerId}`);
     } catch (error) {
-      console.error('플랜 저장 실패:', error); // 에러 로그 확인
-      console.error('Axios Error Details:', {
-        message: error.message,
-        code: error.code,
-        response: error.response,
-      });
+      console.error('플랜 저장 실패:', error);
       alert('플랜 저장 중 오류가 발생했습니다.');
     } finally {
       setIsSaveModalOpen(false); // 모달 닫기
@@ -214,7 +226,12 @@ function PlanTrip() {
               )}
             </div>
           ))}
-          <button onClick={() => setIsSaveModalOpen(true)}>플랜 저장</button>
+          <button
+            className="plan-button"
+            onClick={() => setIsSaveModalOpen(true)}
+          >
+            플랜 저장
+          </button>
         </div>
         {/* 플랜 저장 모달 */}
         {isSaveModalOpen && (
@@ -223,7 +240,7 @@ function PlanTrip() {
             onClick={() => setIsSaveModalOpen(false)}
           >
             <div className="modalContent" onClick={(e) => e.stopPropagation()}>
-              <h2>플래너 제목 입력</h2>
+              <h3>플래너 제목을 입력해주세요.</h3>
               <input
                 type="text"
                 value={plannerTitle}
@@ -232,8 +249,15 @@ function PlanTrip() {
                 className="plannerTitleInput"
               />
               <div className="modalButtons">
-                <button onClick={handleSavePlan}>저장</button>
-                <button onClick={() => setIsSaveModalOpen(false)}>취소</button>
+                <button className="SaveTitleButton" onClick={handleSavePlan}>
+                  저장
+                </button>
+                <button
+                    className="SaveTitleButton"
+                  onClick={() => setIsSaveModalOpen(false)}
+                >
+                  취소
+                </button>
               </div>
             </div>
           </div>
@@ -312,10 +336,10 @@ function PlanTrip() {
                 ))}
             </ul>
 
-            <div className="loadMoreContainer">
+            <div className="plantripLoadMoreContainer">
               {currentPage < totalPages && (
                 <button
-                  className="loadMoreButton"
+                  className="plantripLoadMoreButton"
                   onClick={() => setCurrentPage((prev) => prev + 1)}
                 >
                   더보기

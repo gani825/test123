@@ -2,15 +2,23 @@ import React, { useContext, useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { AuthContext } from '../../App';
 import {handleSessionExpired, login, refreshToken} from '../../api/AuthService';
-import Register from './Register'; // 회원가입 폼 컴포넌트
+import { useNavigate } from 'react-router-dom';
+import kakao from '../../img/icons/kakao.png';
+import naver from '../../img/icons/naver.png';
+import google from '../../img/icons/google.png';
+import cross from "../../img/icons/cross.png";
+import './SignIn.css';
 
 Modal.setAppElement('#root'); // React Modal 설정
 
 function SignIn() {
     const { user, setUser, isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ userEmail: '', userPassword: '' });
-    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // 회원가입 모달 상태
     const [loginError, setLoginError] = useState(''); // 로그인 에러 상태
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
 
     // 입력 값 변경 핸들러
     const handleChange = (e) => {
@@ -77,14 +85,9 @@ function SignIn() {
 
         checkAndRestoreSession();
     }, []);
-    // 회원가입 모달 열기
-    const openRegisterModal = () => {
-        setIsRegisterModalOpen(true);
-    };
 
-    // 회원가입 모달 닫기
-    const closeRegisterModal = () => {
-        setIsRegisterModalOpen(false);
+    const handleClose = () => {
+        navigate('/'); // 홈으로 이동
     };
 
     // OAuth 로그인 핸들러 (예: Google)
@@ -93,56 +96,71 @@ function SignIn() {
     };
 
     return (
-        <div>
-            <h2>로그인</h2>
-            <form onSubmit={handleLogin}>
-                <input
-                    name="userEmail"
-                    placeholder="이메일"
-                    value={credentials.userEmail} // 상태 값 연결
-                    onChange={handleChange}
-                />
-                <input
-                    name="userPassword"
-                    type="password"
-                    placeholder="비밀번호"
-                    value={credentials.userPassword} // 상태 값 연결
-                    onChange={handleChange}
-                />
-                <button type="submit">로그인</button>
-            </form>
-
-            {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
-
-            {/* 회원가입 모달 열기 버튼 */}
-            <button onClick={openRegisterModal}>회원가입</button>
-
-            {/* OAuth 버튼 */}
-            <div>
-                <button onClick={handleOAuthLogin}>Google로 로그인</button>
-                <button onClick={() => alert('다른 OAuth 로그인 기능 추가 필요')}>
-                    Facebook로 로그인
+        <div className="SignIn">
+        <div className="modal-overlay">
+            <div className="Login-modal-content" onClick={(e) => e.stopPropagation()}>
+                <button className="close-button" onClick={handleClose}>
+                    <img src={cross} alt="close" />
                 </button>
-            </div>
+                <h2 className="modal-title">LOGO</h2>
+                <form onSubmit={handleLogin}>
+                    <h4 className="inputName">이메일</h4>
+                    <input
+                        type="email"
+                        name="userEmail"
+                        placeholder="이메일을 입력해주세요."
+                        value={credentials.userEmail}
+                        onChange={handleChange}
+                        required
+                    />
+                    <h4 className="inputName">비밀번호</h4>
+                    <input
+                        type="password"
+                        name="userPassword"
+                        placeholder="비밀번호를 입력해주세요."
+                        value={credentials.userPassword}
+                        onChange={handleChange}
+                        required
+                    />
+                    {loginError && <p className="login-error">{loginError}</p>}
+                    <button type="submit" className="submit-button">이메일로 로그인</button>
+                </form>
 
-            {/* 회원가입 모달 */}
-            <Modal
-                isOpen={isRegisterModalOpen}
-                onRequestClose={closeRegisterModal}
-                contentLabel="회원가입"
-                style={{
-                    overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-                    content: {
-                        margin: 'auto',
-                        maxWidth: '500px',
-                        borderRadius: '10px',
-                        padding: '20px',
-                    },
-                }}
-            >
-                <button onClick={closeRegisterModal}>X 닫기</button>
-                <Register />
-            </Modal>
+                <div className="login-links-container">
+                    <span className="signup-link" onClick={() => navigate('/signup')}>
+                        회원가입
+                    </span>
+                    <div className="find-links">
+                        <span className="find-id-link" onClick={() => navigate('/find-id')}>
+                            아이디 찾기
+                        </span>
+                        <span className="divider">|</span>
+                        <span className="find-password-link" onClick={() => navigate('/find-password')}>
+                            비밀번호 찾기
+                        </span>
+                    </div>
+                </div>
+
+                <div className="social-login">
+                    <div className="social-login-divider">
+                        <span className="divider-line"></span>
+                        <span className="divider-text">SNS 간편 로그인</span>
+                        <span className="divider-line"></span>
+                    </div>
+                    <div className="social-icons">
+                        <div className="kakao-box">
+                            <img src={kakao} alt="Kakao" />
+                        </div>
+                        <div className="naver-box">
+                            <img src={naver} alt="Naver" />
+                        </div>
+                        <div className="google-box">
+                            <img src={google} alt="Google" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     );
 }

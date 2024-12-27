@@ -45,6 +45,44 @@
   color: #222;
 }
 
+
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    text-align: center;
+    width: 400px;
+    height: 200px;
+}
+
+.modalButtons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.SaveTitleButton{
+    margin-right: 30px;
+}
+
+.SaveTitleButton, .CancellationButton {
+    background-color: #222;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.plannerTitleInput {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
 /* Day 헤더 스타일 */
 .dayHeader {
   display: flex;
@@ -114,17 +152,44 @@
 }
 
 .completeButton {
-  margin: 10px 0 0 10px;
-  width: 320px;
-  height: 52px;
-  padding: 10px;
-  font-size: 16px;
-  text-align: center;
-  color: #fff;
-  background-color: #222;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+    margin: 10px 0 0 10px;
+    width: 320px;
+    height: 52px;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    background-color: #222;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.plan-button {
+    margin-left: 10px;
+    width: 95%;
+    height: 52px;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    background-color: #222;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
 /* 중앙 섹션: 장소 목록 */
@@ -251,8 +316,8 @@
 }
 
 .mapContainer {
-  flex: 1; /* 지도 크기 조절 */
-  height: 100%;
+    flex: 1; /* 지도 크기 조절 */
+    height: 100%;
 }
 
 .mapContainer .fullMap {
@@ -261,21 +326,51 @@
 }
 
 .viewPlanButtonContainer {
-  position: relative; /* 부모 컨테이너 안에 배치 */
-  text-align: center; /* 가운데 정렬 */
-  margin-top: 10px; /* 지도 아래 여백 */
-  left: 590px;
+    position: relative; /* 부모 컨테이너 안에 배치 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 10px; /* 지도 아래 여백 */
+    left: 590px;
 }
 
 .viewPlanButton {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #222; /* 기본 색상 */
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #222; /* 기본 색상 */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.plantripLoadMoreContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.plantripLoadMoreButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #474747;
+    cursor: pointer;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.plantripLoadMoreButton::before,
+.plantripLoadMoreButton::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #aaa;
+    margin: 0 10px;
 }
 
 /*.viewPlanButtonContainer {*/
