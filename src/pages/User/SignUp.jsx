@@ -80,6 +80,7 @@ const SignUp = () => {
     const isFormValid = formData.userEmail && formData.userPassword && formData.userNickname && formData.userPhone;
 
     return (
+        <div className="SignUp">
         <div className="modal-overlay">
             <div className="Join-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="Join-close-button" onClick={handleClose}>
@@ -139,6 +140,7 @@ const SignUp = () => {
                     </button>
                 </form>
             </div>
+        </div>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import './styles/reset.css';
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import Home from './pages/Home/Home';
 import Plan from './pages/plan/Plan';
@@ -34,7 +34,19 @@ function NavigationBar() {
     return null;
 }
 
+function Register() {
+    return null;
+}
+
 function App() {
+    // 특정 페이지 Footer 렌더링 제외
+    const location = useLocation();
+    const shouldRenderFooter =
+        location.pathname !== '/plan-trip' &&
+        location.pathname !== '/signin' &&
+        location.pathname !== '/signup' &&
+        location.pathname !== '/planner/edit/:id';
+
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
@@ -65,7 +77,6 @@ function App() {
     return (
         <div className="App">
             <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated, saveUser, clearUser }}>
-                <Router>
 
                     <div className="header">
                         <MenuBar />
@@ -90,11 +101,12 @@ function App() {
                             <Route path="/planner-list" element={<PlannerList />} />
                             <Route path="/planner-details/:id" element={<PlanDetails />} />
                             <Route path="/planner/edit/:id" element={<EditPlan />} />
+                            <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
 
                         </Routes>
                     </div>
-                    <Footer />
-                </Router>
+                    {/* 특정 페이지 Footer 렌더링 제외 */}
+                    {shouldRenderFooter && <Footer />}
             </AuthContext.Provider>
         </div>
     );

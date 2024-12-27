@@ -96,6 +96,7 @@ function SignIn() {
     };
 
     return (
+        <div className="SignIn">
         <div className="modal-overlay">
             <div className="Login-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={handleClose}>
@@ -159,6 +160,7 @@ function SignIn() {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 /* 모달 오버레이 */
-.modal-overlay {
+.SignUp .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
 }
 
 /* 모달 창 */
-.Join-modal-content {
+.SignUp .Join-modal-content {
     background: #fff;
     padding: 20px 40px;
     width: 450px;
@@ -21,7 +21,7 @@
     position: relative;
 }
 
-.Join-close-button {
+.SignUp .Join-close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -32,27 +32,27 @@
     padding-top: 8px;
 }
 
-.SignUpInputName {
+.SignUp .SignUpInputName {
     text-align: left;
     margin-top: 10px;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.input-with-button {
+.SignUp .input-with-button {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.input-with-button input {
+.SignUp .input-with-button input {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.check-button {
+.SignUp .check-button {
     margin-bottom: 15px;
     background-color: #222;
     color: white;
@@ -62,7 +62,7 @@
     cursor: pointer;
 }
 
-.password-input {
+.SignUp .password-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -70,14 +70,14 @@
 }
 
 
-.phone-input {
+.SignUp .phone-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.submit-button {
+.SignUp .submit-button {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
@@ -88,13 +88,13 @@
     cursor: pointer;
 }
 
-.check-button.disabled,
-.submit-button.disabled {
+.SignUp .check-button.disabled,
+.SignUp .submit-button.disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
 
-.Join-back-button {
+.SignUp .Join-back-button {
     position: absolute;
     top: 20px;
     left: 10px;
@@ -105,7 +105,7 @@
     color: black;
 }
 
-.Join-back-button:hover {
+.SignUp .Join-back-button:hover {
     color: gray;
 }
 
