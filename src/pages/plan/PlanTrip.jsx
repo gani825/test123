@@ -404,12 +404,13 @@ function PlanTrip() {
             <MapRenderer
                 center={center}
                 markers={Object.values(dailyPlans)
-                    .flat() // 날짜별 장소 배열을 평탄화
-                    .map((place, index) => ({
-                      ...place,
-                      color: colors[Math.floor(index / Object.values(dailyPlans)[0].length) % colors.length], // 색상 배열 순환
-                      glyph: `${index % Object.values(dailyPlans)[0].length + 1}`, // 각 Day 내에서 순차적인 숫자
-                    }))}
+                    .flatMap((places, dayIndex) =>
+                        places.map((place, index) => ({
+                          ...place,
+                          color: colors[dayIndex % colors.length], // Day별 색상 적용
+                          glyph: `${index + 1}`, // 각 Day 내에서 1부터 시작하는 숫자
+                        }))
+                    )}
                 routes={Object.values(dailyPlans).map((places, dayIndex) => ({
                   color: colors[dayIndex % colors.length], // Day별 경로 색상
                   path: places.map((place) => ({
@@ -421,6 +422,7 @@ function PlanTrip() {
                 onMarkerClick={handleMarkerClick}
                 onCloseInfoWindow={handleCloseModal}
             />
+
           </div>
         </div>
 
