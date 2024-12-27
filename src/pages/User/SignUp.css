@@ -1,5 +1,5 @@
 /* 모달 오버레이 */
-.SignUp .modal-overlay {
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
 }
 
 /* 모달 창 */
-.SignUp .Join-modal-content {
+.Join-modal-content {
     background: #fff;
     padding: 20px 40px;
     width: 450px;
@@ -21,7 +21,7 @@
     position: relative;
 }
 
-.SignUp .Join-close-button {
+.Join-close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -32,7 +32,7 @@
     padding-top: 8px;
 }
 
-.SignUp .SignUpInputName {
+.SignUpInputName {
     text-align: left;
     margin-top: 10px;
     margin-bottom: 5px;
@@ -41,11 +41,11 @@
 
 /* 이메일 적는 칸 */
 .signUp-email-input{
-    margin-bottom : 5px;
+    margin-bottom : 10px;
 }
 
 .verificationCode-input{
-    margin : 5px 0;
+    margin : 10px 0;
 }
 
 /* 중복 확인 버튼 */
@@ -59,9 +59,15 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    /* margin-top: 5px; */
+}
+.verify-code-button{
     margin-bottom: 15px;
 }
+.duplicate-check-button{
+    margin-bottom: 10px;
+}
+
+    
 /* 인증 번호 요청 버튼 */
 .verification-request-button,
 .reset-verified-button{
@@ -71,12 +77,14 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    /* margin-top: 5px; */
+    margin-top: 5px;
     /* margin-bottom: 5px; */
 }
 
 
-
+.email-verified-message{
+    margin-bottom : 5px;
+}
 
 /* 이메일 중복 확인인 메시지 */
 /* 인증 이메일 발송 메시지 */
@@ -107,20 +115,21 @@
     cursor: not-allowed;
 }
 
+
 .input-with-button {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.SignUp .input-with-button input {
+.input-with-button input {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.SignUp .check-button {
+.check-button {
     margin-bottom: 15px;
     background-color: #222;
     color: white;
@@ -130,7 +139,7 @@
     cursor: pointer;
 }
 
-.SignUp .password-input {
+.password-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -138,14 +147,14 @@
 }
 
 
-.SignUp .phone-input {
+.phone-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.SignUp .submit-button {
+.submit-button {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
@@ -156,13 +165,13 @@
     cursor: pointer;
 }
 
-.SignUp .check-button.disabled,
-.SignUp .submit-button.disabled {
+.check-button.disabled,
+.submit-button.disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
 
-.SignUp .Join-back-button {
+.Join-back-button {
     position: absolute;
     top: 20px;
     left: 10px;
@@ -173,6 +182,6 @@
     color: black;
 }
 
-.SignUp .Join-back-button:hover {
+.Join-back-button:hover {
     color: gray;
 }

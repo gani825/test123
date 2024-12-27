@@ -58,3 +58,11 @@
     margin-bottom: 50px;
     margin: 50px 0;
 }
+
+.findpw-request-check{
+    margin-bottom: 15px;
+}
+
+.findpw-status-message{
+    margin-top: 5px;
+}

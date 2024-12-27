@@ -96,7 +96,6 @@ function SignIn() {
     };
 
     return (
-        <div className="SignIn">
         <div className="modal-overlay">
             <div className="Login-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={handleClose}>
@@ -135,7 +134,7 @@ function SignIn() {
                             아이디 찾기
                         </span>
                         <span className="divider">|</span>
-                        <span className="find-password-link" onClick={() => navigate('/find-password')}>
+                        <span className="find-password-link" onClick={() => navigate('/find-pw')}>
                             비밀번호 찾기
                         </span>
                     </div>
@@ -160,7 +159,6 @@ function SignIn() {
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }
