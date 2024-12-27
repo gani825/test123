@@ -15,7 +15,7 @@
 }
 
 /* 모달 창 */
-.FindId-modal-content {
+.FindPw-modal-content {
     background: #fff;
     padding: 20px 40px;
     width: 450px;
@@ -24,7 +24,7 @@
 }
 
 /* 닫기 버튼 */
-.FindId-close-button {
+.FindPw-close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -37,7 +37,7 @@
 }
 
 /* 뒤로 가기 버튼 */
-.FindId-back-button {
+.FindPw-back-button {
     position: absolute;
     top: 20px;
     left: 10px;
@@ -48,7 +48,7 @@
     color: black;
 }
 
-.FindId-back-button:hover {
+.FindPw-back-button:hover {
     color: gray;
 }
 

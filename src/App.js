@@ -18,7 +18,8 @@ import PlannerList from "./pages/test/PlannerList";
 import EditPlan from "./pages/plan/EditPlan";
 import MyPage from "./MyPage/MyPage";
 import Footer from "./component/Footer";
-import FindId from "./pages/User/FindId"
+import FindId from "./pages/User/FindId";
+import FindPw from "./pages/User/FindPw";
 
 // AuthContext 생성
 export const AuthContext = createContext({
@@ -100,6 +101,7 @@ function App() {
                             <Route path="/planner-list" element={<PlannerList />} />
                             <Route path="/planner/edit/:id" element={<EditPlan />} />
                             <Route path="/find-id" element={<FindId/>} />
+                            <Route path="/find-pw" element={<FindPw/>} />
                         </Routes>
                     </div>
                     {/* 특정 페이지 Footer 렌더링 제외 */}
