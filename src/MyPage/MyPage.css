@@ -360,7 +360,44 @@
     font-size: 1rem;
     color: #555;
 }
+/* 페이징 스타일링 */
+.myPage-review-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:20px 0;
+    gap: 20px;
+    font-size: 16px;
+    color: #333;
+}
+.myPage-review-pagination button {
+    background-color: #222;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
+.myPage-review-pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.myPage-review-pagination button:hover:not(:disabled) {
+    background-color: #444;
+}
+
+.myPage-review-pagination span {
+    font-size: 16px;
+    color: #666;
+}
+
+.myPage-review-pagination span strong {
+    font-weight: bold;
+}
 
   
   

@@ -335,7 +335,7 @@ const MyPage = () => {
 
                         </div>
 
-                        <div className="pagination">
+                        <div className="myPage-review-pagination">
                             <button
                             disabled={currentPage <= 0}
                             onClick={() => handlePageChange(currentPage - 1)}
