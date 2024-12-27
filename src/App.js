@@ -34,6 +34,10 @@ function NavigationBar() {
   return null;
 }
 
+function Register() {
+    return null;
+}
+
 function App() {
     // 특정 페이지 Footer 렌더링 제외
     const location = useLocation();
