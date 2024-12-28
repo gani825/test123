@@ -91,7 +91,10 @@ const SignUp = () => {
         setIsFirstRequest(false); 
 
         try {
-            await axios.post("http://localhost:5050/api/email/send", { userEmail: formData.userEmail });
+            await axios.post("http://localhost:5050/api/email/send", { 
+                userEmail: formData.userEmail,
+                mode : "verify" 
+            });
 
             setVerificationStatus("인증 이메일이 발송되었습니다.");
             setVerificationRequested(true);
@@ -207,7 +210,6 @@ const SignUp = () => {
 
 
     return (
-        <div className="SignUp">
         <div className="modal-overlay">
             <div className="Join-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="Join-close-button" onClick={handleClose}>
@@ -342,7 +344,6 @@ const SignUp = () => {
                     </button>
                 </form>
             </div>
-        </div>
         </div>
     );
 };

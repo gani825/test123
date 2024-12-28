@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import './App.css';
 import "./styles/reset.css";
 
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
@@ -18,7 +19,8 @@ import PlannerList from "./pages/test/PlannerList";
 import EditPlan from "./pages/plan/EditPlan";
 import MyPage from "./MyPage/MyPage";
 import Footer from "./component/Footer";
-import FindId from "./pages/User/FindId"
+import FindId from "./pages/User/FindId";
+import FindPw from "./pages/User/FindPw";
 
 // AuthContext 생성
 export const AuthContext = createContext({
@@ -45,7 +47,7 @@ function App() {
         location.pathname !== '/plan-trip' &&
         location.pathname !== '/signin' &&
         location.pathname !== '/signup' &&
-        location.pathname !== '/planner/edit/:id';
+        location.pathname.slice(0, 13) !== '/planner/edit';
 
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user');
@@ -76,34 +78,37 @@ function App() {
 
     return (
         <div className="App">
-            <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated, saveUser, clearUser }}>
+            <AuthContext.Provider value={{user, setUser, isAuthenticated, setIsAuthenticated, saveUser, clearUser}}>
+                <div className="wrapper">
                     <div className="header">
-                        <MenuBar />
-                        <NavigationBar /> {/* NavigationBar 추가 */}
+                        <MenuBar/>
+                        <NavigationBar/> {/* NavigationBar 추가 */}
                     </div>
                     <div className="main">
                         <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/plan" element={<Plan />} />
-                            <Route path="/select-dates" element={<SelectDates />} />
-                            <Route path="/plan-trip" element={<PlanTrip />} />
-                            <Route path="/view-plan/:plannerId" element={<ViewPlan />} />
-                            <Route path="/attractions" element={<Attractions />} />
-                            <Route path="/community" element={<Community />} />
-                            <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to="/" />} />
-                            <Route path="/signin" element={<SignIn />} />
-                            <Route path="/mypage" element={<MyPage />} /> {/* 마이페이지 라우트 추가 */}
+                            <Route path="/" element={<Home/>}/>
+                            <Route path="/plan" element={<Plan/>}/>
+                            <Route path="/select-dates" element={<SelectDates/>}/>
+                            <Route path="/plan-trip" element={<PlanTrip/>}/>
+                            <Route path="/view-plan/:plannerId" element={<ViewPlan/>}/>
+                            <Route path="/attractions" element={<Attractions/>}/>
+                            <Route path="/community" element={<Community/>}/>
+                            <Route path="/signup" element={!isAuthenticated ? <SignUp/> : <Navigate to="/"/>}/>
+                            <Route path="/signin" element={<SignIn/>}/>
+                            <Route path="/mypage" element={<MyPage/>}/> {/* 마이페이지 라우트 추가 */}
                             <Route
                                 path="/attractionDetail/:locationId"
-                                element={<AttractionDetail />}
+                                element={<AttractionDetail/>}
                             />
-                            <Route path="/planner-list" element={<PlannerList />} />
-                            <Route path="/planner/edit/:id" element={<EditPlan />} />
-                            <Route path="/find-id" element={<FindId/>} />
+                            <Route path="/planner-list" element={<PlannerList/>}/>
+                            <Route path="/planner/edit/:id" element={<EditPlan/>}/>
+                            <Route path="/find-id" element={<FindId/>}/>
+                            <Route path="/find-pw" element={<FindPw/>}/>
                         </Routes>
                     </div>
                     {/* 특정 페이지 Footer 렌더링 제외 */}
-                    {shouldRenderFooter && <Footer />}
+                    {shouldRenderFooter && <Footer/>}
+                </div>
             </AuthContext.Provider>
         </div>
     );
