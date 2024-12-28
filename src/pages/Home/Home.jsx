@@ -179,7 +179,7 @@ function Home() {
             <section className="reviews">
                 <div className="innerWrap">
                     <div className="review-title-container">
-                        <h3 className="title">사용자 리뷰</h3>
+                        <h3 className="home-title">사용자 리뷰</h3>
                         <span className="subheading">진짜 여행자들의 생생한 리뷰를 확인해 보세요.</span>
                     </div>
                     <div className="review-card-container">

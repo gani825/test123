@@ -184,6 +184,23 @@ function EditPlan() {
     setSelectedPlace(place);
   };
 
+  const colors = [
+    // 빨강 (Red)
+    '#D63131', '#E17055', '#FF7676',
+    // 주황 (Orange)
+    '#FDBC6E',
+    // 노랑 (Yellow)
+    '#FFEAA7',
+    // 초록 (Green)
+    '#00B894', '#00CEC9',
+    // 파랑 (Blue)
+    '#0984E3', '#55EFC4', '#81ECEC',
+    // 남색 (Indigo)
+    '#74B9FF',
+    // 보라 (Violet)
+    '#6C5CE7', '#A29BFE', '#EB4493', '#FD79A8',
+  ];
+
   // InfoWindow 닫기 핸들러
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -259,53 +276,56 @@ function EditPlan() {
           </div>
 
           {Object.entries(dailyPlans).map(([date, places], index) => (
-            <div key={date} className="dailyPlanContainer">
-              <div className="dayHeader">
-                <h4>Day {index + 1}</h4>
-                <span className="dateLabel">{date}</span>
+              <div key={date} className="dailyPlanContainer">
+                <div className="dayHeader">
+                  <h4>Day {index + 1}</h4>
+                  <span className="dateLabel">{date}</span>
+                </div>
+
+                <button
+                    className="addPlaceButton"
+                    onClick={() => handleShowPlaceList(date)}
+                >
+                  여행지 추가 +
+                </button>
+
+                {places.length > 0 && (
+                    <ul className="addedPlacesList">
+                      {places.map((place) => (
+                          <li key={place.locationId} className="selectedPlaceCard">
+                            <img
+                                src={place.placeImgUrl || "/images/placeholder.jpg"}
+                                alt={place.locationName}
+                                className="placeImage"
+                            />
+                            <div className="placeText">
+                              <span>{place.locationName}</span>
+                            </div>
+                            <button
+                                onClick={() =>
+                                    handleRemovePlace(date, place.locationId)
+                                }
+                            >
+                              삭제
+                            </button>
+                          </li>
+                      ))}
+                    </ul>
+                )}
               </div>
-
-              <button
-                className="addPlaceButton"
-                onClick={() => handleShowPlaceList(date)}
-              >
-                여행지 추가 +
-              </button>
-
-              {places.length > 0 && (
-                <ul className="addedPlacesList">
-                  {places.map((place) => (
-                    <li key={place.locationId} className="selectedPlaceCard">
-                      <img
-                        src={place.placeImgUrl || "/images/placeholder.jpg"}
-                        alt={place.locationName}
-                        className="placeImage"
-                      />
-                      <div className="placeText">
-                        <span>{place.locationName}</span>
-                      </div>
-                      <button
-                        onClick={() =>
-                          handleRemovePlace(date, place.locationId)
-                        }
-                      >
-                        삭제
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
           ))}
-          <button onClick={() => setIsSaveModalOpen(true)}>
+          <button className="plan-button" onClick={() => setIsSaveModalOpen(true)}>
             플랜 수정하기
+          </button>
+          <button className="cancel-button" onClick={() => navigate(-1)}>
+            수정 취소
           </button>
         </div>
         {/* 플랜 저장 모달 */}
         {isSaveModalOpen && (
-          <div
-            className="modalOverlay"
-            onClick={() => setIsSaveModalOpen(false)}
+            <div
+                className="modalOverlay"
+                onClick={() => setIsSaveModalOpen(false)}
           >
             <div className="modalContent" onClick={(e) => e.stopPropagation()}>
               <h2>플래너 제목 입력</h2>
@@ -317,8 +337,8 @@ function EditPlan() {
                 className="plannerTitleInput"
               />
               <div className="modalButtons">
-                <button onClick={handleUpdate}>저장</button>
-                <button onClick={() => setIsSaveModalOpen(false)}>취소</button>
+                <button className="SaveTitleButton" onClick={handleUpdate}>저장</button>
+                <button className="CancellationButton" onClick={() => setIsSaveModalOpen(false)}>취소</button>
               </div>
             </div>
           </div>
@@ -397,10 +417,10 @@ function EditPlan() {
                 ))}
             </ul>
 
-            <div className="loadMoreContainer">
+            <div className="planLoadMoreContainer">
               {currentPage < totalPages && (
                 <button
-                  className="loadMoreButton"
+                  className="planLoadMoreButton"
                   onClick={() => setCurrentPage((prev) => prev + 1)}
                 >
                   더보기
@@ -412,11 +432,25 @@ function EditPlan() {
 
         <div className="mapContainer">
           <MapRenderer
-            center={center}
-            markers={Object.values(dailyPlans).flat()}
-            selectedPlace={selectedPlace}
-            onMarkerClick={handleMarkerClick}
-            onCloseInfoWindow={handleCloseModal}
+              center={center}
+              markers={Object.values(dailyPlans)
+                  .flatMap((places, dayIndex) =>
+                      places.map((place, index) => ({
+                        ...place,
+                        color: colors[dayIndex % colors.length], // Day별 색상 적용
+                        glyph: `${index + 1}`, // 각 Day 내에서 1부터 시작하는 숫자
+                      }))
+                  )}
+              routes={Object.values(dailyPlans).map((places, dayIndex) => ({
+                color: colors[dayIndex % colors.length], // Day별 경로 색상
+                path: places.map((place) => ({
+                  lat: place.latitude,
+                  lng: place.longitude,
+                })),
+              }))}
+              selectedPlace={selectedPlace}
+              onMarkerClick={handleMarkerClick}
+              onCloseInfoWindow={handleCloseModal}
           />
         </div>
       </div>

@@ -110,20 +110,14 @@ function PlanTrip() {
   const handleAddPlace = (place) => {
     if (!selectedDay) return; // 선택된 Day가 없으면 리턴
 
-    // selectedDay를 'Day 1', 'Day 2' 형식으로 변환
-    const dayIndex = Object.keys(dailyPlans).indexOf(selectedDay) + 1;
-    const dayLabel = `Day ${dayIndex}`;
-
-    // 알림창에 Day 형식으로 표시
-    const confirmAdd = window.confirm(`${dayLabel} 여행지를 추가하시겠습니까?`);
-    if (!confirmAdd) return; // 사용자가 취소를 누르면 추가하지 않음
-
     setDailyPlans((prev) => ({
       ...prev,
       [selectedDay]: [...(prev[selectedDay] || []), place],
     }));
     setCenter({ lat: place.latitude, lng: place.longitude });
+    // setShowPlaceList(false); // 장소를 추가한 후 목록 닫기
   };
+
 
   // 날짜별 장소 삭제 핸들러
   const handleRemovePlace = (date, locationId) => {
@@ -413,10 +407,10 @@ function PlanTrip() {
                       ))}
                 </ul>
 
-                <div className="plantripLoadMoreContainer">
+                <div className="planLoadMoreContainer">
                   {currentPage < totalPages && (
                       <button
-                          className="plantripLoadMoreButton"
+                          className="planLoadMoreButton"
                           onClick={() => setCurrentPage((prev) => prev + 1)}
                       >
                         더보기
