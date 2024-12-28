@@ -9,7 +9,7 @@ import usePlanData from "../../component/PlanTrip/usePlanData";
 function PlanTrip() {
   // Google Maps API 로드
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyCShblMMYThZxLOVypghTgG7XRwFpCL7RI", // API 키
+    googleMapsApiKey: "AIzaSyDYcmeImkXId7f8bF5GT1N3bWEDAhnp-rM", // API 키
   });
 
   // 네비게이션과 위치 상태
