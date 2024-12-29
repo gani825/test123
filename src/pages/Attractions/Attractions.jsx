@@ -173,6 +173,107 @@ const Attractions = () => {
         handleSubmit(0); // 검색어로 첫 번째 페이지 데이터 요청
     };
 
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);  // 로그인 상태 체크
+        // 로그인 상태를 확인하는 함수
+        useEffect(() => {
+            const token = localStorage.getItem('accessToken');
+            if (token) {
+                setIsLoggedIn(true); // 토큰이 있으면 로그인 상태로 간주
+
+                // 로그인 상태일 경우 사용자 즐겨찾기 목록을 백엔드에서 받아옵니다.
+                getUserFavoriteLocations();
+            }
+        }, []);
+      
+    // 좋아요 아이콘 클릭 처리
+    const handleLikeClick = (locationId) => {
+
+        if (!isLoggedIn) {
+            // 로그인되지 않은 상태 이용불가
+            alert("로그인이 필요한 서비스입니다.");
+            return;
+        }
+
+
+        setLikedLocations((prevLikedLocations) => {
+            let newLikedLocations;
+
+            if (prevLikedLocations.includes(locationId)) {
+                // 이미 좋아요가 눌려 있다면, 좋아요 취소, 좋아요 정보 삭제
+                newLikedLocations = prevLikedLocations.filter((id) => id !== locationId);
+                deleteFavorite(locationId);
+            } else {
+                // 좋아요 추가, 좋아요 정보 저장
+                newLikedLocations = [...prevLikedLocations, locationId];
+                addFavorite(locationId)
+            }
+
+            return newLikedLocations;
+        });
+    };
+
+
+    // 사용자의 즐겨찾기 목록을 가져오는 함수
+    const getUserFavoriteLocations = async () => {
+        try {
+            const response = await axios.get("http://localhost:5050/api/locationFavorite/userFavorites", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+                params: {
+                    page: 0, // 페이징 기본값 (필요시 수정)
+                    pageSize: 100, // 페이징 기본값 (필요시 수정)
+                    sortValue: 'locationName', // 정렬 기준
+                    sortDirection: 'ASC', // 정렬 방향
+                },
+            });
+            const favoriteLocations = response.data.content.map(location => location.locationId); // 반환된 즐겨찾기 목록에서 locationId만 추출
+            setLikedLocations(favoriteLocations);
+            console.log(response);
+            console.log(favoriteLocations);            
+        } catch (error) {
+            console.error("즐겨찾기 목록 조회 실패", error);
+        }
+    };
+
+    // 좋아요 정보 저장 요청
+    const addFavorite = async (locationId) => {
+        try {
+            
+            const response = await axios.post(
+                "http://localhost:5050/api/locationFavorite/add",
+                { locationId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,  // token 사용
+                    },
+                }
+            );
+            
+        } catch (error) {
+            console.error("좋아요 추가 실패", error);
+        }
+    };
+
+    // 좋아요 정보 삭제 요청
+    const deleteFavorite = async (locationId) => {
+        try {
+            const response = await axios.delete(
+                "http://localhost:5050/api/locationFavorite/add",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,  // token 사용
+                    },
+                    data: { locationId },
+                }
+            );
+            console.log(response.data);  // 성공 메시지
+        } catch (error) {
+            console.error("좋아요 삭제 실패", error);
+        }
+    };
+
     // 페이지관련 설정
     const generatePageNumbers = () => {
         const pages = [];
@@ -193,18 +294,9 @@ const Attractions = () => {
         return pages;
     };
 
-    // 좋아요 아이콘 클릭 처리
-    const handleLikeClick = (locationId) => {
-        setLikedLocations((prevLikedLocations) => {
-            if (prevLikedLocations.includes(locationId)) {
-                // 이미 좋아요가 눌려 있다면, 좋아요 취소
-                return prevLikedLocations.filter((id) => id !== locationId);
-            } else {
-                // 좋아요 추가
-                return [...prevLikedLocations, locationId];
-            }
-        });
-    };
+
+
+
 
     return (
         <div className="Attraction">
