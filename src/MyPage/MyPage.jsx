@@ -209,6 +209,45 @@ const MyPage = () => {
         }
     };
 
+    // const toggleOptions = (id) => {
+    //     setActiveOptions((prev) => (prev === id ? null : id)); // 같은 ID 클릭 시 닫기
+    // };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                !event.target.closest(".options-menu") &&
+                !event.target.closest(".options-button")
+            ) {
+                setActiveOptions(null); // 메뉴 닫기
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, []);
+
+    const handleDeletePlan = async (plannerId) => {
+        if (window.confirm("정말로 삭제하시겠습니까?")) {
+            try {
+                await axios.delete(`http://localhost:5050/api/planner/${plannerId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                });
+                setPlans((prevPlans) =>
+                    prevPlans.filter((plan) => plan.plannerId !== plannerId)
+                );
+                alert("플랜이 삭제되었습니다.");
+            } catch (error) {
+                console.error("플랜 삭제 실패:", error);
+                alert("플랜 삭제 중 오류가 발생했습니다.");
+            }
+        }
+    };
 
     return (
         <div className="mypage-container">
@@ -272,11 +311,22 @@ const MyPage = () => {
                                             여행 일정 | {plan.plannerStartDate} ~ {plan.plannerEndDate}
                                         </p>
                                     </div>
+                                    {/* 옵션 버튼 */}
                                     <div className="options">
-                                        <button className="options-button">⋮</button>
-                                        {/* 추가 옵션 메뉴를 여기에 구현 */}
+                                        <button
+                                            className="options-button"
+                                            onClick={() => toggleOptions(plan.plannerId)}
+                                        >
+                                            ⋮
+                                        </button>
+                                        {activeOptions === plan.plannerId && ( // 해당 카드의 옵션만 표시
+                                            <div className="options-menu">
+                                                <button>공유하기</button>
+                                                <button>내용편집</button>
+                                                <button onClick={() => handleDeletePlan(plan.plannerId)}>삭제</button>
+                                            </div>
+                                        )}
                                     </div>
-
                                 </div>
                             ))}
                         </div>

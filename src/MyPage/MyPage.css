@@ -399,6 +399,36 @@
     font-weight: bold;
 }
 
+.options-menu {
+    width: 110px;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    z-index: 10;
+}
+
+.options-menu button {
+    background: none;
+    border: none;
+    color: #333;
+    padding: 8px 16px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.options-menu button:hover {
+    background-color: #f0f0f0;
+}
+
+.options-button {
+    background: none;
+    border: none;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+
   
   
   
