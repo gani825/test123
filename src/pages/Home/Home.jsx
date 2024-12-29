@@ -24,8 +24,10 @@ import 'swiper/css/pagination';
 // AOS 불러오기
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import {useNavigate} from "react-router-dom";
 
 function Home() {
+    const navigate = useNavigate();
 
     // AOS 초기화
     useEffect(() => {
@@ -173,7 +175,7 @@ function Home() {
                             <img src={map} alt="Map Placeholder" className="map-image"/>
                         </div>
                     </div>
-                    <button className="start-button">시작하기</button>
+                    <button className="start-button" onClick={() => navigate(`/plan`, {})}>시작하기</button>
                 </section>
             </div>
             <section className="reviews">
