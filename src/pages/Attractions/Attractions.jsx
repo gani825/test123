@@ -224,7 +224,7 @@ const Attractions = () => {
                 params: {
                     page: 0, // 페이징 기본값 (필요시 수정)
                     pageSize: 100, // 페이징 기본값 (필요시 수정)
-                    sortValue: 'locationName', // 정렬 기준
+                    sortValue: 'createdAt', // 정렬 기준
                     sortDirection: 'ASC', // 정렬 방향
                 },
             });
@@ -260,7 +260,7 @@ const Attractions = () => {
     const deleteFavorite = async (locationId) => {
         try {
             const response = await axios.delete(
-                "http://localhost:5050/api/locationFavorite/add",
+                "http://localhost:5050/api/locationFavorite/delete",
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,  // token 사용

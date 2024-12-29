@@ -121,6 +121,9 @@ const MyPage = () => {
         if (activeTab === "reviews") {
             fetchReviews(); // "나의 리뷰" 탭이 활성화되면 API 호출
         }
+        if(activeTab === "favorites"){
+            fetchFavoriteLocation(); // favoriteTab이 활성화되었을 때만 호출
+        }
     }, [activeTab]);
     
     // 평점을 별로 표시하는 함수
@@ -178,6 +181,33 @@ const MyPage = () => {
             }
         }
     };
+
+
+    const [favoriteLocations, setFavoriteLocations] = useState([]);
+
+    const fetchFavoriteLocation = async (pageNumber = 0) => {
+        setLoading(true);
+        try {
+            const response = await axios.get("http://localhost:5050/api/locationFavorite/userFavorites", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+                params: {
+                    page: pageNumber,
+                    pageSize: 100,
+                    sortValue: 'createdAt',
+                    sortDirection: 'ASC',
+                },
+            });
+            console.log(response);
+            setFavoriteLocations(response.data.content); // 받아온 데이터로 상태 업데이트
+        } catch (error) {
+            console.error("즐겨찾기 목록 조회 실패", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     
     
     return (
@@ -216,8 +246,13 @@ const MyPage = () => {
                 >
                     나의 리뷰 {totalReviews}
                 </button>
+                <button 
+                    className={activeTab === "favorites" ? "active" : ""}
+                    onClick={() => setActiveTab("favorites")}
+                >
+                    찜한 여행지
+                </button>
 
-                <button>찜한 여행지 1</button>
             </nav>
 
             <div className="mypage-content">
@@ -353,6 +388,29 @@ const MyPage = () => {
 
                     </>
                 )}
+
+                {activeTab === "favorites" && (
+                    <>
+                        <p>찜한 여행지 목록</p>
+                        {loading ? (
+                            <p>로딩 중...</p>
+                        ) : (
+                            favoriteLocations.map((destination) => (
+                                <div key={destination.locationId} className="favorite-destination-card">
+                                    <img src={destination.placeImgUrl} alt={destination.locationName} />
+                                    <h3>{destination.locationName}</h3>
+                                    <p>평점: {destination.googleRating} ({destination.userRatingsTotal}명 평가)</p>
+                                    <p>주소: {destination.formattedAddress}</p>
+                                    <a href={destination.website} target="_blank" rel="noopener noreferrer">
+                                        공식 웹사이트
+                                    </a>
+                                </div>
+                            ))
+                        )}
+                    </>
+                )}
+
+
             </div>
 
             {/*<section className="footer">*/}
