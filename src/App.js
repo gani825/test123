@@ -47,6 +47,8 @@ function App() {
         location.pathname !== '/plan-trip' &&
         location.pathname !== '/signin' &&
         location.pathname !== '/signup' &&
+        location.pathname !== '/find-id' &&
+        location.pathname !== '/find-pw' &&
         location.pathname.slice(0, 13) !== '/planner/edit';
 
     const [user, setUser] = useState(() => {

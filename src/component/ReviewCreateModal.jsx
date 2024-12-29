@@ -190,8 +190,8 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
 
             {/* 하단영역 - 버튼 */}
             <div className="modal-footer">
-                <button onClick={onClose} className="cancel-button">취소</button>
-                <button onClick={handleSubmit} className="submit-button">저장</button>
+                <button onClick={onClose} className="review-create-cancel-button">취소</button>
+                <button onClick={handleSubmit} className="review-create-submit-button">저장</button>
             </div>
         </div>
     );

@@ -1,16 +1,14 @@
 .active-link {
   font-weight: bold;
-  text-decoration: underline;
 }
 
 .MenuBar {
-
-  height: 83px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
   padding: 10px 20px;
+  height: 83px;
   border-bottom: 1px solid #d6d6d6;
   font-size: 19px;
 }

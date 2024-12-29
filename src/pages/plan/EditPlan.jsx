@@ -278,7 +278,40 @@ function EditPlan() {
           {Object.entries(dailyPlans).map(([date, places], index) => (
               <div key={date} className="dailyPlanContainer">
                 <div className="dayHeader">
-                  <h4>Day {index + 1}</h4>
+                  <h4 style={{display: 'flex', alignItems: 'center'}}>
+                    Day {index + 1}{' '}
+                    {/* Day 텍스트 뒤에 마커 추가 */}
+                    <span
+                        dangerouslySetInnerHTML={{
+                          __html: `
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 24 24" 
+                width="30" 
+                height="30" 
+                style="
+                  margin-left: 4px; /* Day 텍스트와 마커 간격 */
+                  position: relative; /* 마커 위치 조정 */
+                  top: 3px; /* 마커 전체를 아래로 살짝 이동 */
+                ">
+                <path 
+                <path
+         fill="${colors[index % colors.length]}"
+         d="M12 2C8.13 2 5 5.13 5 9c0 4.67 7 13 7 13s7-8.33 7-13c0-3.87-3.13-7-7-7z"
+            />
+                <text 
+                  x="12" 
+                  y="11" /* 숫자를 마커의 중심에 배치 */
+                  fill="white" 
+                  font-size="8" 
+                  font-weight="bold" 
+                  text-anchor="middle" 
+                  alignment-baseline="middle">${index + 1}</text>
+              </svg>
+            `,
+                        }}
+                    ></span>
+                  </h4>
                   <span className="dateLabel">{date}</span>
                 </div>
 
@@ -318,7 +351,7 @@ function EditPlan() {
             플랜 수정하기
           </button>
           <button className="cancel-button" onClick={() => navigate(-1)}>
-            수정 취소
+            취소하기
           </button>
         </div>
         {/* 플랜 저장 모달 */}

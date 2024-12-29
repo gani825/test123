@@ -58,8 +58,8 @@
 
 /* 문구랑 검색창 */
 .Home .section {
-    max-width: 1440px;
-    padding: 0 20px;
+    max-width: 1480px;
+    padding: 0 40px;
     margin: 0 auto;
 }
 
@@ -99,12 +99,15 @@
 
 .Home .card-container {
     display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 74px;
+    justify-content: space-between;
 }
 
-/* 카테고리 전체 */
+.Home .card-container .card {
+    width: 100%;
+}
+
+    /* 카테고리 전체 */
 
 /* 카테고리 섹션 스타일 */
 .Home .category-container {
@@ -151,7 +154,6 @@
 }
 
 /* 여행 계획 섹션 스타일 */
-
 .Home .travel-plan-container {
     margin: 40px 0;
     border: 1px solid #D6D6D6;
@@ -290,19 +292,14 @@
 
 .Home .reviews .innerWrap {
     display: flex;
-    gap: 130px;
+    gap: 120px;
     align-items: start;
-    padding: 70px 20px 0 20px;
+    padding: 70px 40px 0 40px;
     margin: 0 auto;
-    max-width: 1440px;
+    max-width: 1480px;
 }
 
-.Home .review-title-container {
-    /*position: relative;*/
-    /*top: 155px;*/
-}
-
-.Home .review-title-container .home-title {
+.Home .review-title-container .title {
     font-size: 30px;
     font-weight: bold;
     margin-top: 80px;

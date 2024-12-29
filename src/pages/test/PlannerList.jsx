@@ -34,27 +34,14 @@ const PlannerList = () => {
         );
 
         const updatedPlanners = response.data.map((planner) => {
-          const createdAt = planner.createdAt || new Date().toISOString(); // 기본값 설정
-          console.log("Planner 생성일 확인:", createdAt); // 디버깅용 로그
           return {
             ...planner,
             imageUrl: getCityImage(planner.plannerTitle),
             city: getCityCategory(planner.plannerTitle),
             days: calculateDays(planner.plannerStartDate, planner.plannerEndDate),
-            createdAtFormatted: formatDate(createdAt), // 날짜 포맷팅
-            createdAt: createdAt, // 정렬용 원본 값 추가
           };
         });
 
-        // 정렬 (플랜 생성일 기준, 최신순)
-        updatedPlanners.sort((a, b) => {
-          const dateA = new Date(a.createdAt).getTime();
-          const dateB = new Date(b.createdAt).getTime();
-          console.log("정렬 기준 날짜 확인:", { dateA, dateB });
-          return dateB - dateA; // 최신순 정렬
-        });
-
-        console.log("정렬된 플래너 데이터:", updatedPlanners); // 디버깅 로그
         setPlanners(updatedPlanners);
       } catch (err) {
         console.error("플래너 데이터를 가져오는 데 실패:", err);
@@ -86,14 +73,6 @@ const PlannerList = () => {
     const end = new Date(endDate);
     const difference = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
     return `${difference}박 ${difference + 1}일`;
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
   };
 
   const filteredPlanners =
@@ -142,7 +121,6 @@ const PlannerList = () => {
                   <h3 className="planner-card-title">{planner.plannerTitle}</h3>
                   <p>{planner.city}</p>
                   <p>{planner.days}</p>
-                  <p>플랜 생성일 | {planner.createdAtFormatted}</p>
                   <p>여행 일정 | {planner.plannerStartDate} ~ {planner.plannerEndDate}</p>
                   <button
                       className="view-button"

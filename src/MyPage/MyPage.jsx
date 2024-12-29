@@ -1,8 +1,6 @@
 import React, { useContext, useState, useEffect  } from "react";
 import { AuthContext } from "../App";
 import "./MyPage.css";
-import youtube from "../img/icons/youtube.png";
-import instagram from "../img/icons/Instagram.png";
 import axios from "axios";
 import {Link, useNavigate} from 'react-router-dom';
 import ReviewCreateModal from '../component/ReviewCreateModal';
@@ -158,7 +156,6 @@ const MyPage = () => {
                         return {
                             ...plan,
                             duration: `${days}박 ${days + 1}일`,
-                            createdAtFormatted: formatDate(plan.createdAt || new Date().toISOString()),
                         };
                     });
                     setPlans(updatedPlans); // 플래너 데이터 설정
@@ -271,7 +268,6 @@ const MyPage = () => {
                                         <h3>{plan.plannerTitle}</h3>
                                         <p>{plan.city || "알 수 없음"}</p>
                                         <p>{plan.duration}</p>
-                                        <p>플랜 생성일 | {plan.createdAtFormatted}</p>
                                         <p>
                                             여행 일정 | {plan.plannerStartDate} ~ {plan.plannerEndDate}
                                         </p>

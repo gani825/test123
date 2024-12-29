@@ -131,26 +131,20 @@ function FindPw() {
         };
 
     return (
-        <div className="modal-overlay">
-            <div className="FindPw-modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="FindPw-close-button" onClick={handleClose}>
-                    <img src={cross} alt="close" />
-                </button>
-                <button className="FindPw-back-button" onClick={handleBackToSignIn}>
-                    <img src={back} alt="back" />
-                </button>
-                <h2 className="modal-title">비밀번호 찾기</h2>
+        <div className="FindPw">
+            <div className="findpw-content" onClick={(e) => e.stopPropagation()}>
+                <h2 className="findpw-title">비밀번호 찾기</h2>
                 <form onSubmit={handleLogin}>
-                <h4 className="SignUpInputName">이메일</h4>
+                    <h4 className="findpw-input-name">이메일</h4>
                     <input
-                        className= "signUp-email-input"
+                        className="signUp-email-input"
                         type="email"
                         name="userEmail"
                         placeholder="이메일을 입력해주세요."
                         value={formData.userEmail}
                         onChange={handleChange}
                     />
-                <h4 className="SignUpInputName">전화번호</h4>
+                    <h4 className="findpw-input-name">전화번호</h4>
                     <input
                         type="text"
                         name="userPhone"
@@ -160,7 +154,7 @@ function FindPw() {
                     />
                     {!isEmailVerified && (
                         <>
-                            <div className = "findpw-request-check">
+                            <div className="findpw-request-check">
                                 <button
                                     type="button"
                                     className="verification-request-button"
@@ -176,9 +170,9 @@ function FindPw() {
                             </div>
                         </>
                     )}
-                    {isgetPassword &&(
+                    {isgetPassword && (
                         <>
-                            <h4 className="inputName">임시 비밀번호</h4>
+                            <h4 className="findpw-input-name">임시 비밀번호</h4>
                             <input
                                 type="password"
                                 name="userPassword"
@@ -190,9 +184,10 @@ function FindPw() {
                             <button type="submit" className="submit-button">지금 바로 로그인</button>
                         </>
                     )}
-
                 </form>
-
+                <button className="join-back-button" onClick={handleBackToSignIn}>
+                    로그인 하기
+                </button>
             </div>
         </div>
     );
