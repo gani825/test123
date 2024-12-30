@@ -13,14 +13,127 @@ const SignUp = () => {
         userPhone: "",
         userNickname: "",
     });
-
     const { setUser, setIsAuthenticated } = useContext(AuthContext); // React 상태 업데이트 함수
     const navigate = useNavigate();
 
+    const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태
+    const [emailChecked, setEmailChecked] = useState(false); // 중복 체크 여부
+
+    // 인증요청 및 인증완료 상태 체크    
+    const [isEmailVerified, setIsEmailVerified] = useState(false);  // 이메일 인증여부
+    const [verificationCode, setVerificationCode] = useState("");   // 인증번호
+    const [verificationRequested, setVerificationRequested] = useState(false);  // 인증 요청 여부
+    const [isRequesting, setIsRequesting] = useState(false); // 인증 요청 상태 (인증번호요청 후 응답까지의 딜레이가 있기에 해당 상태 체크)
+    const [requestTime, setRequestTime] = useState(null); // 인증 이메일 요청 시간
+    const [verificationStatus, setVerificationStatus] = useState(""); // 인증 상태 메시지
+    const [verificationCodeInput,setVerificationCodeInput] = useState(false) //인증코드 입력란 활성화 여부
+    const [isFirstRequest, setIsFirstRequest] = useState(true); // 인증요청이 처음인지 여부
+
+    // 인증이메일 재재요청 딜레이
+    useEffect(() => {
+        if (requestTime) {
+            const interval = setInterval(() => {
+                const elapsedTime = Date.now() - requestTime;
+                if (elapsedTime >= 5000) { // 5초가 경과하면 재요청 가능
+                    clearInterval(interval);
+                    setVerificationRequested(false);
+                }
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [requestTime]);
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        
+        if (name === "userEmail") {
+            setEmailChecked(false); // 이메일 변경 시 중복 체크 초기화
+            setIsEmailValid(false); // 이메일 정규식 체크 여부 초기화
+            setVerificationCode(""); // 인증 코드 초기화
+            setVerificationRequested(false); // 인증 요청 여부 초기화
+            setVerificationCodeInput(false); // 인증코드 입력란 비활성화
+            setIsEmailVerified(false); // 인증 상태 초기화
+            setIsFirstRequest(true);    // 인증코드 처음인지 여부
+            setVerificationStatus("");  // 인증메일 발송여부 메시지
+        }
     };
+    
+    const handleDuplicateCheck = async () => {
+        // email 정규표현식 
+        const emailRegex = new RegExp("^(?!\\.)[a-zA-Z0-9._%+-]{1,64}(?<!\\.)@[a-zA-Z0-9-]{1,63}(\\.[a-zA-Z]{2,})+$");
+        
+        if(!emailRegex.test(formData.userEmail)){
+            alert("이메일 형식이 아닙니다.")
+            return;
+        }
+        try {
+            const response = await axios.post("http://localhost:5050/user/duplicate-email", { userEmail: formData.userEmail });
+            const isDuplicate = response.data;
+            setIsEmailValid(isDuplicate);
+            setEmailChecked(true);
+        } catch (error) {
+            console.error("중복 체크 실패:", error.response?.data || error.message);
+            alert("중복 체크에 실패했습니다. 다시 시도해주세요.");
+        }
+    };
+
+    const handleSendVerificationEmail = async () => {
+        if (!isEmailValid) {
+            alert("이메일 중복 확인을 먼저 완료해주세요.");
+            return;
+        }
+
+
+        setIsRequesting(true);
+        setVerificationCodeInput(true);
+        setVerificationStatus("인증 메일을 보내는 중입니다...");
+        setIsFirstRequest(false); 
+
+        try {
+            await axios.post("http://localhost:5050/api/email/send", { 
+                userEmail: formData.userEmail,
+                mode : "verify" 
+            });
+
+            setVerificationStatus("인증 이메일이 발송되었습니다.");
+            setVerificationRequested(true);
+            setRequestTime(Date.now()); // 요청 시간을 현재 시간으로 설정
+            setIsRequesting(false); // 인증메일 전송 완료
+
+        } catch (error) {
+            console.error("이메일 인증 요청 실패:", error.response?.data || error.message);
+            alert("인증 요청에 실패했습니다. 다시 시도해주세요.");
+            setIsRequesting(false); // 오류 발생 시 요청 상태 종료
+        }
+    };
+
+    const handleVerifyCode = async () => {
+        try {
+            const response = await axios.post("http://localhost:5050/api/email/verify", {
+                userEmail: formData.userEmail,
+                code: verificationCode,
+            });
+            if (response.data === "인증에 성공했습니다.") {
+                alert("이메일 인증에 성공했습니다.");
+                setIsEmailVerified(true);
+            } else {
+                alert("인증 코드가 올바르지 않습니다.");
+            }
+        } catch (error) {
+            console.error("인증 코드 검증 실패:", error.response?.data || error.message);
+            alert("인증 코드 검증에 실패했습니다. 다시 시도해주세요.");
+        }
+    };
+    
+    const handleResetVerified = () => {
+        setIsEmailVerified(false);
+        setFormData({
+            ...formData,
+            userEmail: "",  // 이메일을 초기화하여 사용자가 다시 입력할 수 있도록 함
+        });
+    }
+
 
     const handleClose = () => {
         navigate('/'); // 홈페이지로 이동
@@ -30,10 +143,21 @@ const SignUp = () => {
         navigate(-1); // 이전 페이지로 이동
     };
 
-    const [emailMessage, setEmailMessage] = useState(""); // 이메일 중복 확인 메시지 상태
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+
+        // 이메일 중복 체크여부 확인
+        if (!emailChecked || !isEmailValid) {
+            alert("이메일 중복 확인을 완료해주세요.");
+            return;
+        }
+
+        if (!isEmailVerified) {
+            alert("이메일 인증을 완료해주세요.");
+            return;
+        }
 
         // 비밀번호 확인
         if (formData.userPassword !== formData.userPasswordConfirm) {
@@ -81,94 +205,9 @@ const SignUp = () => {
     };
 
     const isFormValid = formData.userEmail && formData.userPassword && formData.userNickname && formData.userPhone;
-    const [isEmailDuplicate, setIsEmailDuplicate] = useState(false); // 이메일 중복 여부 상태
 
 
-    // 이메일 중복확인 요청
-    const checkEmailDuplicate = async () => {
 
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(formData.userEmail)) { // 이메일 형식 체크
-            setEmailMessage("이메일 형식이 아닙니다.");
-            return; // 형식이 올바르지 않으면 함수 종료
-        }
-
-        try {
-            const response = await axios.post(`http://localhost:5050/user/duplicate-email`, { userEmail: formData.userEmail });
-            setIsEmailDuplicate(response.data); // 중복 여부에 따라 상태 업데이트
-            if (response.data) {
-                setEmailMessage("사용 가능한 이메일입니다.");
-            } else {
-                setEmailMessage("이메일이 이미 존재합니다.");
-            }
-        } catch (error) {
-            console.error("이메일 중복 확인 실패:", error.response?.data || error.message);
-            alert("이메일 중복 확인에 실패했습니다.");
-        }
-    };
-
-    const [isEmailSent, setIsEmailSent] = useState(false); // 인증 이메일 전송 여부 상태
-    const [emailSentTime, setEmailSentTime] = useState(null); // 이메일 발송 시간 상태
-    const [isVerificationInputVisible, setIsVerificationInputVisible] = useState(false); // 인증 번호 입력 칸 표시 여부
-
-    // 이메일 인증 요청 보내기
-    const sendVerificationEmail = async (email) => {
-
-        // 인증 이메일 재전송 제한 시간 설정 (현재 10초)
-        const now = new Date().getTime();
-        if (isEmailSent && emailSentTime && now - emailSentTime < 10 * 1000) {
-            alert("인증 이메일을 너무 자주 요청했습니다. 잠시 후 다시 시도해주세요.");
-            return;
-        }
-
-        // 이메일 발송 시점에 바로 요청을 보내고, 재전송을 차단
-        setIsEmailSent(true); // 이메일 발송 요청 중 상태로 변경
-        setEmailMessage("인증 이메일 발송 중... 발송에는 최대 30초정도 소요될 수 있습니다.");
-
-        try {
-            const response = await axios.post("http://localhost:5050/api/email/send", { userEmail: email });
-            alert(response.data); // 인증 이메일 발송 메시지
-            setEmailMessage("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요.");
-            setEmailSentTime(now); // 이메일 발송 시간 기록
-            // setIsEmailSent(true);  // 상태 업데이트 후 UI 갱신
-            setIsVerificationInputVisible(true); // 인증번호 입력 칸 표시
-        
-        } catch (error) {
-            console.error("인증 이메일 발송 실패:", error.response?.data || error.message);
-            alert("인증 이메일 발송에 실패했습니다.");
-        }
-    };
-
-        // 인증 코드 입력 핸들러
-    const handleVerificationCodeChange = (e) => {
-        setVerificationCode(e.target.value);
-    };
-
-    useEffect(() => {
-        console.log("userEffect로 isEmailSent상태 확인 : "+isEmailSent);
-    }, [isEmailSent]); // isEmailSent 상태가 변경될 때마다 실행
-
-    // 인증 확인 요청
-    const handleVerifyCode = async () => {
-        try {
-            const response = await axios.post("http://localhost:5050/api/email/verify", {
-                userEmail: formData.userEmail,
-                code: verificationCode,
-            });
-            if (response.data === "인증에 성공했습니다.") {
-                setIsVerified(true);
-                alert("인증에 성공했습니다!");
-            } else {
-                alert("인증에 실패했습니다. 다시 시도해 주세요.");
-            }
-        } catch (error) {
-            console.error("인증 확인 실패:", error.response?.data || error.message);
-            alert("인증 확인에 실패했습니다.");
-        }
-    };
-
-    const [verificationCode, setVerificationCode] = useState(""); // 인증 코드 상태
-    const [isVerified, setIsVerified] = useState(false); // 인증 상태
 
     return (
         <div className="modal-overlay">
@@ -183,39 +222,87 @@ const SignUp = () => {
                 <form onSubmit={handleSubmit}>
                     <h4 className="SignUpInputName">이메일</h4>
                     <input
+                        className= "signUp-email-input"
                         type="email"
                         name="userEmail"
                         placeholder="이메일을 입력해주세요."
                         value={formData.userEmail}
                         onChange={handleChange}
+                        disabled={isEmailVerified}
                     />
-                    <button type="button" onClick={checkEmailDuplicate}>중복 확인</button>
-                    {/* 중복 확인 메시지 출력 */}
-                    {emailMessage && <p className="email-message">{emailMessage}</p>}
 
-                    {/* 인증 번호 요청 버튼 */}
-                    {isEmailDuplicate && !isEmailSent && emailMessage === "사용 가능한 이메일입니다." && (
-                        <div>
-                            <button type="button" onClick={() => sendVerificationEmail(formData.userEmail)}>
-                                인증번호 요청
+                    {!isEmailVerified && (
+                        <>
+                            <div className = "duplicate-check">
+                                <button
+                                    type="button"
+                                    className="duplicate-check-button"
+                                    onClick={handleDuplicateCheck}
+                                >
+                                    중복 확인
+                                </button>
+                                {emailChecked && (
+                                    <p className={`email-check-message ${isEmailValid ? "valid" : "invalid"}`}>
+                                        {isEmailValid ? "사용 가능한 이메일입니다." : "이미 사용 중인 이메일입니다."}
+                                    </p>
+                                )}
+                            </div>
+                            <div className = "request-check">
+                                {emailChecked && (
+                                    <button
+                                        type="button"
+                                        className="verification-request-button"
+                                        onClick={handleSendVerificationEmail}
+                                        disabled={!isEmailValid || verificationRequested || isRequesting}
+                                    >
+                                        {!isFirstRequest ? "다시 요청하기" : "인증번호 요청"}
+                                    </button>
+                                )}
+
+                                {verificationStatus && (
+                                    <p className="verification-status-message">{verificationStatus}</p>
+                                )}
+                            </div>
+
+                            <div className = "verification-check">
+                                {verificationCodeInput && (
+                                    <>
+                                        <input
+                                            type="text"
+                                            className = "verificationCode-input"
+                                            name="verificationCode"
+                                            placeholder="인증 코드를 입력해주세요."
+                                            value={verificationCode}
+                                            onChange={(e) => setVerificationCode(e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="verify-code-button"
+                                            onClick={handleVerifyCode}
+                                            disabled={isEmailVerified}
+                                        >
+                                            인증 확인
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </>
+                    )}
+
+
+                    {isEmailVerified && (
+                        <>
+                            <p className="email-verified-message">이메일 인증이 완료되었습니다.</p>
+                            <button 
+                                type="button"
+                                className="reset-verified-button"
+                                onClick={handleResetVerified}
+                            >
+                                변경하기
                             </button>
-                        </div>
+                        </>
                     )}
-
-                    {/* 인증 번호 입력 폼 */}
-                    {!isVerified && isEmailSent && emailMessage && isVerificationInputVisible === "사용 가능한 이메일입니다." &&  (
-                        <div>
-                            <h4>이메일로 발송된 인증 번호를 입력해주세요.</h4>
-                            <input
-                                type="text"
-                                value={verificationCode}
-                                onChange={handleVerificationCodeChange}
-                                placeholder="인증 번호"
-                            />
-                            <button type="button" onClick={handleVerifyCode}>인증 확인</button> 
-                        </div>
-                    )}
-
+                    
                     <h4 className="SignUpInputName">닉네임</h4>
                     <input
                         type="text"

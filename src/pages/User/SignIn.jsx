@@ -134,7 +134,7 @@ function SignIn() {
                             아이디 찾기
                         </span>
                         <span className="divider">|</span>
-                        <span className="find-password-link" onClick={() => navigate('/find-password')}>
+                        <span className="find-password-link" onClick={() => navigate('/find-pw')}>
                             비밀번호 찾기
                         </span>
                     </div>

@@ -4,6 +4,7 @@
 }
 
 .MenuBar {
+
   height: 83px;
   display: flex;
   justify-content: space-between;
@@ -23,6 +24,11 @@
 .MainLogo img {
   height: 45px; /* 로고 크기 조정 */
   width: auto; /* 비율 유지 */
+}
+
+.MainLogo img {
+    height: 45px; /* 로고 크기 조정 */
+    width: auto; /* 비율 유지 */
 }
 
 .profile {

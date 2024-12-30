@@ -39,6 +39,83 @@
     font-weight: bold;
 }
 
+/* 이메일 적는 칸 */
+.signUp-email-input{
+    margin-bottom : 10px;
+}
+
+.verificationCode-input{
+    margin : 10px 0;
+}
+
+/* 중복 확인 버튼 */
+/* 인증 번호 요청 버튼 */
+/* 인증 번호 확인 버튼 */
+.duplicate-check-button,
+.verify-code-button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.verify-code-button{
+    margin-bottom: 15px;
+}
+.duplicate-check-button{
+    margin-bottom: 10px;
+}
+
+    
+/* 인증 번호 요청 버튼 */
+.verification-request-button,
+.reset-verified-button{
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    /* margin-bottom: 5px; */
+}
+
+
+.email-verified-message{
+    margin-bottom : 5px;
+}
+
+/* 이메일 중복 확인인 메시지 */
+/* 인증 이메일 발송 메시지 */
+.email-check-message,
+.verification-status-message {
+    font-size: 14px;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom : 4px;
+}
+
+/* 중복 확인 버튼 */
+/* 인증 번호 요청 버튼 */
+/* 인증 번호 확인 버튼 */
+.duplicate-check-button:hover,
+.verification-request-button:hover,
+.verify-code-button:hover,
+.reset-verified-button:hover {
+    background-color: #0056b3;
+}
+
+/* 인증 번호 요청 버튼 */
+/* 인증 번호 확인 버튼 */
+.verification-request-button:disabled,
+.verify-code-button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+
 .input-with-button {
     display: flex;
     gap: 10px;
@@ -108,4 +185,3 @@
 .Join-back-button:hover {
     color: gray;
 }
-
