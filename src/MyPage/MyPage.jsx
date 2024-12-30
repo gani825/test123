@@ -7,6 +7,7 @@ import ReviewCreateModal from '../component/ReviewCreateModal';
 import starColor from '../img/icons/starColor.png';
 import heart from '../img/icons/heart.png';
 import heartFilled from '../img/icons/heartFilled.png';
+import Compressor from 'compressorjs';
 
 const MyPage = () => {
   const { user } = useContext(AuthContext);
@@ -15,7 +16,38 @@ const MyPage = () => {
   const [plans, setPlans] = useState([]);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  
+  const [compressedImage,setCompressedImage] = useState('');
+  const [previewImage, setPreviewImage] = useState(null);
+  const [initialProfileImageUrl, setInitialProfileImageUrl] = useState(''); // 초기 프로필 이미지 URL 저장
+  
+  // 사용자가 업로드한 이미지를 압축함
+  const handleImageUpload = (file) => {
+    if (!file) {
+        console.log("업로드할 파일이 없습니다.");
+        return;
+    }
 
+    // 미리보기 이미지 URL 설정
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result); // 미리보기 이미지 업데이트
+    };
+    reader.readAsDataURL(file);
+  
+    new Compressor(file, {
+      quality: 0.6,
+      maxWidth: 800,
+      maxHeight: 800,
+      success: (compressedFile) => {
+        // 파일을 상태에 저장
+        setCompressedImage(compressedFile)
+      },
+      error: (err) => {
+        console.error("이미지 압축 실패: ", err);
+      },
+    });
+  };
 
   // 유저 프로필 데이터
   const [userProfile, setUserProfile] = useState({
@@ -34,6 +66,7 @@ const MyPage = () => {
   
       if (response && response.data) {
         setUserProfile(response.data); // 프로필 데이터 저장
+        setInitialProfileImageUrl(response.data.profileImageUrl); // 초기 이미지 URL 저장
       }
     } catch (error) {
       console.error('프로필 정보를 가져오는 데 실패했습니다:', error);
@@ -46,25 +79,65 @@ const MyPage = () => {
   }, []);
 
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+  const [originalProfile, setOriginalProfile] = useState(null); // 초기 프로필 데이터 저장
 
+  // 프로필 수정
   const updateUserProfile = async () => {
-    try {
-      const response = await axios.put('http://localhost:5050/api/userProfile', userProfile, {
+
+    const formData = new FormData();
+    formData.append("profileImage", compressedImage); // FormData에 파일 추가
+
+    try{
+      const response = await axios.post('http://localhost:5050/api/userProfile/uploadProfileImage',formData,{
+        headers : {
+          "Content-Type" : "multiple/form-data",
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        }
+      });
+      
+      console.log("프로필 이미지 저장 후 응답:", response.data);
+  
+      // 프로필 이미지 URL을 상태에 업데이트하지 않고 바로 업데이트할 프로필 객체에 반영
+      const updatedProfile = { ...userProfile, profileImageUrl: response.data }; 
+
+      // 프로필 이미지 URL 업데이트된 객체로 서버에 프로필 업데이트 요청
+      const updateResponse = await axios.put('http://localhost:5050/api/userProfile', updatedProfile, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
-  
-      if (response && response.data) {
-        setUserProfile(response.data); // 업데이트된 프로필 저장
+
+      if (updateResponse && updateResponse.data) {
+        console.log("업데이트된 프로필 응답:", updateResponse.data);
+        setUserProfile(updateResponse.data); // 최종적으로 업데이트된 프로필 상태 저장
         alert('프로필이 성공적으로 업데이트되었습니다.');
         setIsEditing(false); // 수정 모드 종료
       }
+
+      
     } catch (error) {
-      console.error('프로필 업데이트에 실패했습니다:', error);
-      alert('프로필 업데이트에 실패했습니다.');
+      alert("프로필 업데이트에 실패했습니다.");
+      console.error('프로필 이미지 저장 또는 프로필 업데이트에 실패했습니다.', error);
     }
   };
+
+  // 수정 모드 진입 시 초기 데이터 저장
+  const enterEditMode = () => {
+    setOriginalProfile({ ...userProfile }); // 원래 데이터를 저장
+    setPreviewImage(userProfile.profileImageUrl); // 수정 전 이미지를 미리보기로 설정
+    setInitialProfileImageUrl(userProfile.profileImageUrl); // 초기 이미지 URL 저장
+    setIsEditing(true); // 수정 모드 활성화
+  };
+
+  // 취소 시 원래 데이터 복원
+  const cancelEdit = () => {
+    if (originalProfile) {
+      setUserProfile(originalProfile); // 초기 데이터로 복원
+    }
+    setPreviewImage(initialProfileImageUrl); // 취소 시 원래 프로필 이미지로 복원
+    setIsEditing(false); // 수정 모드 비활성화
+  };
+
 
 
 
@@ -351,7 +424,6 @@ const MyPage = () => {
           setTotalFavorite(response.data.totalElements);
           setCurrentFavoritePage(pageNumber); // 현재 페이지 업데이트
           setTotalFavoritePages(response.data.totalPages);
-          console.log(favoriteLocations);
           
       } catch (error) {
           console.error("즐겨찾기 목록 조회 실패", error);
@@ -405,23 +477,13 @@ const MyPage = () => {
   }, []); // 빈 배열을 전달해 컴포넌트 마운트 시 실행
 
 
-  const handleImageUpload = (file) => {
-    // 이미지를 서버에 업로드하거나, URL로 변환하여 저장
-    const reader = new FileReader();
-    reader.onload = () => {
-      setUserProfile((prev) => ({
-        ...prev,
-        profileImageUrl: reader.result, // 미리보기로 업데이트
-      }));
-    };
-    reader.readAsDataURL(file);
-  };
+
 
   return (
     <div className="mypage-container">
     <header className="mypage-header">
       <img
-        src={userProfile.profileImageUrl || 'https://via.placeholder.com/100'}
+        src={previewImage || userProfile.profileImageUrl || 'https://via.placeholder.com/100'}
         alt="Profile"
         className="profile-img"
       />
@@ -429,33 +491,36 @@ const MyPage = () => {
         <div className="Profile">
           {isEditing ? (
             <div className="profile-edit-form">
-              <label className="profile-edit-label">
-                닉네임:
-                <input
-                  type="text"
-                  value={userProfile.userNickname}
-                  onChange={(e) =>
-                    setUserProfile({ ...userProfile, userNickname: e.target.value })
-                  }
-                  className="profile-edit-input"
-                  placeholder="닉네임을 입력하세요"
-                />
-              </label>
-              <label className="profile-edit-label">
-                프로필 이미지:
-                <input
-                  type="file"
-                  onChange={(e) => handleImageUpload(e.target.files[0])} // 이미지 업로드 처리
-                  className="profile-edit-input-file"
-                />
-              </label>
-              <div className="profile-edit-buttons">
-                <button className="save-button" onClick={updateUserProfile}>
-                  저장
-                </button>
-                <button className="cancel-button" onClick={() => setIsEditing(false)}>
-                  취소
-                </button>
+
+              <div className = "profile-edit-input-container">
+                <label className="profile-edit-label">
+                  닉네임 
+                  <input
+                    type="text"
+                    value={userProfile.userNickname}
+                    onChange={(e) =>
+                      setUserProfile({ ...userProfile, userNickname: e.target.value })
+                    }
+                    className="profile-edit-input"
+                    placeholder="닉네임을 입력하세요"
+                  />
+                </label>
+
+                <label className="profile-edit-image-label">
+                  프로필 이미지
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      const file = e.target.files ? e.target.files[0] : null; // 파일 존재 확인
+                      if (file) {
+                          handleImageUpload(file);
+                      } else {
+                          console.log("파일이 선택되지 않았습니다."); // 취소했을 때 메시지
+                      }
+                    }} // 이미지 업로드 처리
+                    className="profile-edit-input-file"
+                  />
+                </label>
               </div>
             </div>
           ) : (
@@ -463,18 +528,37 @@ const MyPage = () => {
               <strong>반가워요! {userProfile.userNickname || 'OOO'}님</strong>
               <button
                 className="Profile-button"
-                onClick={() => setIsEditing(true)}
+                onClick={enterEditMode}
               >
                 프로필 설정⚙️
               </button>
             </>
           )}
         </div>
-        <div className="navigation">
-          <button className="active">나의 여행 계획 {plans.length}</button>
-          <button>나의 리뷰 {totalReviews}</button>
-          <button>찜한 여행지 {totalFavorite}</button>
-        </div>
+
+        {isEditing ? (
+
+          <div className="profile-edit-buttons">
+            <button className="save-button" onClick={updateUserProfile}>
+              저장
+            </button>
+            <button className="cancel-button" onClick={cancelEdit}>
+              취소
+            </button>
+          </div>
+
+        ) : (
+          <>
+            <div className="navigation">
+              <button className="active">나의 여행 계획 {plans.length}</button>
+              <button>나의 리뷰 {totalReviews}</button>
+              <button>찜한 여행지 {totalFavorite}</button>
+            </div>
+          </>
+        )}
+
+
+
       </div>
     </header>
 
