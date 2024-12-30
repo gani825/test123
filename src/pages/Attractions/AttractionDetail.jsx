@@ -88,7 +88,7 @@ const AttractionDetail = () => {
                         },
                     });
 
-                    // console.log(response.data)
+                    console.log(response.data)
 
                     // locationResponseDtoExcludeTag와 locationResponseDtoIncludeTag 배열 모두에 대해 km를 m 변환
                     const excludeTagLocationsWithDistance = response.data.locationResponseDtoExcludeTag
@@ -323,7 +323,7 @@ const AttractionDetail = () => {
                                 ))}
                         </ul>
                     ) : (
-                        <p>태그가 포함되지 않은 장소가 없습니다.</p>
+                        <p className = "no-nearby-locations-message">주위에 여행지가 없습니다.</p>
                     )}
 
                     {/* 태그가 포함된 근처 장소 */}
@@ -352,7 +352,7 @@ const AttractionDetail = () => {
                             ))}
                         </ul>
                     ) : (
-                        <p>태그가 포함된 장소가 없습니다.</p>
+                        <p className = "no-nearby-locations-message">주위에 음식점이 없습니다.</p>
                     )}
                 </div>
 
@@ -443,7 +443,7 @@ const AttractionDetail = () => {
                                     </div>
                                 ))
                             ) : (
-                                <p>작성된 리뷰가 없습니다.</p>
+                                <p className = "no-nearby-locations-message" >작성된 리뷰가 없습니다.</p>
                             )}
                         </div>
 

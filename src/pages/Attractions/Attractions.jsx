@@ -77,11 +77,16 @@ const Attractions = () => {
     const handleTagButtonClick = (tagId) => {
         setSelectedTags((prev) => {
             if (prev.includes(tagId)) {
-                return prev.filter((id) => id !== tagId); // 이미 선택된 태그는 해제
+                // 태그 해제
+                return prev.filter((id) => id !== tagId);
             }
+    
             if (prev.length < 3) {
-                return [...prev, tagId];  // 최대 3개 선택 가능
+                // 태그가 3개 미만일 경우 추가 가능
+                return [...prev, tagId];
             }
+    
+            alert("최대 3개의 태그만 선택할 수 있습니다.");
             return prev; // 3개 초과 시 선택 불가
         });
     };
@@ -96,9 +101,7 @@ const Attractions = () => {
             .filter(tag => selectedTags.includes(tag.tagId)) // selectedTags에서 tagId와 일치하는 tag를 찾아
             .map(tag => tag.tagName)                         // 해당 tag들의 tagName을 추출
 
-            const tagNamesString = selectedTagNames.join(',');  // 선택된 태그 배열을 ,를 이용하여 문자열로 변환
-
-            // console.log('regionId:', regionId);
+            const tagNamesString = selectedTagNames.join(',') || '';  // 선택된 태그 배열을 ,를 이용하여 문자열로 변환
 
             const response = await axios.get("http://localhost:5050/api/locations/searchLocation",{ //
                 params : {
@@ -116,7 +119,6 @@ const Attractions = () => {
             // 서버에서 받은 응답을 처리
             if (response && response.data) {
                 setLocations(response.data.content);   //지역정보 데이터 저장
-                // console.log(response.data);
                 setTotalPages(response.data.totalPages); // 전체 페이지 수 저장
                 setCurrentPage(pageNumber)  // 현재 페이지가 어딘지 저장
                 setTotalElements(response.data.totalElements); // 총 여행지 개수 저장
@@ -141,8 +143,16 @@ const Attractions = () => {
 
     // 페이지가 처음 로드될 때, 태그나 검색어 없이 전체 로케이션 데이터를 요청
     useEffect(() => {
-        handleSubmit(); // 초기 데이터 요청
+        if (selectedTags.length > 0) {
+            handleSubmit(0); // 태그가 선택되었을 때 검색 결과 요청
+        }
     }, [selectedRegion]); // selectedRegion 변경 시 자동으로 요청
+
+    useEffect(() => {
+        // 태그가 있으면 첫 페이지 데이터 요청
+        handleSubmit(0); // `handleSubmit`에 페이지 번호를 기본으로 전달
+    }, [selectedTags]);
+
 
     const handlePageChange = (newPage) => {
         // 페이지 번호가 숫자여야만 처리하도록 확인
@@ -156,12 +166,7 @@ const Attractions = () => {
         });
     };
 
-    // 선택된 태그가 변경될 때마다 자동으로 결과 요청
-    useEffect(() => {
-        if (selectedTags.length > 0) {
-            handleSubmit(); // 선택된 태그에 맞는 첫 번째 페이지 데이터 요청
-        }
-    }, [selectedTags]);
+    
 
     // 검색어 변경 처리 (입력 후 버튼 클릭으로 전송)
     const handleSearchChange = (event) => {
@@ -229,9 +234,7 @@ const Attractions = () => {
                 },
             });
             const favoriteLocations = response.data.content.map(location => location.locationId); // 반환된 즐겨찾기 목록에서 locationId만 추출
-            setLikedLocations(favoriteLocations);
-            console.log(response);
-            console.log(favoriteLocations);            
+            setLikedLocations(favoriteLocations);      
         } catch (error) {
             console.error("즐겨찾기 목록 조회 실패", error);
         }
@@ -268,7 +271,7 @@ const Attractions = () => {
                     data: { locationId },
                 }
             );
-            console.log(response.data);  // 성공 메시지
+ 
         } catch (error) {
             console.error("좋아요 삭제 실패", error);
         }
