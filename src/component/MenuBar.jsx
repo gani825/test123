@@ -24,7 +24,11 @@ const MenuBar = () => {
 
   return (
     <div className="MenuBar">
-      <div className="MainLogo">
+      <div
+          className="MainLogo"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+      >
         <img src={Logo} alt="Logo" />
       </div>
       <div className="navigation">

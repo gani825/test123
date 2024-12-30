@@ -24,8 +24,10 @@ import 'swiper/css/pagination';
 // AOS 불러오기
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import {useNavigate} from "react-router-dom";
 
 function Home() {
+    const navigate = useNavigate();
 
     // AOS 초기화
     useEffect(() => {
@@ -145,7 +147,7 @@ function Home() {
                     <span>나만의 특별한 여행을 계획하고 완성해 보세요.</span>
                     <div className="travel-plan-container">
                         <div className="travel-plan">
-                            <h4 className="plan-title">.내 여행 코스 일정</h4>
+                            <h4 className="plan-title">내 여행 코스 일정</h4>
                             <div className="plan-dayAll">
                                 <div className="plan-day">
                                     <h5>1일차</h5>
@@ -173,52 +175,53 @@ function Home() {
                             <img src={map} alt="Map Placeholder" className="map-image"/>
                         </div>
                     </div>
-                    <button className="start-button">시작하기</button>
+                    <button className="start-button" onClick={() => navigate(`/plan`, {})}>시작하기</button>
                 </section>
             </div>
             <section className="reviews">
-                <div className="review-title">
-                    <h3 className="Title">사용자 리뷰</h3>
-                    <span className="Subheading">진짜 여행자들의 생생한 리뷰를 확인해 보세요.</span>
-                </div>
-
                 <div className="innerWrap">
-                    <div className="review-card" data-aos="fade-up">
-                        <img src={Harajuku} alt="도쿄 하라주쿠" className="review-image"/>
-                        <div className="review-content">
-                            <h4>도쿄 하라주쿠</h4>
-                            <p>⭐⭐⭐⭐⭐</p>
-                            <p><strong>무조건 강추!</strong></p>
-                            <p>젊음의 문화와 패션의 중심지인 하라주쿠는<br/>
-                                독특한 거리 음식과 개성 넘치는 상점들로 가득 차 있어, 다양한 문화를 체험하고자 하는<br/>
-                                여행자들에게 추천합니다.
-                            </p>
-                            <span>므째이 성완</span>
-                        </div>
+                    <div className="review-title-container">
+                        <h3 className="title">사용자 리뷰</h3>
+                        <span className="subheading">진짜 여행자들의 생생한 리뷰를 확인해 보세요.</span>
                     </div>
-
-                    <div className="review-card" data-aos="fade-up">
-                        <img src={Dotonbori} alt="오사카 도톤보리" className="review-image"/>
-                        <div className="review-content">
-                            <h4>오사카 도톤보리</h4>
-                            <p>⭐⭐⭐⭐⭐</p>
-                            <p><strong>연인이랑 가보세요!!</strong></p>
-                            <p>화려한 네온사인과 다양한 먹거리로 가득한 오사카 도톤보리는 꼭 방문해야 할 명소입니다.
-                                특히 밤에 보는 도톤보리는 화려한 불빛이 매력을 더해줘 연인이랑 가는걸 추천!</p>
-                            <span>므째이 재영</span>
+                    <div className="review-card-container">
+                        <div className="review-card" data-aos="fade-up">
+                            <img src={Harajuku} alt="도쿄 하라주쿠" className="review-image"/>
+                            <div className="review-content">
+                                <h4>도쿄 하라주쿠</h4>
+                                <p>⭐⭐⭐⭐⭐</p>
+                                <p><strong>무조건 강추!</strong></p>
+                                <p>젊음의 문화와 패션의 중심지인 하라주쿠는<br/>
+                                    독특한 거리 음식과 개성 넘치는 상점들로 가득 차 있어, 다양한 문화를 체험하고자 하는<br/>
+                                    여행자들에게 추천합니다.
+                                </p>
+                                <span>므째이 성완</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="review-card" data-aos="fade-up">
-                        <img src={FushimiInariShrine} alt="후시미 이나리 신사" className="review-image"/>
-                        <div className="review-content">
-                            <h4>교토 후시미 이나리 신사</h4>
-                            <p>⭐⭐⭐⭐⭐</p>
-                            <p><strong>신비로움을 겪고 싶으면 여기로~</strong></p>
-                            <p>수천 개의 붉은 토리이 문이 이어진 후시미 이나리 신사는 신비로움이 가득한 장소인데요,
-                                토리이 문을 따라 산책하며 마치 다른 세계에 온 듯한 느낌을 받을 수 있어요.
-                                일몰 무렵에는 붉은 토리이 문 사이로 비치는 빛이 환상적이에요!</p>
-                            <span>므째이 재용</span>
+                        <div className="review-card" data-aos="fade-up">
+                            <img src={Dotonbori} alt="오사카 도톤보리" className="review-image"/>
+                            <div className="review-content">
+                                <h4>오사카 도톤보리</h4>
+                                <p>⭐⭐⭐⭐⭐</p>
+                                <p><strong>연인이랑 가보세요!!</strong></p>
+                                <p>화려한 네온사인과 다양한 먹거리로 가득한 오사카 도톤보리는 꼭 방문해야 할 명소입니다.
+                                    특히 밤에 보는 도톤보리는 화려한 불빛이 매력을 더해줘 연인이랑 가는걸 추천!</p>
+                                <span>므째이 재영</span>
+                            </div>
+                        </div>
+
+                        <div className="review-card" data-aos="fade-up">
+                            <img src={FushimiInariShrine} alt="후시미 이나리 신사" className="review-image"/>
+                            <div className="review-content">
+                                <h4>교토 후시미 이나리 신사</h4>
+                                <p>⭐⭐⭐⭐⭐</p>
+                                <p><strong>신비로움을 겪고 싶으면 여기로~</strong></p>
+                                <p>수천 개의 붉은 토리이 문이 이어진 후시미 이나리 신사는 신비로움이 가득한 장소인데요,
+                                    토리이 문을 따라 산책하며 마치 다른 세계에 온 듯한 느낌을 받을 수 있어요.
+                                    일몰 무렵에는 붉은 토리이 문 사이로 비치는 빛이 환상적이에요!</p>
+                                <span>므째이 재용</span>
+                            </div>
                         </div>
                     </div>
                 </div>

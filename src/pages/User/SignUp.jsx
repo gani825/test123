@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import './SignUp.css';
 import back from "../../img/icons/back.png";
-import cross from "../../img/icons/cross.png"; 
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +11,7 @@ const SignUp = () => {
         userPassword: "",
         userPhone: "",
         userNickname: "",
+        userPasswordConfirm: "",
     });
     const { setUser, setIsAuthenticated } = useContext(AuthContext); // React 상태 업데이트 함수
     const navigate = useNavigate();
@@ -46,6 +46,8 @@ const SignUp = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        console.log(e.target);
+        console.log(name);
         
         if (name === "userEmail") {
             setEmailChecked(false); // 이메일 변경 시 중복 체크 초기화
@@ -84,7 +86,6 @@ const SignUp = () => {
             return;
         }
 
-
         setIsRequesting(true);
         setVerificationCodeInput(true);
         setVerificationStatus("인증 메일을 보내는 중입니다...");
@@ -96,7 +97,7 @@ const SignUp = () => {
                 mode : "verify" 
             });
 
-            setVerificationStatus("인증 이메일이 발송되었습니다.");
+            setVerificationStatus("인증 메일이 발송되었습니다.");
             setVerificationRequested(true);
             setRequestTime(Date.now()); // 요청 시간을 현재 시간으로 설정
             setIsRequesting(false); // 인증메일 전송 완료
@@ -134,7 +135,6 @@ const SignUp = () => {
         });
     }
 
-
     const handleClose = () => {
         navigate('/'); // 홈페이지로 이동
     };
@@ -146,7 +146,6 @@ const SignUp = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-
 
         // 이메일 중복 체크여부 확인
         if (!emailChecked || !isEmailValid) {
@@ -206,70 +205,64 @@ const SignUp = () => {
 
     const isFormValid = formData.userEmail && formData.userPassword && formData.userNickname && formData.userPhone;
 
-
-
-
     return (
-        <div className="modal-overlay">
-            <div className="Join-modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="Join-close-button" onClick={handleClose}>
-                    <img src={cross} alt="close" />
-                </button>
-                <button className="Join-back-button" onClick={handleBackToSignIn}>
-                    <img src={back} alt="back" />
-                </button>
-                <h2 className="modal-title">회원가입</h2>
+        <div className="SignUp">
+            <div className="signup-content" onClick={(e) => e.stopPropagation()}>
+                <h2 className="signup-title">회원가입</h2>
                 <form onSubmit={handleSubmit}>
-                    <h4 className="SignUpInputName">이메일</h4>
-                    <input
-                        className= "signUp-email-input"
-                        type="email"
-                        name="userEmail"
-                        placeholder="이메일을 입력해주세요."
-                        value={formData.userEmail}
-                        onChange={handleChange}
-                        disabled={isEmailVerified}
-                    />
+                    <h4 className="signup-input-name">이메일</h4>
 
                     {!isEmailVerified && (
                         <>
-                            <div className = "duplicate-check">
-                                <button
-                                    type="button"
-                                    className="duplicate-check-button"
-                                    onClick={handleDuplicateCheck}
-                                >
-                                    중복 확인
-                                </button>
-                                {emailChecked && (
-                                    <p className={`email-check-message ${isEmailValid ? "valid" : "invalid"}`}>
-                                        {isEmailValid ? "사용 가능한 이메일입니다." : "이미 사용 중인 이메일입니다."}
-                                    </p>
-                                )}
+                            <div className="signup-email-container">
+                                <input
+                                    className="signup-email-input"
+                                    type="email"
+                                    name="userEmail"
+                                    placeholder="이메일을 입력해주세요."
+                                    value={formData.userEmail}
+                                    onChange={handleChange}
+                                    disabled={isEmailVerified}
+                                />
+                                <div className="duplicate-check">
+                                    {(!emailChecked || !isEmailValid) && (
+                                        <button
+                                            type="button"
+                                            className="duplicate-check-button"
+                                            onClick={handleDuplicateCheck}
+                                        >
+                                            확인
+                                        </button>
+                                    )}
+                                    {emailChecked && isEmailValid && (
+                                        <button
+                                            type="button"
+                                            className="verification-request-button"
+                                            onClick={handleSendVerificationEmail}
+                                            disabled={!isEmailValid || verificationRequested || isRequesting}
+                                        >
+                                            {!isFirstRequest ? "재발송" : "인증번호 요청"}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                            <div className = "request-check">
-                                {emailChecked && (
-                                    <button
-                                        type="button"
-                                        className="verification-request-button"
-                                        onClick={handleSendVerificationEmail}
-                                        disabled={!isEmailValid || verificationRequested || isRequesting}
-                                    >
-                                        {!isFirstRequest ? "다시 요청하기" : "인증번호 요청"}
-                                    </button>
-                                )}
-
+                            {emailChecked && (
+                                <p className={`email-check-message ${isEmailValid ? "valid" : "invalid"}`}>
+                                    {isEmailValid ? "사용 가능한 이메일입니다." : "이미 사용 중인 이메일입니다."}
+                                </p>
+                            )}
+                            <div className="request-check">
                                 {verificationStatus && (
                                     <p className="verification-status-message">{verificationStatus}</p>
                                 )}
                             </div>
 
-                            <div className = "verification-check">
+                            <div className="verification-check">
                                 {verificationCodeInput && (
                                     <>
                                         <input
                                             type="text"
-                                            className = "verificationCode-input"
+                                            className="verificationCode-input"
                                             name="verificationCode"
                                             placeholder="인증 코드를 입력해주세요."
                                             value={verificationCode}
@@ -289,52 +282,80 @@ const SignUp = () => {
                         </>
                     )}
 
-
                     {isEmailVerified && (
                         <>
+                            <div className="signup-email-container">
+                                <input
+                                    className="signup-email-input"
+                                    type="email"
+                                    name="userEmail"
+                                    placeholder="이메일을 입력해주세요."
+                                    value={formData.userEmail}
+                                    onChange={handleChange}
+                                    disabled={isEmailVerified}
+                                />
+                                <div className="duplicate-check">
+                                    {(!emailChecked || !isEmailValid) && (
+                                        <button
+                                            type="button"
+                                            className="duplicate-check-button"
+                                            onClick={handleDuplicateCheck}
+                                        >
+                                            확인
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                             <p className="email-verified-message">이메일 인증이 완료되었습니다.</p>
-                            <button 
-                                type="button"
-                                className="reset-verified-button"
-                                onClick={handleResetVerified}
-                            >
-                                변경하기
-                            </button>
                         </>
                     )}
-                    
-                    <h4 className="SignUpInputName">닉네임</h4>
+
+                    <h4 className="signup-input-name">닉네임</h4>
                     <input
+                        className="signup-nickname-input"
                         type="text"
                         name="userNickname"
                         placeholder="닉네임을 입력해주세요."
                         value={formData.userNickname}
                         onChange={handleChange}
                     />
-                    <h4 className="SignUpInputName">전화번호</h4>
+                    <h4 className="signup-input-name">전화번호</h4>
                     <input
+                        className="signup-userphone-input"
                         type="text"
                         name="userPhone"
                         placeholder="전화번호를 입력해주세요. 예: 010-1234-5678"
                         value={formData.userPhone}
                         onChange={handleChange}
                     />
-                    <h4 className="SignUpInputName">비밀번호</h4>
+                    <h4 className="signup-input-name">비밀번호</h4>
                     <input
+                        className="signup-pwd-input"
                         type="password"
                         name="userPassword"
                         placeholder="영문, 숫자, 특수문자 포함 8자리 이상"
                         value={formData.userPassword}
                         onChange={handleChange}
                     />
-                    <h4 className="SignUpInputName">비밀번호 확인</h4>
+                    {
+                        !/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(formData.userPassword)
+                        && formData.userPassword !== '' ?
+                            <p className="pwd-message">영문, 숫자, 특수문자 포함 8자리 이상 입력</p> : null
+                    }
+                    <h4 className="signup-input-name">비밀번호 확인</h4>
                     <input
+                        className="signup-pwd-confirm-input"
                         type="password"
                         name="userPasswordConfirm"
                         placeholder="비밀번호 확인"
                         value={formData.userPasswordConfirm}
                         onChange={handleChange}
                     />
+                    {
+                        formData.userPassword !== formData.userPasswordConfirm
+                        && formData.userPasswordConfirm !== '' ?
+                            <p className="pwd-cofirm-message">비밀번호가 일치하지 않습니다</p> : null
+                    }
                     <button
                         type="submit"
                         className={`submit-button ${isFormValid ? "" : "disabled"}`}
@@ -343,6 +364,9 @@ const SignUp = () => {
                         회원가입하고 로그인하기
                     </button>
                 </form>
+                <button className="join-back-button" onClick={handleBackToSignIn}>
+                    로그인 하기
+                </button>
             </div>
         </div>
     );

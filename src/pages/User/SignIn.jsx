@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import kakao from '../../img/icons/kakao.png';
 import naver from '../../img/icons/naver.png';
 import google from '../../img/icons/google.png';
-import cross from "../../img/icons/cross.png";
 import './SignIn.css';
 
 Modal.setAppElement('#root'); // React Modal 설정
@@ -86,22 +85,15 @@ function SignIn() {
         checkAndRestoreSession();
     }, []);
 
-    const handleClose = () => {
-        navigate('/'); // 홈으로 이동
-    };
-
     // OAuth 로그인 핸들러 (예: Google)
     const handleOAuthLogin = () => {
         window.location.href = '/api/auth/oauth2/authorize/google'; // 백엔드 OAuth 엔드포인트
     };
 
     return (
-        <div className="modal-overlay">
-            <div className="Login-modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="close-button" onClick={handleClose}>
-                    <img src={cross} alt="close" />
-                </button>
-                <h2 className="modal-title">LOGO</h2>
+        <div className="SignIn">
+            <div className="signin-content" onClick={(e) => e.stopPropagation()}>
+                <h2 className="signin-title">로그인</h2>
                 <form onSubmit={handleLogin}>
                     <h4 className="inputName">이메일</h4>
                     <input

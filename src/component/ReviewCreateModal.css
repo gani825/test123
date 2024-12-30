@@ -173,7 +173,7 @@
     padding: 0 70px;
 }
 
-.reviewCreateModal .submit-button, .cancel-button {
+.reviewCreateModal .review-create-submit-button, .review-create-cancel-button {
     box-sizing: border-box;
     flex: 1;
     height: 48px; /* 버튼 높이를 고정 */
@@ -186,12 +186,12 @@
 }
 
 
-.reviewCreateModal .cancel-button {
+.reviewCreateModal .review-create-cancel-button {
   background-color: #bdbdbd;
   color: black;
 }
 
-.reviewCreateModal .submit-button {
+.reviewCreateModal .review-create-submit-button {
   background-color: black;
   color: #fff;
 }
