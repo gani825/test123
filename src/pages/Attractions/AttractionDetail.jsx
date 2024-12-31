@@ -88,7 +88,7 @@ const AttractionDetail = () => {
                         },
                     });
 
-                    // console.log(response.data)
+                    console.log(response.data)
 
                     // locationResponseDtoExcludeTag와 locationResponseDtoIncludeTag 배열 모두에 대해 km를 m 변환
                     const excludeTagLocationsWithDistance = response.data.locationResponseDtoExcludeTag
@@ -186,7 +186,18 @@ const AttractionDetail = () => {
       if (status === "success") {
           fetchReviews(); // 리뷰 목록 갱신
       }
-  };
+    };
+
+    // 리뷰 작성 버튼 클릭 핸들러
+    const handleReviewClick = () => {
+        const accessToken = localStorage.getItem('accessToken'); // 인증 정보 확인
+        if (!accessToken) {
+            alert('로그인이 필요한 서비스입니다.'); // 경고창 표시
+            return;
+        }
+        // 인증된 사용자만 리뷰 작성 로직 실행
+        openModal(); // 모달 열기
+    };
 
 
     // Google Maps API를 로드하는 훅
@@ -323,7 +334,7 @@ const AttractionDetail = () => {
                                 ))}
                         </ul>
                     ) : (
-                        <p>태그가 포함되지 않은 장소가 없습니다.</p>
+                        <p className = "no-nearby-locations-message">주위에 여행지가 없습니다.</p>
                     )}
 
                     {/* 태그가 포함된 근처 장소 */}
@@ -352,7 +363,7 @@ const AttractionDetail = () => {
                             ))}
                         </ul>
                     ) : (
-                        <p>태그가 포함된 장소가 없습니다.</p>
+                        <p className = "no-nearby-locations-message">주위에 음식점이 없습니다.</p>
                     )}
                 </div>
 
@@ -391,7 +402,7 @@ const AttractionDetail = () => {
                                     <div className="sort-divider"/>
                                 </div>
                                 {/* 우측: 리뷰 작성 버튼 */}
-                                <button className="review-header-button" onClick={openModal}>
+                                <button className="review-header-button" onClick={handleReviewClick}>
                                     리뷰 작성하기
                                 </button>
                             </div>
@@ -443,7 +454,7 @@ const AttractionDetail = () => {
                                     </div>
                                 ))
                             ) : (
-                                <p>작성된 리뷰가 없습니다.</p>
+                                <p className = "no-nearby-locations-message" >작성된 리뷰가 없습니다.</p>
                             )}
                         </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './RandomPlaces.css'; // CSS 파일 연결
 import './RandomPlaces.css';
 import { useContext } from 'react';
 import { AuthContext } from '../../App';
@@ -43,30 +44,30 @@ const RandomPlaces = () => {
     const { user } = useContext(AuthContext);
 
   useEffect(() => {
+    setLoading(true); // 로딩 시작
     console.log("Loading RandomPlaces data...");
     setLoading(true);
     axios
-        .get(`http://localhost:5050/api/ai/random-places?email=${user.email}`)
-        .then((response) => {
-          console.log("Fetched places:", response.data);
-          setPlaces(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching random places:", error);
-          setError("관광지 데이터를 불러오는 데 실패했습니다.");
-          setLoading(false);
-        });
-  }, [user]);
-
+      .get('http://localhost:5050/api/ai/random-places')
+      .then((response) => {
+        setPlaces(response.data);
+        setLoading(false); // 로딩 종료
+      })
+      .catch((error) => {
+        console.error('Error fetching random places:', error);
+        setError('관광지 데이터를 불러오는 데 실패했습니다.');
+        setLoading(false); // 로딩 종료
+      });
+  }, []);
 
   const handleRatingChange = (locationId, value) => {
     setRatings({ ...ratings, [locationId]: value });
   };
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken'); // JWT 토큰 가져오기
     if (!token) {
+      console.error('JWT 토큰이 없습니다.');
       alert('로그인이 필요합니다.');
       return;
     }
@@ -78,15 +79,16 @@ const RandomPlaces = () => {
 
     const payload = places.map((place) => ({
       locationId: place.locationId,
-      rating: ratings[place.locationId] || 3, // 기본값: 보통
+      rating: ratings[place.locationId] || 3, // 점수
     }));
 
     try {
       await axios.post('http://localhost:5050/api/ai/rating', payload, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // JWT 포함
         },
       });
+      console.log('점수 제출 완료:', payload);
 
       setMessage('점수가 성공적으로 제출되었습니다!');
     } catch (error) {
