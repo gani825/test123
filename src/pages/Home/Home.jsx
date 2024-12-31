@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Home.css';
 import Card from "../../component/Card";
 import TokyoTower from '../../img/TokyoTower.jpg'
@@ -28,6 +28,15 @@ import {useNavigate} from "react-router-dom";
 
 function Home() {
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = () => {
+        navigate(`/attractions?search=${encodeURIComponent(searchTerm)}`);
+    };
 
     // AOS 초기화
     useEffect(() => {
@@ -68,7 +77,14 @@ function Home() {
             <div className="section">
                 <div className="search">
                     <h3>어디로 가시나요?</h3>
-                    <input type="text" placeholder="여행지를 검색하세요" className="search-bar"/>
+                    <input 
+                        type="text" 
+                        placeholder="여행지를 검색하세요" 
+                        className="search-bar"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                    <button onClick={handleSearchSubmit}>검색</button>
                 </div>
 
                 <section className="recommended" data-aos="fade-up">
