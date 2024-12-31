@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './Home.css';
 import Card from "../../component/Card";
 import TokyoTower from '../../img/TokyoTower.jpg'
@@ -12,6 +12,8 @@ import FushimiInariShrine from '../../img/FushimiInariShrine.jpg';
 import MainBanner from '../../img/MainBanner.jpg';
 import SecondBanner from '../../img/SecondBanner.jpg';
 import ThirdBanner from '../../img/ThirdBanner.jpg';
+import { AuthContext } from '../../App';
+import RandomPlaces from "../test/RandomPlaces";
 
 import {Swiper, SwiperSlide} from 'swiper/react'; // 슬라이더 불러오기
 // Swiper 모듈 가져오기
@@ -24,10 +26,14 @@ import 'swiper/css/pagination';
 // AOS 불러오기
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+
 
 function Home() {
+    const location = useLocation();
     const navigate = useNavigate();
+    const { isAuthenticated } = useContext(AuthContext); // 로그인 상태 확인
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // AOS 초기화
     useEffect(() => {
@@ -36,8 +42,20 @@ function Home() {
         });
     }, []);
 
+    useEffect(() => {
+        // 회원가입 후 로그인한 상태에서만 모달 표시
+        if (location.state?.isFromSignUp && isAuthenticated) {
+            setIsModalOpen(true);
+            window.history.replaceState({}, document.title); // URL 상태 초기화
+        }
+    }, [location.state, isAuthenticated]);
+
+    const closeModal = () => setIsModalOpen(false);
+
     return (
         <div className="Home">
+            {/* 회원가입 후에만 모달 표시 */}
+            {isModalOpen && <RandomPlaces closeModal={closeModal} />}
             <div className="slide">
                 <Swiper
                     modules={[Navigation, Pagination, Autoplay]}
@@ -67,12 +85,12 @@ function Home() {
 
             <div className="section">
                 <div className="search">
-                    <h3>어디로 가시나요?</h3>
+                    <h3 className="home-title">어디로 가시나요?</h3>
                     <input type="text" placeholder="여행지를 검색하세요" className="search-bar"/>
                 </div>
 
                 <section className="recommended" data-aos="fade-up">
-                    <h3>인기 여행지 추천</h3>
+                    <h3 className="home-title">인기 여행지 추천</h3>
                     <span>많은 사람들이 주목하고 있는 가장 인기 있는 여행지를 만나보세요.</span>
                     <div className="card-container">
                         <div className="card">
@@ -119,7 +137,7 @@ function Home() {
 
                 {/* 카테고리 섹션 */}
                 <section className="category" data-aos="fade-up">
-                    <h3>카테고리 탐색</h3>
+                    <h3 className="home-title">카테고리 탐색</h3>
                     <span>다양한 테마로 분류된 여행지를 탐색하며 새로운 경험을 만나보세요.</span>
                     <div className="category-container">
                         <div className="category-card-large">
@@ -143,7 +161,7 @@ function Home() {
                 </section>
 
                 <section className="map-section" data-aos="fade-up">
-                    <h3>여행 계획</h3>
+                    <h3 className="home-title">여행 계획</h3>
                     <span>나만의 특별한 여행을 계획하고 완성해 보세요.</span>
                     <div className="travel-plan-container">
                         <div className="travel-plan">

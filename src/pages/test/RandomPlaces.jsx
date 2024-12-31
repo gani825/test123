@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './RandomPlaces.css';
+import { useContext } from 'react';
+import { AuthContext } from '../../App';
+
 
 const RandomPlaces = () => {
   const [places, setPlaces] = useState([]);
@@ -20,21 +23,42 @@ const RandomPlaces = () => {
     { value: 5, label: "매우 좋음" },
   ];
 
+  // useEffect(() => {
+  //   setLoading(true);
+  //   axios
+  //       .get('http://localhost:5050/api/ai/random-places')
+  //       .then((response) => {
+  //         setPlaces(response.data);
+  //         setLoading(false);
+  //         setIsModalOpen(true); // 데이터 로드 후 모달 열기
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching random places:', error);
+  //         setError('관광지 데이터를 불러오는 데 실패했습니다.');
+  //         setLoading(false);
+  //       });
+  // }, []);
+
+    // useContext를 useEffect 외부로 이동
+    const { user } = useContext(AuthContext);
+
   useEffect(() => {
+    console.log("Loading RandomPlaces data...");
     setLoading(true);
     axios
-        .get('http://localhost:5050/api/ai/random-places')
+        .get(`http://localhost:5050/api/ai/random-places?email=${user.email}`)
         .then((response) => {
+          console.log("Fetched places:", response.data);
           setPlaces(response.data);
           setLoading(false);
-          setIsModalOpen(true); // 데이터 로드 후 모달 열기
         })
         .catch((error) => {
-          console.error('Error fetching random places:', error);
-          setError('관광지 데이터를 불러오는 데 실패했습니다.');
+          console.error("Error fetching random places:", error);
+          setError("관광지 데이터를 불러오는 데 실패했습니다.");
           setLoading(false);
         });
-  }, []);
+  }, [user]);
+
 
   const handleRatingChange = (locationId, value) => {
     setRatings({ ...ratings, [locationId]: value });
