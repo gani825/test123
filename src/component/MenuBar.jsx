@@ -51,12 +51,12 @@ const MenuBar = () => {
         >
           관광지
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to="/community"
           className={({ isActive }) => (isActive ? "active-link" : "")}
-        >
-          커뮤니티
-        </NavLink>
+        > */}
+        {/* 커뮤니티
+        </NavLink> */}
 
         {isAuthenticated ? (
           <div className="profile">
