@@ -19,7 +19,7 @@ const SignUp = () => {
     const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태
     const [emailChecked, setEmailChecked] = useState(false); // 중복 체크 여부
 
-    // 인증요청 및 인증완료 상태 체크    
+    // 인증요청 및 인증완료 상태 체크
     const [isEmailVerified, setIsEmailVerified] = useState(false);  // 이메일 인증여부
     const [verificationCode, setVerificationCode] = useState("");   // 인증번호
     const [verificationRequested, setVerificationRequested] = useState(false);  // 인증 요청 여부
@@ -42,13 +42,13 @@ const SignUp = () => {
             return () => clearInterval(interval);
         }
     }, [requestTime]);
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         console.log(e.target);
         console.log(name);
-        
+
         if (name === "userEmail") {
             setEmailChecked(false); // 이메일 변경 시 중복 체크 초기화
             setIsEmailValid(false); // 이메일 정규식 체크 여부 초기화
@@ -60,11 +60,11 @@ const SignUp = () => {
             setVerificationStatus("");  // 인증메일 발송여부 메시지
         }
     };
-    
+
     const handleDuplicateCheck = async () => {
-        // email 정규표현식 
+        // email 정규표현식
         const emailRegex = new RegExp("^(?!\\.)[a-zA-Z0-9._%+-]{1,64}(?<!\\.)@[a-zA-Z0-9-]{1,63}(\\.[a-zA-Z]{2,})+$");
-        
+
         if(!emailRegex.test(formData.userEmail)){
             alert("이메일 형식이 아닙니다.")
             return;
@@ -89,12 +89,12 @@ const SignUp = () => {
         setIsRequesting(true);
         setVerificationCodeInput(true);
         setVerificationStatus("인증 메일을 보내는 중입니다...");
-        setIsFirstRequest(false); 
+        setIsFirstRequest(false);
 
         try {
-            await axios.post("http://localhost:5050/api/email/send", { 
+            await axios.post("http://localhost:5050/api/email/send", {
                 userEmail: formData.userEmail,
-                mode : "verify" 
+                mode : "verify"
             });
 
             setVerificationStatus("인증 메일이 발송되었습니다.");
@@ -126,7 +126,7 @@ const SignUp = () => {
             alert("인증 코드 검증에 실패했습니다. 다시 시도해주세요.");
         }
     };
-    
+
     const handleResetVerified = () => {
         setIsEmailVerified(false);
         setFormData({
@@ -134,6 +134,7 @@ const SignUp = () => {
             userEmail: "",  // 이메일을 초기화하여 사용자가 다시 입력할 수 있도록 함
         });
     }
+
 
     const handleClose = () => {
         navigate('/'); // 홈페이지로 이동
@@ -143,27 +144,27 @@ const SignUp = () => {
         navigate(-1); // 이전 페이지로 이동
     };
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 이메일 중복 체크여부 확인
-        if (!emailChecked || !isEmailValid) {
-            alert("이메일 중복 확인을 완료해주세요.");
-            return;
-        }
-
-        if (!isEmailVerified) {
-            alert("이메일 인증을 완료해주세요.");
-            return;
-        }
+        // // 이메일 중복 체크여부 확인
+        // if (!emailChecked || !isEmailValid) {
+        //     alert("이메일 중복 확인을 완료해주세요.");
+        //     return;
+        // }
+        //
+        // if (!isEmailVerified) {
+        //     alert("이메일 인증을 완료해주세요.");
+        //     return;
+        // }
 
         // 비밀번호 확인
         if (formData.userPassword !== formData.userPasswordConfirm) {
             alert("비밀번호가 일치하지 않습니다.");
             return;
         }
-        
+
         // 비밀번호 강도 확인
         if (!/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(formData.userPassword)) {
             alert("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자리 이상이어야 합니다.");
@@ -196,7 +197,10 @@ const SignUp = () => {
             setIsAuthenticated(true);
 
             alert("회원가입 및 로그인 성공!");
-            navigate("/"); // 홈 화면으로 이동
+            console.log("Navigating to Home with state:", { isFromSignUp: true });
+
+            // 상태 전달과 함께 홈으로 이동
+            navigate("/", { state: { isFromSignUp: true } }); // 상태 전달
         } catch (error) {
             console.error("회원가입 실패:", error.response?.data || error.message);
             alert("회원가입에 실패했습니다. 데이터를 확인하세요.");

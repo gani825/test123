@@ -117,6 +117,12 @@
   cursor: pointer;
 }
 
+.addPlaceButton.active {
+    background-color: #dee5ec;
+    border: 1px solid #dee5ec;
+    color: #222;
+}
+
 /* 추가된 여행지 목록 스타일 */
 .addedPlacesList {
   list-style: none;
@@ -310,6 +316,7 @@
   cursor: pointer;
   font-size: 18px;
 }
+
 
 .placeItem button:hover {
   background: #dee5ec;

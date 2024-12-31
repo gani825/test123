@@ -151,6 +151,13 @@
     margin-top: 70px;
 }
 
+.AttractionDetail .no-nearby-locations-message {
+    margin: 30px 0;
+    font-size: 16px; /* 텍스트 크기 조정 */
+    text-align: center; /* 가운데 정렬 */
+    color: #666; /* 부드러운 색상 */
+}
+
 .AttractionDetail .nearby-locations-container > h4 {
     margin-bottom: 30px;
 }
