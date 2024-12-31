@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useLoadScript } from "@react-google-maps/api";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import "./PlanTrip.css";
-import MapRenderer from "../../component/PlanTrip/MapRenderer";
-import usePlanData from "../../component/PlanTrip/usePlanData";
+import React, { useEffect, useState } from 'react';
+import { useLoadScript } from '@react-google-maps/api';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './PlanTrip.css';
+import MapRenderer from '../../component/PlanTrip/MapRenderer';
+import usePlanData from '../../component/PlanTrip/usePlanData';
 
 function PlanTrip() {
   // Google Maps API 로드
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDYcmeImkXId7f8bF5GT1N3bWEDAhnp-rM", // API 키
+    googleMapsApiKey: 'AIzaSyDYcmeImkXId7f8bF5GT1N3bWEDAhnp-rM', // API 키
   });
 
   // 네비게이션과 위치 상태
@@ -18,18 +18,18 @@ function PlanTrip() {
   const { cityName, regionId, startDate, endDate } = location.state || {};
 
   // 상태 변수
-  const [plannerTitle, setPlannerTitle] = useState(""); // 사용자 입력 상태
+  const [plannerTitle, setPlannerTitle] = useState(''); // 사용자 입력 상태
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false); // 플랜 저장 모달 상태
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 }); // 지도 중심
   const [dailyPlans, setDailyPlans] = useState({}); // 날짜별 장소 상태
   const [selectedPlace, setSelectedPlace] = useState(null); // InfoWindow에서 표시할 선택된 장소
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
   const [selectedDay, setSelectedDay] = useState(null); // 선택된 Day
   const [showPlaceList, setShowPlaceList] = useState(false); // 장소 목록 표시 여부
-  const [categoryFilter, setCategoryFilter] = useState("전체"); // 필터링된 카테고리
+  const [categoryFilter, setCategoryFilter] = useState('전체'); // 필터링된 카테고리
   const [expandedPlaceId, setExpandedPlaceId] = useState(null); // 확장된 장소 ID 상태
-  const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리 저장
+  const [selectedCategory, setSelectedCategory] = useState('전체'); // 선택된 카테고리 저장
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [routePath, setRoutePath] = useState([]); // 폴리라인 경로 상태 변수
 
@@ -44,30 +44,29 @@ function PlanTrip() {
   // dailyPlans 상태 변경 감지 및 Marker 렌더링
   useEffect(() => {
     const allPlaces = Object.values(dailyPlans).flat();
-    console.log("All places:", allPlaces); // 모든 장소 확인
+    console.log('All places:', allPlaces); // 모든 장소 확인
 
     const validPath = allPlaces
-      .filter(
-        (place) =>
-          place.latitude &&
-          place.longitude &&
-          !isNaN(parseFloat(place.latitude)) &&
-          !isNaN(parseFloat(place.longitude)) &&
-          parseFloat(place.latitude) >= -90 &&
-          parseFloat(place.latitude) <= 90 &&
-          parseFloat(place.longitude) >= -180 &&
-          parseFloat(place.longitude) <= 180
-      )
-      .map((place) => ({
-        lat: parseFloat(place.latitude),
-        lng: parseFloat(place.longitude),
-      }));
+        .filter(
+            (place) =>
+                place.latitude &&
+                place.longitude &&
+                !isNaN(parseFloat(place.latitude)) &&
+                !isNaN(parseFloat(place.longitude)) &&
+                parseFloat(place.latitude) >= -90 &&
+                parseFloat(place.latitude) <= 90 &&
+                parseFloat(place.longitude) >= -180 &&
+                parseFloat(place.longitude) <= 180
+        )
+        .map((place) => ({
+          lat: parseFloat(place.latitude),
+          lng: parseFloat(place.longitude),
+        }));
 
-    console.log("Valid path for polyline:", validPath); // 유효한 경로 디버깅
+    console.log('Valid path for polyline:', validPath); // 유효한 경로 디버깅
     setRoutePath(validPath);
   }, [dailyPlans]);
 
-  // 출발일과 도착일 기준으로 날짜 생성
   useEffect(() => {
     if (startDate && endDate) {
       const dates = generateDatesBetween(startDate, endDate);
@@ -77,16 +76,21 @@ function PlanTrip() {
     }
   }, [startDate, endDate]);
 
-  // 시작일과 종료일 사이의 날짜 생성 함수
+// 시작일과 종료일 사이의 날짜 생성 함수
   const generateDatesBetween = (startDate, endDate) => {
     const dates = [];
-    let currentDate = new Date(startDate);
-    while (currentDate <= new Date(endDate)) {
-      dates.push(new Date(currentDate).toISOString().split("T")[0]);
+    let currentDate = new Date(`${startDate}T00:00:00`); // UTC 시간으로 고정
+    const endDateObj = new Date(`${endDate}T00:00:00`); // UTC 시간으로 고정
+
+    while (currentDate <= endDateObj) {
+      // 시간 정보를 제거하고 날짜만 저장
+      const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+      dates.push(dateStr);
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return dates;
   };
+
 
   // 장소의 세부 정보를 확장하거나 접는 함수
   const toggleExpand = (placeId) => {
@@ -118,14 +122,20 @@ function PlanTrip() {
     // setShowPlaceList(false); // 장소를 추가한 후 목록 닫기
   };
 
-
   // 날짜별 장소 삭제 핸들러
   const handleRemovePlace = (date, locationId) => {
-    setDailyPlans((prev) => ({
-      ...prev,
-      [date]: prev[date].filter((p) => p.locationId !== locationId),
-    }));
+    // 알람 추가
+    const isConfirmed = window.confirm('정말로 이 장소를 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      setDailyPlans((prev) => ({
+        ...prev,
+        [date]: prev[date].filter((p) => p.locationId !== locationId),
+      }));
+      alert('장소가 삭제되었습니다.');
+    }
   };
+
 
   // 마커 클릭 (InfoWindow 열기)
   const handleMarkerClick = (place) => {
@@ -134,21 +144,28 @@ function PlanTrip() {
 
   const colors = [
     // 빨강 (Red)
-    '#D63131', '#E17055', '#FF7676',
+    '#D63131',
+    '#E17055',
+    '#FF7676',
     // 주황 (Orange)
     '#FDBC6E',
     // 노랑 (Yellow)
     '#FFEAA7',
     // 초록 (Green)
-    '#00B894', '#00CEC9',
+    '#00B894',
+    '#00CEC9',
     // 파랑 (Blue)
-    '#0984E3', '#55EFC4', '#81ECEC',
+    '#0984E3',
+    '#55EFC4',
+    '#81ECEC',
     // 남색 (Indigo)
     '#74B9FF',
     // 보라 (Violet)
-    '#6C5CE7', '#A29BFE', '#EB4493', '#FD79A8',
+    '#6C5CE7',
+    '#A29BFE',
+    '#EB4493',
+    '#FD79A8',
   ];
-
 
   // InfoWindow 닫기 핸들러
   const handleCloseModal = () => {
@@ -159,7 +176,7 @@ function PlanTrip() {
   // 플랜 저장 핸들러
   const handleSavePlan = async () => {
     if (!plannerTitle.trim()) {
-      alert("플래너 제목을 입력해주세요.");
+      alert('플래너 제목을 입력해주세요.');
       return;
     }
 
@@ -176,39 +193,39 @@ function PlanTrip() {
           formattedAddress: place.formattedAddress,
           latitude: place.latitude,
           longitude: place.longitude,
-          placeImgUrl: place.placeImgUrl || "/images/placeholder.jpg", // 기본 이미지 포함
+          placeImgUrl: place.placeImgUrl || '/images/placeholder.jpg', // 기본 이미지 포함
         })),
       })),
     };
 
-    console.log("전송할 Planner Data:", plannerData); // 전송 데이터 확인
+    console.log('전송할 Planner Data:', plannerData); // 전송 데이터 확인
 
     try {
-      const token = localStorage.getItem("accessToken"); // 토큰 가져오기
+      const token = localStorage.getItem('accessToken'); // 토큰 가져오기
 
       if (!token) {
-        alert("로그인이 필요한 서비스입니다.");
+        alert('로그인이 필요한 서비스입니다.');
         return;
       }
       const response = await axios.post(
-        "http://localhost:5050/api/planner/save",
-        plannerData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰 헤더에 추가
-          },
-        }
+          'http://localhost:5050/api/planner/save',
+          plannerData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // 토큰 헤더에 추가
+            },
+          }
       );
-      console.log("서버 응답 데이터:", response.data); // 서버 응답 확인
+      console.log('서버 응답 데이터:', response.data); // 서버 응답 확인
       const savedPlannerId = response.data;
-      console.log("플랜 저장 성공:", plannerData);
-      alert("플랜이 성공적으로 저장되었습니다!");
+      console.log('플랜 저장 성공:', plannerData);
+      alert('플랜이 성공적으로 저장되었습니다!');
 
       // ViewPlan 페이지로 이동하면서 데이터 전달
       navigate(`/view-plan/${savedPlannerId}`);
     } catch (error) {
-      console.error("플랜 저장 실패:", error);
-      alert("플랜 저장 중 오류가 발생했습니다.");
+      console.error('플랜 저장 실패:', error);
+      alert('플랜 저장 중 오류가 발생했습니다.');
     } finally {
       setIsSaveModalOpen(false); // 모달 닫기
     }
@@ -227,9 +244,8 @@ function PlanTrip() {
             {Object.entries(dailyPlans).map(([date, places], index) => (
                 <div key={date} className="dailyPlanContainer">
                   <div className="dayHeader">
-                    <h4 style={{ display: 'flex', alignItems: 'center' }}>
-                      Day {index + 1}{' '}
-                      {/* Day 텍스트 뒤에 마커 추가 */}
+                    <h4 style={{display: 'flex', alignItems: 'center'}}>
+                      Day {index + 1} {/* Day 텍스트 뒤에 마커 추가 */}
                       <span
                           dangerouslySetInnerHTML={{
                             __html: `
@@ -265,7 +281,9 @@ function PlanTrip() {
                   </div>
 
                   <button
-                      className="addPlaceButton"
+                      className={`addPlaceButton ${
+                          selectedDay === date ? 'active' : ''
+                      }`}
                       onClick={() => handleShowPlaceList(date)}
                   >
                     여행지 추가 +
@@ -301,7 +319,7 @@ function PlanTrip() {
                 className="plan-button"
                 onClick={() => setIsSaveModalOpen(true)}
             >
-              플랜 저장
+            플랜 저장
             </button>
           </div>
           {/* 플랜 저장 모달 */}
@@ -423,14 +441,13 @@ function PlanTrip() {
           <div className="mapContainer">
             <MapRenderer
                 center={center}
-                markers={Object.values(dailyPlans)
-                    .flatMap((places, dayIndex) =>
-                        places.map((place, index) => ({
-                          ...place,
-                          color: colors[dayIndex % colors.length], // Day별 색상 적용
-                          glyph: `${index + 1}`, // 각 Day 내에서 1부터 시작하는 숫자
-                        }))
-                    )}
+                markers={Object.values(dailyPlans).flatMap((places, dayIndex) =>
+                    places.map((place, index) => ({
+                      ...place,
+                      color: colors[dayIndex % colors.length], // Day별 색상 적용
+                      glyph: `${index + 1}`, // 각 Day 내에서 1부터 시작하는 숫자
+                    }))
+                )}
                 routes={Object.values(dailyPlans).map((places, dayIndex) => ({
                   color: colors[dayIndex % colors.length], // Day별 경로 색상
                   path: places.map((place) => ({
@@ -444,75 +461,75 @@ function PlanTrip() {
             />
 
             <div className="categoryTags">
-              {["전체", "관광명소", "음식", "쇼핑", "문화", "랜드마크"].map(
-                (category) => (
-                  <button
-                    key={category}
-                    className={`categoryTag ${
-                      selectedCategory === category ? "selected" : ""
-                    }`}
-                    onClick={() => handleCategoryClick(category)}
-                  >
-                    {selectedCategory === category ? category : `#${category}`}
-                  </button>
-                )
+              {['전체', '관광명소', '음식', '쇼핑', '문화', '랜드마크'].map(
+                  (category) => (
+                      <button
+                          key={category}
+                          className={`categoryTag ${
+                              selectedCategory === category ? 'selected' : ''
+                          }`}
+                          onClick={() => handleCategoryClick(category)}
+                      >
+                        {selectedCategory === category ? category : `#${category}`}
+                      </button>
+                  )
               )}
             </div>
             <ul>
               {locations
-                .filter(
-                  (place) =>
-                    !(dailyPlans[selectedDay] || []).some(
-                      (addedPlace) => addedPlace.locationId === place.locationId
-                    )
-                )
-                .map((place) => (
-                  <li key={place.locationId} className="placeItem">
-                    <img
-                      src={place.placeImgUrl || "/images/placeholder.jpg"}
-                      alt={place.locationName}
-                      className="placeImage"
-                    />
-                    <div className="placeInfo">
-                      <div className="placeDetails">
-                        <span className="placeName">{place.locationName}</span>
-                        <p className="placeRating">
-                          평점: ⭐ {place.googleRating || "정보 없음"}
-                        </p>
-                        <p className="placeAddress">{place.formattedAddress}</p>
-                        {expandedPlaceId === place.locationId && (
-                          <p className="placeDescription">
-                            {place.description || "상세 설명이 없습니다."}
-                          </p>
-                        )}
-                        <span
-                          className="toggleText"
-                          onClick={() => toggleExpand(place.locationId)}
-                        >
-                          {expandedPlaceId === place.locationId
-                            ? "접기"
-                            : "더보기"}
-                        </span>
-                      </div>
-                      <button
-                        className="addButton"
-                        onClick={() => handleAddPlace(place)}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                  .filter(
+                      (place) =>
+                          !(dailyPlans[selectedDay] || []).some(
+                              (addedPlace) => addedPlace.locationId === place.locationId
+                          )
+                  )
+                  .map((place) => (
+                      <li key={place.locationId} className="placeItem">
+                        <img
+                            src={place.placeImgUrl || '/images/placeholder.jpg'}
+                            alt={place.locationName}
+                            className="placeImage"
+                        />
+                        <div className="placeInfo">
+                          <div className="placeDetails">
+                            <span className="placeName">{place.locationName}</span>
+                            <p className="placeRating">
+                              평점: ⭐ {place.googleRating || '정보 없음'}
+                            </p>
+                            <p className="placeAddress">{place.formattedAddress}</p>
+                            {expandedPlaceId === place.locationId && (
+                                <p className="placeDescription">
+                                  {place.description || '상세 설명이 없습니다.'}
+                                </p>
+                            )}
+                            <span
+                                className="toggleText"
+                                onClick={() => toggleExpand(place.locationId)}
+                            >
+                        {expandedPlaceId === place.locationId
+                            ? '접기'
+                            : '더보기'}
+                      </span>
+                          </div>
+                          <button
+                              className="addButton"
+                              onClick={() => handleAddPlace(place)}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </li>
+                  ))}
             </ul>
 
             <div className="plantripLoadMoreContainer">
               {currentPage < totalPages && (
-                <button
-                  className="plantripLoadMoreButton"
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                >
-                  더보기
-                </button>
+                  <button
+                      className="plantripLoadMoreButton"
+                      onClick={() => setCurrentPage((prev) => prev + 1)}
+                  >
+                    더보기
+                  </button>
               )}
             </div>
           </div>
@@ -529,15 +546,14 @@ function PlanTrip() {
         )}
         <div className="mapContainer">
           <MapRenderer
-            center={center}
-            markers={Object.values(dailyPlans).flat()}
-            selectedPlace={selectedPlace}
-            onMarkerClick={handleMarkerClick}
-            onCloseInfoWindow={handleCloseModal}
-            polylinePath={routePath}
+              center={center}
+              markers={Object.values(dailyPlans).flat()}
+              selectedPlace={selectedPlace}
+              onMarkerClick={handleMarkerClick}
+              onCloseInfoWindow={handleCloseModal}
+              polylinePath={routePath}
           />
         </div>
-
       </div>
   );
 }

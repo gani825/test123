@@ -15,12 +15,13 @@ import SelectDates from "./pages/plan/SelectDates";
 import PlanTrip from "./pages/plan/PlanTrip";
 import MenuBar from "./component/MenuBar";
 import ViewPlan from "./pages/plan/ViewPlan";
-import PlannerList from "./pages/test/PlannerList";
+import PlannerList from "./pages/plan/PlannerList";
 import EditPlan from "./pages/plan/EditPlan";
 import MyPage from "./MyPage/MyPage";
 import Footer from "./component/Footer";
 import FindId from "./pages/User/FindId";
 import FindPw from "./pages/User/FindPw";
+import RandomPlaces from "./pages/test/RandomPlaces";
 
 // AuthContext 생성
 export const AuthContext = createContext({
@@ -102,6 +103,7 @@ function App() {
                                 path="/attractionDetail/:locationId"
                                 element={<AttractionDetail/>}
                             />
+                            <Route path="/randomPlaces" element={<RandomPlaces/>}/>
                             <Route path="/planner-list" element={<PlannerList/>}/>
                             <Route path="/planner/edit/:id" element={<EditPlan/>}/>
                             <Route path="/find-id" element={<FindId/>}/>

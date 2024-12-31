@@ -1,16 +1,16 @@
-import React, { useContext, useState, useEffect  } from "react";
-import { AuthContext } from "../App";
-import "./MyPage.css";
-import axios from "axios";
-import {Link, useNavigate} from 'react-router-dom';
+import React, { useContext, useState, useEffect } from 'react';
+import { AuthContext } from '../App';
+import './MyPage.css';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import ReviewCreateModal from '../component/ReviewCreateModal';
 
 const MyPage = () => {
     const { user } = useContext(AuthContext);
     const [activeOptions, setActiveOptions] = useState(null); // 활성화된 카드의 ID 저장
-    const [activeTab, setActiveTab] = useState("plans"); // 기본적으로 '나의 여행 계획' 탭 활성화
+    const [activeTab, setActiveTab] = useState('plans'); // 기본적으로 '나의 여행 계획' 탭 활성화
     const [plans, setPlans] = useState([]);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const toggleOptions = (id) => {
@@ -42,34 +42,41 @@ const MyPage = () => {
     // 리뷰조회입니다....
     const [reviews, setReviews] = useState([]); // 리뷰 상태
     const [reviewLocation, setReviewLocation] = useState([]); // 리뷰가 쓰인 장소 상태
-    const [totalReviews,setTotalReviews] = useState();  // 총 리뷰 갯수수
-    const [currentPage, setCurrentPage] = useState(0);  // 현재 페이지
-    const [totalPages, setTotalPages] = useState(0);  // 전체 페이지 수
+    const [totalReviews, setTotalReviews] = useState(); // 총 리뷰 갯수수
+    const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+    const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
     const [loading, setLoading] = useState(false); // 로딩 상태
 
     // 리뷰 데이터 API 호출
     const fetchReviews = async (pageNumber = 0) => {
         setLoading(true);
         try {
-            const response = await axios.get("http://localhost:5050/reviews/getReviewsWithLocation", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                },
-                params: {
-                    page: pageNumber, // 첫 번째 페이지
-                    pageSize: 5, // 한 페이지당 5개 리뷰
-                    sortValue: "reviewCreatedAt", // 리뷰 생성일 기준 정렬
-                    sortDirection: "desc", // 내림차순
-                },
-            });
+            const response = await axios.get(
+                'http://localhost:5050/reviews/getReviewsWithLocation',
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                    params: {
+                        page: pageNumber, // 첫 번째 페이지
+                        pageSize: 5, // 한 페이지당 5개 리뷰
+                        sortValue: 'reviewCreatedAt', // 리뷰 생성일 기준 정렬
+                        sortDirection: 'desc', // 내림차순
+                    },
+                }
+            );
 
             if (response && response.data) {
                 const reviewWithLocationDtoList =
                     response.data._embedded?.reviewWithLocationDtoList || []; // 데이터가 없으면 빈 배열
 
                 // 리뷰저장
-                const reviewList = reviewWithLocationDtoList.map((item) => item.reviewDto);
-                const reviewLocationList = reviewWithLocationDtoList.map((item) => item.locationDto);
+                const reviewList = reviewWithLocationDtoList.map(
+                    (item) => item.reviewDto
+                );
+                const reviewLocationList = reviewWithLocationDtoList.map(
+                    (item) => item.locationDto
+                );
 
                 setReviews(reviewList);
                 setReviewLocation(reviewLocationList);
@@ -78,7 +85,7 @@ const MyPage = () => {
                 setCurrentPage(pageNumber); // 현재 페이지 업데이트
             }
         } catch (error) {
-            console.error("리뷰 데이터를 가져오는 데 실패했습니다.",error);
+            console.error('리뷰 데이터를 가져오는 데 실패했습니다.', error);
         } finally {
             setLoading(false);
         }
@@ -98,7 +105,7 @@ const MyPage = () => {
 
     // 탭 변경 시 데이터 fetch
     useEffect(() => {
-        if (activeTab === "reviews") {
+        if (activeTab === 'reviews') {
             fetchReviews(); // "나의 리뷰" 탭이 활성화되면 API 호출
         }
     }, [activeTab]);
@@ -110,10 +117,18 @@ const MyPage = () => {
 
         const stars = [];
         for (let i = 0; i < filledStars; i++) {
-            stars.push(<span key={`filled-${i}`} className="star filled">★</span>);
+            stars.push(
+                <span key={`filled-${i}`} className="star filled">
+          ★
+        </span>
+            );
         }
         for (let i = 0; i < emptyStars; i++) {
-            stars.push(<span key={`empty-${i}`} className="star empty">☆</span>);
+            stars.push(
+                <span key={`empty-${i}`} className="star empty">
+          ☆
+        </span>
+            );
         }
         return stars;
     };
@@ -127,23 +142,23 @@ const MyPage = () => {
         return `${year}-${month}-${day}`;
     };
 
-
     useEffect(() => {
         // 여행 계획 데이터 가져오기
         const fetchPlans = async () => {
+            setLoading(true); // 로딩 시작
             try {
-                const token = localStorage.getItem("accessToken");
+                const token = localStorage.getItem('accessToken');
 
                 if (!token) {
-                    setError("로그인이 필요합니다.");
+                    setError('로그인이 필요합니다.');
                     return;
                 }
 
                 const response = await axios.get(
-                    "http://localhost:5050/api/planner/user/plans",
+                    'http://localhost:5050/api/planner/user/plans',
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`,
+                            Authorization: `Bearer ${token}`, // 토큰 포함
                         },
                     }
                 );
@@ -152,16 +167,29 @@ const MyPage = () => {
                     const updatedPlans = response.data.map((plan) => {
                         const startDate = new Date(plan.plannerStartDate);
                         const endDate = new Date(plan.plannerEndDate);
-                        const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                        const days = Math.ceil(
+                            (endDate - startDate) / (1000 * 60 * 60 * 24)
+                        );
+
+                        // 첫 번째 이미지 가져오기
+                        const firstImage =
+                            plan.dailyPlans[0]?.toDos[0]?.placeImgUrl ||
+                            'https://via.placeholder.com/100';
+
                         return {
                             ...plan,
                             duration: `${days}박 ${days + 1}일`,
+                            imageUrl: firstImage, // 첫 번째 이미지 설정
+                            city: plan.regionName || '알 수 없음',
                         };
                     });
                     setPlans(updatedPlans); // 플래너 데이터 설정
                 }
             } catch (err) {
-                setError("여행 계획 데이터를 불러오지 못했습니다.");
+                console.error('여행 계획 데이터를 가져오는 데 실패했습니다:', err);
+                setError('여행 계획 데이터를 불러오지 못했습니다.');
+            } finally {
+                setLoading(false); // 로딩 종료
             }
         };
 
@@ -213,39 +241,45 @@ const MyPage = () => {
     //     setActiveOptions((prev) => (prev === id ? null : id)); // 같은 ID 클릭 시 닫기
     // };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                !event.target.closest(".options-menu") &&
-                !event.target.closest(".options-button")
-            ) {
-                setActiveOptions(null); // 메뉴 닫기
-            }
-        };
-
-        document.addEventListener("click", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
-
+    // useEffect(() => {
+    //     const handleClickOutside = (event) => {
+    //         if (
+    //             !event.target.closest('.options-menu') &&
+    //             !event.target.closest('.options-button')
+    //         ) {
+    //             setActiveOptions(null); // 메뉴 닫기
+    //         }
+    //     };
+    //
+    //     document.addEventListener('click', handleClickOutside);
+    //
+    //     return () => {
+    //         document.removeEventListener('click', handleClickOutside);
+    //     };
+    // }, []);
     const handleDeletePlan = async (plannerId) => {
-        if (window.confirm("정말로 삭제하시겠습니까?")) {
-            try {
-                await axios.delete(`http://localhost:5050/api/planner/${plannerId}`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    },
-                });
-                setPlans((prevPlans) =>
-                    prevPlans.filter((plan) => plan.plannerId !== plannerId)
-                );
-                alert("플랜이 삭제되었습니다.");
-            } catch (error) {
-                console.error("플랜 삭제 실패:", error);
-                alert("플랜 삭제 중 오류가 발생했습니다.");
+        if (!window.confirm('정말로 삭제하시겠습니까?')) return;
+
+        try {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                return;
             }
+
+            await axios.delete(`http://localhost:5050/api/planner/${plannerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // 토큰 포함
+                },
+            });
+
+            setPlans((prevPlans) =>
+                prevPlans.filter((plan) => plan.plannerId !== plannerId)
+            );
+            alert('플래너가 삭제되었습니다.');
+        } catch (error) {
+            console.error('플래너 삭제 실패:', error);
+            alert('플래너 삭제 중 오류가 발생했습니다.');
         }
     };
 
@@ -253,13 +287,13 @@ const MyPage = () => {
         <div className="mypage-container">
             <header className="mypage-header">
                 <img
-                    src={user?.profilePicture || "https://via.placeholder.com/100"}
+                    src={user?.profilePicture || 'https://via.placeholder.com/100'}
                     alt="Profile"
                     className="profile-img"
                 />
                 <div className="profile-info">
                     <div className="Profile">
-                        <strong>반가워요! {user?.displayName || "OOO"}님</strong>
+                        <strong>반가워요! {user?.displayName || 'OOO'}님</strong>
                         <button className="Profile-button">프로필 설정⚙️</button>
                     </div>
                     <div className="navigation">
@@ -271,17 +305,16 @@ const MyPage = () => {
             </header>
 
             <nav className="mypage-tabs">
-
                 <button
-                    className={activeTab === "plans" ? "active" : ""}
-                    onClick={() => setActiveTab("plans")}
+                    className={activeTab === 'plans' ? 'active' : ''}
+                    onClick={() => setActiveTab('plans')}
                 >
                     나의 여행 계획 {plans.length}
                 </button>
 
                 <button
-                    className={activeTab === "reviews" ? "active" : ""}
-                    onClick={() => setActiveTab("reviews")}
+                    className={activeTab === 'reviews' ? 'active' : ''}
+                    onClick={() => setActiveTab('reviews')}
                 >
                     나의 리뷰 {totalReviews}
                 </button>
@@ -290,25 +323,27 @@ const MyPage = () => {
             </nav>
 
             <div className="mypage-content">
-                {activeTab === "plans" && (
+                {activeTab === 'plans' && (
                     <>
-                        <button className="add-plan"  onClick={() => navigate(`/plan`, {})}>
-                            + 여행 일정 추가하기</button>
+                        <button className="add-plan" onClick={() => navigate(`/plan`, {})}>
+                            + 여행 일정 추가하기
+                        </button>
                         {plans.length === 0 && <p>등록된 여행 계획이 없습니다.</p>}
                         <div className="travel-plans">
                             {plans.map((plan) => (
                                 <div key={plan.plannerId} className="travel-plan-card">
                                     <img
-                                        src={plan.imageUrl || "https://via.placeholder.com/100"}
+                                        src={plan.imageUrl || 'https://via.placeholder.com/100'}
                                         alt={plan.plannerTitle}
                                         className="travel-image"
                                     />
                                     <div className="travel-details">
                                         <h3>{plan.plannerTitle}</h3>
-                                        <p>{plan.city || "알 수 없음"}</p>
+                                        <p>{plan.city || '알 수 없음'}</p>
                                         <p>{plan.duration}</p>
                                         <p>
-                                            여행 일정 | {plan.plannerStartDate} ~ {plan.plannerEndDate}
+                                            여행 일정 | {plan.plannerStartDate} ~{' '}
+                                            {plan.plannerEndDate}
                                         </p>
                                     </div>
                                     {/* 옵션 버튼 */}
@@ -323,7 +358,11 @@ const MyPage = () => {
                                             <div className="options-menu">
                                                 <button>공유하기</button>
                                                 <button>내용편집</button>
-                                                <button onClick={() => handleDeletePlan(plan.plannerId)}>삭제</button>
+                                                <button
+                                                    onClick={() => handleDeletePlan(plan.plannerId)}
+                                                >
+                                                    삭제
+                                                </button>
                                             </div>
                                         )}
                                     </div>
@@ -333,7 +372,7 @@ const MyPage = () => {
                     </>
                 )}
 
-                {activeTab === "reviews" && (
+                {activeTab === 'reviews' && (
                     <>
                         {loading && <p>로딩 중...</p>}
                         {!loading && reviews.length === 0 && <p>작성한 리뷰가 없습니다.</p>}
@@ -366,12 +405,12 @@ const MyPage = () => {
                                         </div>
                                     </div>
 
-
                                     <p>{review.comment}</p>
 
                                     {/* 리뷰 이미지 */}
                                     <div className="myPage-review-images">
-                                        {review.imageUrls && review.imageUrls.length > 0 && (
+                                        {review.imageUrls &&
+                                            review.imageUrls.length > 0 &&
                                             review.imageUrls.map((imageUrl, idx) => (
                                                 <img
                                                     key={idx}
@@ -379,15 +418,16 @@ const MyPage = () => {
                                                     alt={`review-image-${idx}`}
                                                     className="myPage-review-image"
                                                 />
-                                            ))
-                                        )}
+                                            ))}
                                     </div>
 
                                     <div className="myPage-review-location">
                                         <div className="myPage-review-location-info">
                                             {/* 위치 이미지가 있을 경우 표시 */}
                                             {reviewLocation[index]?.placeImgUrl && (
-                                                <Link to={`/attractionDetail/${reviewLocation[index].locationId}`}>
+                                                <Link
+                                                    to={`/attractionDetail/${reviewLocation[index].locationId}`}
+                                                >
                                                     <img
                                                         src={reviewLocation[index].placeImgUrl}
                                                         alt={reviewLocation[index].locationName}
@@ -395,8 +435,12 @@ const MyPage = () => {
                                                     />
                                                 </Link>
                                             )}
-                                            <Link to={`/attractionDetail/${reviewLocation[index]?.locationId}`}>
-                                                <span>{reviewLocation[index]?.locationName || '알 수 없음'}</span>
+                                            <Link
+                                                to={`/attractionDetail/${reviewLocation[index]?.locationId}`}
+                                            >
+                        <span>
+                          {reviewLocation[index]?.locationName || '알 수 없음'}
+                        </span>
                                             </Link>
                                         </div>
                                     </div>
@@ -412,7 +456,6 @@ const MyPage = () => {
                                     )}
                                 </div>
                             ))}
-
                         </div>
 
                         <div className="myPage-review-pagination">
@@ -422,7 +465,9 @@ const MyPage = () => {
                             >
                                 이전
                             </button>
-                            <span>{currentPage + 1} / {totalPages}</span>
+                            <span>
+                {currentPage + 1} / {totalPages}
+              </span>
                             <button
                                 disabled={currentPage >= totalPages - 1}
                                 onClick={() => handlePageChange(currentPage + 1)}
@@ -430,7 +475,6 @@ const MyPage = () => {
                                 다음
                             </button>
                         </div>
-
                     </>
                 )}
             </div>

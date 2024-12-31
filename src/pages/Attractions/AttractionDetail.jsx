@@ -191,7 +191,7 @@ const AttractionDetail = () => {
 
     // Google Maps API를 로드하는 훅
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyDYcmeImkXId7f8bF5GT1N3bWEDAhnp-rM',  // 발급받은 API 키 입력
+        googleMapsApiKey: 'AIzaSyAp8uS-RhnBl9Wbb-kQ42oKmfxpxcrD2rQ',  // 발급받은 API 키 입력
     });
 
     // 로딩 중일 경우

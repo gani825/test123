@@ -66,28 +66,30 @@ const MenuBar = () => {
               onClick={toggleDropdown} // 클릭하면 드롭다운 열림/닫힘
             />
             {isDropdownOpen && (
-              <div className="dropdown-menu">
-                <div
-                  className="dropdown-item"
-                  onClick={() => navigate("/mypage")}
-                >
-                  마이페이지
+                <div className="dropdown-menu">
+                    <div className="dropdown-item"
+                         onClick={() => {
+                             navigate("/mypage");
+                             setDropdownOpen(false); // 드롭다운 닫기
+                         }}
+                    >
+                        마이페이지
+                    </div>
+                    <div
+                        className="dropdown-item"
+                        onClick={handleLogout}
+                        style={{cursor: "pointer"}}
+                    >
+                        로그아웃
+                    </div>
                 </div>
-                <div
-                  className="dropdown-item"
-                  onClick={handleLogout}
-                  style={{ cursor: "pointer" }}
-                >
-                  로그아웃
-                </div>
-              </div>
             )}
           </div>
         ) : (
-          <div
-            className="login-link"
-            onClick={() => navigate("/signin")}
-            style={{ cursor: "pointer" }}
+            <div
+                className="login-link"
+                onClick={() => navigate("/signin")}
+                style={{ cursor: "pointer" }}
           >
             로그인
           </div>

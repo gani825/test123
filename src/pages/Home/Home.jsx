@@ -150,7 +150,7 @@ function Home() {
                             <h4 className="plan-title">내 여행 코스 일정</h4>
                             <div className="plan-dayAll">
                                 <div className="plan-day">
-                                    <h5>1일차</h5>
+                                    <h5>Day1</h5>
                                     <ul>
                                         <li><span className="landmark-tag">랜드마크</span> 도쿄
                                             타워<br/><span>13:00 - 15:00</span></li>
@@ -161,7 +161,7 @@ function Home() {
                                     </ul>
                                 </div>
                                 <div className="plan-day">
-                                    <h5>2일차</h5>
+                                    <h5>Day2</h5>
                                     <ul>
                                         <li><span className="landmark-tag">랜드마크</span> 교토
                                             사원<br/><span>13:00 - 15:00</span></li>
