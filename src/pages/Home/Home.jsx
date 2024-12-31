@@ -28,9 +28,22 @@ import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const navigate = useNavigate();
+
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = () => {
+        navigate(`/attractions?search=${encodeURIComponent(searchTerm)}`);
+    };
+
+
   const [recommendations, setRecommendations] = useState([]); // 추천 데이터를 저장할 상태
   const [title, setTitle] = useState(); // 제목 상태
+
 
   // AOS 초기화 및 axios 요청
   useEffect(() => {
@@ -119,13 +132,17 @@ function Home() {
 
       <div className="section">
         <div className="search">
-          <h3>어디로 가시나요?</h3>
-          <input
-            type="text"
-            placeholder="여행지를 검색하세요"
-            className="search-bar"
-          />
+            <h3>어디로 가시나요?</h3>
+            <input 
+                type="text" 
+                placeholder="여행지를 검색하세요" 
+                className="search-bar"
+                value={searchTerm}
+                onChange={handleSearchChange}
+            />
+            <button onClick={handleSearchSubmit}>검색</button>
         </div>
+
 
         <section className="recommended" data-aos="fade-up">
           <h3>{title}</h3>
