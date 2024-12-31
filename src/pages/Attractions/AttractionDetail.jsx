@@ -10,6 +10,7 @@ import star from "../../img/icons/star.png";
 import angleSmallLeft from "../../img/icons/angleSmallLeft.png";
 import angleSmallRight from "../../img/icons/angleSmallRight.png";
 
+
        
 const AttractionDetail = () => {
     // 여행지 상세 정보 불러오기
@@ -121,7 +122,8 @@ const AttractionDetail = () => {
     const fetchReviews = async (pageNumber = 0) => {
         try {
             const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
-            const response = await axios.get('http://localhost:5050/reviews/getPagedReviews', {
+            const response = await axios.get('http://localhost:5050/reviews/getReviewsWithUser', {
+
                 headers: { Authorization: `Bearer ${accessToken}` },
                 params: {
                     locationId,
@@ -137,7 +139,7 @@ const AttractionDetail = () => {
                     response.data._embedded?.reviewWithUserProfileDtoList || []; // 데이터가 없으면 빈 배열
 
                 // 리뷰와 사용자 프로필 데이터를 분리하여 저장
-                const reviewList = reviewWithUserProfileDtoList.map((item) => item.reivewDto);
+                const reviewList = reviewWithUserProfileDtoList.map((item) => item.reviewDto);
                 const userProfileList = reviewWithUserProfileDtoList.map((item) => item.userProfileDto);
 
                 setReviews(reviewList);
@@ -180,6 +182,12 @@ const AttractionDetail = () => {
         }
     };
 
+    const handleReviewSuccess = (status) => {
+      if (status === "success") {
+          fetchReviews(); // 리뷰 목록 갱신
+      }
+  };
+
 
     // Google Maps API를 로드하는 훅
     const { isLoaded } = useLoadScript({
@@ -190,7 +198,6 @@ const AttractionDetail = () => {
     if (locationLoading) {
         return <div>Loading...</div>;
     }
-
     // 장소 상세 정보가 없을 경우
     if (!location) {
         return <div>No details available for this location.</div>;
@@ -351,7 +358,11 @@ const AttractionDetail = () => {
 
                 {isModalOpen && (
                     <div className="modal-backdrop">
-                    <ReviewCreateModal locationId={locationId} onClose={closeModal}/>
+                        <ReviewCreateModal 
+                            locationId={locationId} 
+                            onClose={closeModal} 
+                            onSuccess={handleReviewSuccess} // onSuccess 전달
+                        />
                     </div>
                 )}
 
@@ -362,7 +373,6 @@ const AttractionDetail = () => {
                         <div className="review-header">
                             {/*  총 리뷰수 */}
                             <h3 className="review-header-title">리뷰 (총 <span>{totalReviews}</span>건 )</h3>
-
                             <div className="review-header-actions">
                                 {/* 좌측: 정렬 옵션 */}
                                 <div className="review-header-sort">
@@ -459,6 +469,7 @@ const AttractionDetail = () => {
                                         key={page}
                                         className={`pagination-button ${page === currentPage ? 'active' : ''}`}
                                         onClick={() => handlePageChange(page)}
+
                                         // disabled={page === currentPage} // 현재 페이지 비활성화
                                     >
                                         {page + 1}

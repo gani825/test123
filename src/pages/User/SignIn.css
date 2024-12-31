@@ -1,53 +1,17 @@
-/* 모달 오버레이 */
-.SignIn .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-}
-
-/* 모달 창 */
-.SignIn .Login-modal-content {
+/* 로그인 컨텐츠 */
+.SignIn .signin-content {
+    position: relative;
     background: #fff;
     padding: 20px 40px;
-    width: 450px;
-    position: relative;
+    margin: auto;
+    max-width: 413px;
 }
 
-/* 닫기 버튼 */
-.SignIn .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    padding-top: 8px;
-}
-
-/* 뒤로 가기 버튼 스타일 */
-.SignIn .back-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #222;
-}
 
 /* 제목 스타일 */
-.SignIn .modal-title {
+.SignIn .signin-title {
+    font-size: 25px;
     text-align: center;
-    margin-bottom: 50px;
     margin: 50px 0;
 }
 
@@ -58,6 +22,7 @@
 /* 입력 필드 스타일 */
 .SignIn form input {
     width: 100%;
+    height: 45px;
     padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #aaa;
@@ -74,7 +39,7 @@
     color: white;
     cursor: pointer;
     border-radius: 8px;
-    margin: 17px 0;
+    margin: 17px 0 13px 0;
 }
 
 /* 로그인 링크 컨테이너 */
@@ -229,5 +194,3 @@
     width: 32px;
     height: 32px;
 }
-
-

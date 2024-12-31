@@ -55,6 +55,7 @@ const Attractions = () => {
                 const response = await axios.get("http://localhost:5050/tag/getAll"); // 모든 태그를 다 가져오는 API 경로
 
                 setTags(response.data); // 가져온 데이터를 상태에 저장
+
             } catch (error) {
                 console.error('Error fetching tags:', error);
             }
@@ -170,6 +171,7 @@ const Attractions = () => {
     // 검색 버튼 클릭 처리
     const handleSearchSubmit = () => {
         handleSubmit(0); // 검색어로 첫 번째 페이지 데이터 요청
+        setTotalElements(0); // 검색 결과 후 totalElements 비우기
     };
 
     // 페이지관련 설정
@@ -253,7 +255,7 @@ const Attractions = () => {
                 <input
                     type="text"
                     className="search-input"
-                    placeholder="검색어를 입력하세요"
+                    placeholder="이름, 지역 검색"
                     value={searchTerm}
                     onChange={handleSearchChange}  // 검색어 입력 시 처리
                     onKeyDown={(event) => {

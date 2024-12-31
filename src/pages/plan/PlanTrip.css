@@ -340,17 +340,16 @@
     border-radius: 5px;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.plantripLoadMoreContainer {
+.planLoadMoreContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
 }
 
-.plantripLoadMoreButton {
+.planLoadMoreButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -417,4 +416,19 @@
 .infoWindowContent {
   max-width: 170px;
   text-align: center;
+}
+
+/* 수정 취소 버튼 */
+.cancel-button {
+    margin: 20px 0 0 10px;
+    width: 95%;
+    height: 52px;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    color: #222;
+    background-color: #eee;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }

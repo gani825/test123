@@ -181,7 +181,6 @@
     text-decoration: none;
     color: inherit;
 }
-
 .AttractionDetail .nearby-location-item h4 {
     font-size: 18px;
     font-weight: bold;
@@ -239,7 +238,6 @@
     transform: translateY(-5px);
 }
 
-  
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -301,6 +299,7 @@
     cursor: pointer;
 }
 
+
 /* 정렬 옵션 스타일 */
 .AttractionDetail .review-header-sort {
     display: flex;
@@ -314,19 +313,18 @@
     border: none;
     font-size: 18px;
     cursor: pointer;
+
 }
 
 .AttractionDetail .sort-button.active {
     font-weight: bold;
 }
-
 /* 구분선 스타일 */
 /*.sort-divider {*/
 /*    width: 1px;*/
 /*    height: 16px;*/
 /*    background-color: #ccc; !* 회색 구분선 *!*/
 /*}*/
-
 
 /* 리뷰 컨테이너 */
 .AttractionDetail .review-main {
