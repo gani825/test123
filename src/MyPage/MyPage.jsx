@@ -7,7 +7,7 @@ import ReviewCreateModal from "../component/ReviewCreateModal";
 import starColor from "../img/icons/starColor.png";
 import heart from "../img/icons/heart.png";
 import heartFilled from "../img/icons/heartFilled.png";
-import Compressor from "compressorjs";
+import imageCompression from 'browser-image-compression';
 import ChangePasswordModal from "./ChangePasswordModal";
 
 const MyPage = () => {
@@ -30,26 +30,31 @@ const MyPage = () => {
       console.log("업로드할 파일이 없습니다.");
       return;
     }
-
+  
     // 미리보기 이미지 URL 설정
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewImage(reader.result); // 미리보기 이미지 업데이트
     };
     reader.readAsDataURL(file);
-
-    new Compressor(file, {
-      quality: 0.6,
-      maxWidth: 800,
-      maxHeight: 800,
-      success: (compressedFile) => {
-        // 파일을 상태에 저장
+  
+    // 압축 옵션 설정
+    const options = {
+      maxWidthOrHeight: 800, // 최대 너비 또는 높이 설정
+      useWebWorker: true, // 웹 워커 사용
+      maxSizeMB: 5, // 최대 파일 크기 (MB 단위)
+      quality: 0.6, // 품질 설정 (0.0 ~ 1.0)
+    };
+  
+    // 이미지 압축
+    imageCompression(file, options)
+      .then((compressedFile) => {
+        // 압축된 파일을 상태에 저장
         setCompressedImage(compressedFile);
-      },
-      error: (err) => {
+      })
+      .catch((err) => {
         console.error("이미지 압축 실패: ", err);
-      },
-    });
+      });
   };
 
   // 유저 프로필 데이터
@@ -217,6 +222,7 @@ const MyPage = () => {
         const reviewLocationList = reviewWithLocationDtoList.map(
           (item) => item.locationDto
         );
+        console.log(reviewList);
 
         setReviews(reviewList);
         setReviewLocation(reviewLocationList);

@@ -40,6 +40,10 @@ function Home() {
         navigate(`/attractions?search=${encodeURIComponent(searchTerm)}`);
     };
 
+    const handleTagClick = (tagId) => {
+      navigate(`/attractions?tagId=${tagId}`);
+    }
+
 
   const [recommendations, setRecommendations] = useState([]); // 추천 데이터를 저장할 상태
   const [title, setTitle] = useState(); // 제목 상태
@@ -174,23 +178,23 @@ function Home() {
             다양한 테마로 분류된 여행지를 탐색하며 새로운 경험을 만나보세요.
           </span>
           <div className="category-container">
-            <div className="category-card-large">
-              <div className="category-title">관광명소</div>
-            </div>
-            <div className="small-cards-container">
-              <div className="category-card">
-                <div className="category-title">음식</div>
+              <div className="category-card-large" onClick={() => handleTagClick(1)}>
+                  <div className="category-title">관광명소</div>
               </div>
-              <div className="category-card">
-                <div className="category-title">랜드마크</div>
+              <div className="small-cards-container">
+                  <div className="category-card" onClick={() => handleTagClick(5)}>
+                      <div className="category-title">음식</div>
+                  </div>
+                  <div className="category-card" onClick={() => handleTagClick(4)}>
+                      <div className="category-title">랜드마크</div>
+                  </div>
+                  <div className="category-card" onClick={() => handleTagClick(2)}>
+                      <div className="category-title">문화</div>
+                  </div>
+                  <div className="category-card" onClick={() => handleTagClick(3)}>
+                      <div className="category-title">쇼핑</div>
+                  </div>
               </div>
-              <div className="category-card">
-                <div className="category-title">문화</div>
-              </div>
-              <div className="category-card">
-                <div className="category-title">쇼핑</div>
-              </div>
-            </div>
           </div>
         </section>
 
