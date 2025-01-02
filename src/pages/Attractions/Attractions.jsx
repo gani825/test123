@@ -45,6 +45,8 @@ const Attractions = () => {
                 const response = await axios.get("http://localhost:5050/region/getAll");  // 지역 정보 API 호출
 
                 setRegions(response.data);  // 가져온 지역 목록 데이터 저장
+                console.log("반환값확인",response);
+                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching regions:', error);
             }

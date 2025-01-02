@@ -28,6 +28,8 @@ import Footer from "./component/Footer";
 import FindId from "./pages/User/FindId";
 import FindPw from "./pages/User/FindPw";
 import RandomPlaces from "./pages/test/RandomPlaces";
+import OAuth2Callback from "./pages/User/OAuth2Callback"; // 추가
+
 
 // AuthContext 생성
 export const AuthContext = createContext({
@@ -48,6 +50,7 @@ function Register() {
 }
 
 function App() {
+
   // 특정 페이지 Footer 렌더링 제외
   const location = useLocation();
   const shouldRenderFooter =
@@ -57,6 +60,7 @@ function App() {
     location.pathname !== '/find-id' &&
     location.pathname !== '/find-pw' &&
     location.pathname.slice(0, 13) !== '/planner/edit';
+
 
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -69,11 +73,13 @@ function App() {
     return !!localStorage.getItem('accessToken') && Date.now() < tokenExpiry;
   });
 
-  const saveUser = (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
-    setIsAuthenticated(true);
-  };
+
+    const saveUser = (user) => {
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+        setIsAuthenticated(true); // 즉시 로그인 상태로 변경
+    };
+
 
   const clearUser = () => {
     localStorage.removeItem('user');
@@ -127,6 +133,7 @@ function App() {
               <Route path="/find-id" element={<FindId />} />
               <Route path="/find-pw" element={<FindPw />} />
               <Route path="/random-places" element={<RandomPlaces />} />
+              <Route path="/oauth2/callback" element={<OAuth2Callback />} /> {/* OAuth2 콜백 */}
             </Routes>
           </div>
           {/* 특정 페이지 Footer 렌더링 제외 */}

@@ -56,44 +56,43 @@ function SignIn() {
 
     // React 상태와 localStorage 동기화
     useEffect(() => {
-        const checkAndRestoreSession = async () => {
-            const storedAccessToken = localStorage.getItem('accessToken');
-            const storedAccessTokenExpiry = localStorage.getItem('accessTokenExpiry');
-            const storedRefreshToken = localStorage.getItem('refreshToken');
-            const storedUserEmail = localStorage.getItem('userEmail');
+        const storedAccessToken = localStorage.getItem('accessToken');
+        const storedAccessTokenExpiry = localStorage.getItem('accessTokenExpiry');
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+        const storedUserEmail = localStorage.getItem('userEmail');
 
-            if (storedAccessToken && storedAccessTokenExpiry) {
-                if (Date.now() < storedAccessTokenExpiry) {
-                    setIsAuthenticated(true);
-                    setUser({ email: storedUserEmail });
-                } else if (storedRefreshToken) {
-                    try {
-                        const newAccessToken = await refreshToken();
+        if (storedAccessToken && storedAccessTokenExpiry) {
+            if (Date.now() < parseInt(storedAccessTokenExpiry, 10)) {
+                setIsAuthenticated(true);
+                setUser({ email: storedUserEmail });
+            } else if (storedRefreshToken) {
+                refreshToken()
+                    .then((newAccessToken) => {
                         setIsAuthenticated(true);
                         setUser({ email: storedUserEmail });
                         console.log('AccessToken이 갱신되었습니다.');
-                    } catch (error) {
-                        console.error('세션 갱신 실패:', error.message);
-                        handleSessionExpired(); // 통합된 함수 호출
-                    }
-                } else {
-                    handleSessionExpired(); // 통합된 함수 호출
-                }
+                    })
+                    .catch(() => {
+                        handleSessionExpired(); // 만료된 세션 처리
+                    });
+            } else {
+                handleSessionExpired(); // 만료된 세션 처리
             }
-        };
+        }
+    }, [setIsAuthenticated, setUser]);
 
-        checkAndRestoreSession();
-    }, []);
 
-    // OAuth 로그인 핸들러 (예: Google)
-    const handleOAuthLogin = () => {
-        window.location.href = '/api/auth/oauth2/authorize/google'; // 백엔드 OAuth 엔드포인트
+
+    // OAuth 로그인 핸들러
+    const handleOAuthLogin = (provider) => {
+        window.location.href = `http://localhost:5050/oauth2/authorization/${provider}`;
     };
 
     return (
         <div className="SignIn">
             <div className="signin-content" onClick={(e) => e.stopPropagation()}>
                 <h2 className="signin-title">로그인</h2>
+
                 <form onSubmit={handleLogin}>
                     <h4 className="inputName">이메일</h4>
                     <input
@@ -139,14 +138,16 @@ function SignIn() {
                         <span className="divider-line"></span>
                     </div>
                     <div className="social-icons">
-                        <div className="kakao-box">
-                            <img src={kakao} alt="Kakao" />
+
+                        <div className="kakao-box" onClick={() => handleOAuthLogin('kakao')}>
+                            <img src={kakao} alt="Kakao"/>
                         </div>
-                        <div className="naver-box">
-                            <img src={naver} alt="Naver" />
+                        <div className="naver-box" onClick={() => handleOAuthLogin('naver')}>
+                            <img src={naver} alt="Naver"/>
                         </div>
-                        <div className="google-box">
-                            <img src={google} alt="Google" />
+                        <div className="google-box" onClick={() => handleOAuthLogin('google')}>
+                            <img src={google} alt="Google"/>
+
                         </div>
                     </div>
                 </div>

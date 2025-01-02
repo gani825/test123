@@ -65,6 +65,7 @@ function Home() {
       .then((response) => {
         console.log("Recommendations", response.data);
         setRecommendations(response.data);
+        console.log("배열인지 확인",response);
 
         // 제목 설정
         if (token && response.data.length > 0) {

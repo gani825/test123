@@ -188,6 +188,7 @@ function FindPw() {
                 <button className="join-back-button" onClick={handleBackToSignIn}>
                     로그인 하기
                 </button>
+
             </div>
         </div>
     );
