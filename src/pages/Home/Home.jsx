@@ -200,25 +200,25 @@ function Home() {
             <div className="small-cards-container">
 
               <div className="category-card">
-                  <img src={Food} alt="Food"  />
-                  <div className="overlay" onClick={() => handleTagClick(5)}></div>
+                  <img src={Food} alt="Food"/>
+                  <div className="overlay" onClick={() => handleTagClick(5)} ></div>
                   <div className="category-text">음식</div>
               </div>
 
               <div className="category-card">
-                  <img src={Landmark} alt="Landmark"  />
-                  <div className="overlay" onClick={() => handleTagClick(4)}></div>
+                  <img src={Landmark} alt="Landmark"/>
+                  <div className="overlay" onClick={() => handleTagClick(4)} ></div>
                   <div className="category-text">랜드마크</div>
               </div>
 
               <div className="category-card">
-                  <img src={Culture} alt="Culture" />
+                  <img src={Culture} alt="Culture"/>
                   <div className="overlay" onClick={() => handleTagClick(2)}></div>
                   <div className="category-text">문화</div>
               </div>
 
               <div className="category-card">
-                  <img src={Shopping} alt="Shopping" />
+                  <img src={Shopping} alt="Shopping"/>
                   <div className="overlay" onClick={() => handleTagClick(3)}></div>
                   <div className="category-text">쇼핑</div>
               </div>
