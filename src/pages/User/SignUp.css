@@ -1,119 +1,144 @@
-/* 회원가입 컨텐츠 */
-.SignUp .signup-content {
+
+/* 모달 오버레이 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* 모달 창 */
+.Join-modal-content {
     background: #fff;
     padding: 20px 40px;
-    margin: 0 auto;
     width: 450px;
     /*height: 660px;*/
     position: relative;
 }
-
-.SignUp .signup-title {
-    font-size: 25px;
-    text-align: center;
-    margin: 50px 0;
+.Join-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding-top: 8px;
 }
 
-/* 제목 */
-.SignUp .signup-input-name {
+.SignUpInputName {
     text-align: left;
     margin-top: 10px;
-    margin-bottom: 6px;
-}
-
-/* 이메일 */
-.SignUp .signup-email-container {
-    display: flex;
-    gap: 7px;
-}
-
-/* 입력창 */
-.SignUp .signup-email-input,
-.SignUp .verificationCode-input,
-.SignUp .signup-nickname-input,
-.SignUp .signup-userphone-input,
-.SignUp .signup-pwd-input,
-.SignUp .signup-pwd-confirm-input
-{
-    padding: 12px;
     margin-bottom: 5px;
-    width: 100%;
-    height: 45px;
-    border: 1px solid #aaa;
-    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* 이메일 적는 칸 */
+.signUp-email-input{
+    margin-bottom : 10px;
+}
+
+.verificationCode-input{
+    margin : 10px 0;
 }
 
 /* 중복 확인 버튼 */
-/* 인증 확인 버튼 */
-.SignUp .duplicate-check-button,
-.SignUp .verify-code-button {
-    padding: 11px;
-    width: 100px;
-    height: 45px;
-    background-color: #222;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.SignUp .verification-check {
-    display: flex;
-    gap: 7px;
-}
-
-/* 인증번호 */
 /* 인증 번호 요청 버튼 */
-.SignUp .verification-request-button {
-    padding: 11px;
-    width: 100px;
-    height: 45px;
-    background-color: #222;
+/* 인증 번호 확인 버튼 */
+.duplicate-check-button,
+.verify-code-button {
+    padding: 5px 10px;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
 }
-
-.SignUp .verify-code-button{
+.verify-code-button{
     margin-bottom: 15px;
 }
+.duplicate-check-button{
+    margin-bottom: 10px;
+}
 
-/* 이메일 중복 확인 메시지 */
+    
+/* 인증 번호 요청 버튼 */
+.verification-request-button,
+.reset-verified-button{
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    /* margin-bottom: 5px; */
+}
+
+
+.email-verified-message{
+    margin-bottom : 5px;
+}
+
+/* 이메일 중복 확인인 메시지 */
 /* 인증 이메일 발송 메시지 */
-/* 인증 이메일 완료 메시지 */
-.SignUp .email-check-message,
-.SignUp .verification-status-message,
-.SignUp .email-verified-message,
-.SignUp .pwd-cofirm-message,
-.SignUp .pwd-message {
+.email-check-message,
+.verification-status-message {
     font-size: 14px;
     margin-left: 10px;
     display: inline-block;
     vertical-align: middle;
     margin-bottom : 4px;
-    color: #f61a1a;
 }
 
-/* 중복 확인 버튼 - 호버 */
-/* 인증 번호 요청 버튼 - 호버 */
-/* 인증 번호 확인 버튼 - 호버 */
-.SignUp .duplicate-check-button:hover,
-.SignUp .verification-request-button:hover,
-.SignUp .verify-code-button:hover,
-.SignUp .reset-verified-button:hover {
+/* 중복 확인 버튼 */
+/* 인증 번호 요청 버튼 */
+/* 인증 번호 확인 버튼 */
+.duplicate-check-button:hover,
+.verification-request-button:hover,
+.verify-code-button:hover,
+.reset-verified-button:hover {
     background-color: #0056b3;
 }
 
-/* 인증 번호 요청 버튼 - 비활성화 */
-/* 인증 번호 확인 버튼 - 비활성화 */
-.SignUp .verification-request-button:disabled,
-.SignUp .verify-code-button:disabled {
+/* 인증 번호 요청 버튼 */
+/* 인증 번호 확인 버튼 */
+.verification-request-button:disabled,
+.verify-code-button:disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
 
-.SignUp .password-input {
+.input-with-button {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-with-button input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.check-button {
+    margin-bottom: 15px;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.password-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -121,14 +146,14 @@
 }
 
 
-.SignUp .phone-input {
+.phone-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.SignUp .submit-button {
+.submit-button {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
@@ -139,23 +164,23 @@
     cursor: pointer;
 }
 
-.SignUp .check-button.disabled,
-.SignUp .submit-button.disabled {
+.check-button.disabled,
+.submit-button.disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
 
-.SignUp .join-back-button {
-    margin: 10px auto;
-    display: block;
+.Join-back-button {
+    position: absolute;
+    top: 20px;
+    left: 10px;
     background: none;
     border: none;
-    font-size: 12px;
+    font-size: 10px;
     cursor: pointer;
-    border-bottom: 1px solid #222;
+    color: black;
 }
 
-.SignUp .Join-back-button:hover {
+.Join-back-button:hover {
     color: gray;
-    border-bottom: 1px solid gray;
 }

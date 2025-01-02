@@ -1,25 +1,19 @@
 // ReviewCreateModal.js
-import React, { useState,useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './ReviewCreateModal.css'
-import imageCompression from 'browser-image-compression';
 
 const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSuccess, accessToken }) => {
-  console.log("머야",initialData);
   const currentMode = mode || 'create' ;
   const [reviewId,setReviewId] = useState(initialData.reviewId || '');
   const [title,setTitle] = useState(initialData.title || '');
   const [rating, setRating] = useState(initialData.rating || 0);
   const [comment, setComment] = useState(initialData.comment || '');
-  const [imageUrls, setImageUrls] = useState(initialData.imageUrls || []); // 최대 3개의 이미지 URL
+  const [imageUrls, setImageUrls] = useState(['', '', '']); // 최대 3개의 이미지 URL
   const [imageFiles, setImageFiles] = useState([]); // 이미지 파일 상태 추가
-
-
-
-
-
+  
   // 이미지 파일 선택 처리
-  const handleImageChange = async (e) => {  // async 추가
+  const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
@@ -31,94 +25,18 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
       return true;
     });
 
-    if (filteredFiles.length + imageFiles.length + imageUrls.length > 3) {
+    if (files.length + imageFiles.length > 3) {
       alert('최대 3개의 이미지만 첨부할 수 있습니다.');
       return;
     }
-
-    // 압축된 이미지를 저장하기 위한 배열
-    const compressedFiles = [];
-    
-    // 이미지 압축 후 저장
-    for (const file of filteredFiles) {
-      try {
-        const options = {
-          maxSizeMB: 5, // 압축된 이미지의 최대 크기 (5MB 이하로 설정)
-          maxWidthOrHeight: 1024, // 이미지의 최대 가로 또는 세로 크기
-          useWebWorker: true, // 웹 워커를 사용하여 비동기적으로 처리
-        };
-
-        // 이미지 압축
-        const compressedBlob = await imageCompression(file, options);
-        console.log(compressedBlob);
-
-        // Blob을 File 객체로 변환하면서 원래 이름 복원
-        const compressedFile = new File([compressedBlob], file.name, {
-          type: file.type,
-          lastModified: Date.now(),
-        });
-       
-        compressedFiles.push(compressedFile);
-      } catch (error) {
-        console.error('이미지 압축 중 오류 발생:', error);
-        alert('이미지 압축에 실패했습니다.');
-        return;
-      }
-    }
-
-    setImageFiles((prevFiles) => [...prevFiles, ...compressedFiles]);
-    // imageUrls 상태 업데이트 (편집 모드에서 기존 이미지에 새 이미지를 추가)
-    if (currentMode === 'edit') {
-      setImageUrls((prevUrls) => [
-        ...prevUrls, 
-        ...filteredFiles.map(file => URL.createObjectURL(file))
-      ]);
-    }
+    setImageFiles((prevFiles) => [...prevFiles, ...filteredFiles]);
   };
 
-  const imageFilesRef = useRef(imageFiles);  // imageFiles의 최신 상태를 참조
-  useEffect(() => {
-    imageFilesRef.current = imageFiles; // imageFiles가 변경될 때마다 최신 값을 ref에 저장
-  }, [imageFiles]);
-
-  useEffect(() => {
-    console.log('Updated imageFiles:', imageFiles);
-  }, [imageFiles]);
 
 
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem('accessToken');
 
-    console.log("현재 imageFiles 상태 확인:", imageFilesRef);
-
-      // 이미지 업로드가 필요할 때만 실행
-      const formData = new FormData();
-    
-      imageFilesRef.current.forEach((file) => {
-        formData.append('files', file);
-      });
-
-      let newImageUrls = [];
-      
-      // 이미지 업로드 요청
-      if (imageFilesRef.current.length > 0) {
-        try {
-          const response = await axios.post('http://localhost:5050/reviews/uploadReviewImage', formData, {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
-          newImageUrls = response.data; // 업로드 후 서버에서 반환된 URL들
-          console.log("새로운 이미지 업로드 제대로 되는가 확인",newImageUrls);
-
-        } catch (error) {
-          console.error('이미지 업로드 중 오류 발생:', error?.response || error.message || error);
-          alert('이미지 업로드에 실패했습니다.');
-          return;
-        }
-      }
 
     const reviewDto = {
       reviewId : reviewId,
@@ -126,7 +44,6 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
       title: title,
       rating: rating,
       comment: comment,
-      imageUrls: [...imageUrls, ...newImageUrls],
     };
 
     try {
@@ -147,7 +64,6 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
         responseStatus = "success"; // 성공 시 상태 변경
 
       } else if (currentMode === 'edit'){
-        console.log(reviewDto);
         await axios.put(`http://localhost:5050/reviews/${initialData.reviewId}/edit`, reviewDto,
         {
           headers: {
@@ -171,14 +87,11 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
     }
   };
 
-  // 기존 이미지 삭제
-  const removeImageUrl = (index) => {
-    setImageUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
-  };
-
-  // 새 이미지 삭제
-  const removeImageFile = (index) => {
-    setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  // 미리보기 이미지 삭제
+  const removeImage = (index) => {
+    const newImageFiles = [...imageFiles];
+    newImageFiles.splice(index, 1); // index 위치의 이미지 삭제
+    setImageFiles(newImageFiles); // 상태 업데이트
   };
 
     return (
@@ -252,36 +165,24 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
                         />
                         {/* 업로드한 사진 미리보기 영역 */}
                         <div className="image-preview">
-                          {/* 기존 이미지 URL 미리보기 */}
-                          {imageUrls.map((url, index) => (
-                            <div className="image-preview-item" key={index}>
-                              <img
-                                src={url}
-                                alt={`Preview ${index}`}
-                                style={{ width: '100px', height: '100px', margin: '5px' }}
-                              />
-                              <button
-                                className="remove-image-btn"
-                                onClick={() => removeImageUrl(index)} // 기존 URL 삭제
-                              >
-                                X
-                              </button>
-                            </div>
-                          ))}
-
-                          {/* 새로 업로드한 이미지 미리보기 */}
-                          {imageFiles.map((file, index) => (
-                            <div className="image-preview-item" key={index + imageUrls.length}>
-                              <img
-                                src={URL.createObjectURL(file)}
-                                alt={`Preview ${index}`}
-                                style={{ width: '100px', height: '100px', margin: '5px' }}
-                              />
-                              <button className="remove-image-btn" onClick={() => removeImageFile(index)}>
-                                X
-                              </button>
-                            </div>
-                          ))}
+                            {imageFiles.length > 0 && (
+                                imageFiles.map((file, index) => (
+                                <div className="image-preview-item" key={index}>
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt={`Preview ${index}`}
+                                        style={{ width: '100px', height: '100px', margin: '5px' }}
+                                    />
+                                    {/* X 버튼 */}
+                                    <button
+                                        className="remove-image-btn"
+                                        onClick={() => removeImage(index)} // 이미지 삭제 함수
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
@@ -290,8 +191,8 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
 
             {/* 하단영역 - 버튼 */}
             <div className="modal-footer">
-                <button onClick={onClose} className="review-create-cancel-button">취소</button>
-                <button onClick={handleSubmit} className="review-create-submit-button">저장</button>
+                <button onClick={onClose} className="cancel-button">취소</button>
+                <button onClick={handleSubmit} className="submit-button">저장</button>
             </div>
         </div>
     );

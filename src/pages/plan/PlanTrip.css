@@ -117,12 +117,6 @@
   cursor: pointer;
 }
 
-.addPlaceButton.active {
-    background-color: #dee5ec;
-    border: 1px solid #dee5ec;
-    color: #222;
-}
-
 /* 추가된 여행지 목록 스타일 */
 .addedPlacesList {
   list-style: none;
@@ -317,7 +311,6 @@
   font-size: 18px;
 }
 
-
 .placeItem button:hover {
   background: #dee5ec;
 }
@@ -347,16 +340,17 @@
     border-radius: 5px;
     color: white;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.planLoadMoreContainer {
+.plantripLoadMoreContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
 }
 
-.planLoadMoreButton {
+.plantripLoadMoreButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -423,19 +417,4 @@
 .infoWindowContent {
   max-width: 170px;
   text-align: center;
-}
-
-/* 수정 취소 버튼 */
-.cancel-button {
-    margin: 20px 0 0 10px;
-    width: 95%;
-    height: 52px;
-    padding: 10px;
-    font-size: 16px;
-    text-align: center;
-    color: #222;
-    background-color: #eee;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
 }

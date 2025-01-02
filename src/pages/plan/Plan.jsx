@@ -5,13 +5,10 @@ import Tokyo from '../../img/Tokyo.jpg';
 import Osaka from '../../img/Osaka.jpg';
 import KyotoCity from '../../img/KyotoCity.jpg';
 import Fukuoka from '../../img/Fukuoka.jpg';
-import {useNavigate} from "react-router-dom";
 
 function Plan() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCity, setSelectedCity] = useState('');
-  const navigate = useNavigate();
-
   const cities = [
     {
       id: 1,
@@ -43,12 +40,6 @@ function Plan() {
     console.log('선택된 도시:', city);
     setSelectedCity({ name: city.name, id: city.id });
     setShowModal(true);
-
-    const selectedCities = JSON.parse(localStorage.getItem('selectedCities')) || [];
-    if (!selectedCities.some((c) => c.id === city.id)) {
-      selectedCities.push(city); // 선택된 도시 중복 저장 방지
-      localStorage.setItem('selectedCities', JSON.stringify(selectedCities));
-    }
   };
 
   const closeModal = () => {
@@ -67,18 +58,12 @@ function Plan() {
                     className="cityCard"
                     onClick={() => openModal(city)}
                 >
-                  <img src={city.image} alt={city.name} className="City-img"/>
+                  <img src={city.image} alt={city.name} className="City-img" />
                   <span>{city.name}</span>
                   <div className="tooltip">{city.description}</div>
                 </div>
             ))}
           </div>
-          <button
-              className="planButton"
-              onClick={() => navigate(`/planner-list`, {})}
-          >
-            내 전체 계획 보기
-          </button>
         </div>
         <CalendarModal
             show={showModal}

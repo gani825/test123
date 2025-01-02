@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import kakao from '../../img/icons/kakao.png';
 import naver from '../../img/icons/naver.png';
 import google from '../../img/icons/google.png';
+import cross from "../../img/icons/cross.png";
 import './SignIn.css';
 
 Modal.setAppElement('#root'); // React Modal 설정
@@ -91,6 +92,7 @@ function SignIn() {
         <div className="SignIn">
             <div className="signin-content" onClick={(e) => e.stopPropagation()}>
                 <h2 className="signin-title">로그인</h2>
+
                 <form onSubmit={handleLogin}>
                     <h4 className="inputName">이메일</h4>
                     <input
@@ -136,6 +138,7 @@ function SignIn() {
                         <span className="divider-line"></span>
                     </div>
                     <div className="social-icons">
+
                         <div className="kakao-box" onClick={() => handleOAuthLogin('kakao')}>
                             <img src={kakao} alt="Kakao"/>
                         </div>
@@ -144,6 +147,7 @@ function SignIn() {
                         </div>
                         <div className="google-box" onClick={() => handleOAuthLogin('google')}>
                             <img src={google} alt="Google"/>
+
                         </div>
                     </div>
                 </div>

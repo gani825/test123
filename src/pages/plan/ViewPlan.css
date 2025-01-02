@@ -91,15 +91,9 @@
     color: #666;
 }
 
-.planviewActionButtons {
-    display: flex;
-    justify-content: center;
-    justify-items: center;
-}
-
 .planviewEditButton {
-    margin: 26px;
     display: block;
+    margin: 30px auto 0;
     padding: 10px 20px;
     background-color: #222;
     color: #fff;
@@ -108,6 +102,11 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.planviewEditButton:hover {
+    background-color: #222;
 }
 
 /* Timeline marker */

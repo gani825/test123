@@ -35,7 +35,7 @@
 .cityCards {
     display: flex;
     justify-content: space-between;
-    margin: 110px 0 30px 0;
+    margin-top: 120px;
 }
 
 /* 툴팁 */
@@ -65,19 +65,5 @@
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(-5px);
-}
-
-.planButton {
-    margin: 0 auto;
-    margin-bottom: 20px;
-    display: block;
-    padding: 10px 20px;
-    background-color: #222;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 

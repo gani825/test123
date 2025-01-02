@@ -1,5 +1,4 @@
 import React, { createContext, useState } from "react";
-import './App.css';
 import "./styles/reset.css";
 
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
@@ -24,7 +23,6 @@ import FindPw from "./pages/User/FindPw";
 import OAuth2Callback from "./pages/User/OAuth2Callback"; // 추가
 
 // AuthContext 생성
-
 export const AuthContext = createContext({
   user: null,
   setUser: () => {}, // 기본값

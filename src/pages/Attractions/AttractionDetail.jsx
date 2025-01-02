@@ -124,7 +124,7 @@ const AttractionDetail = () => {
             const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
             const response = await axios.get('http://localhost:5050/reviews/getReviewsWithUser', {
 
-                // headers: { Authorization: `Bearer ${accessToken}` },
+                headers: { Authorization: `Bearer ${accessToken}` },
                 params: {
                     locationId,
                     page: pageNumber,
@@ -186,23 +186,12 @@ const AttractionDetail = () => {
       if (status === "success") {
           fetchReviews(); // 리뷰 목록 갱신
       }
-    };
-
-    // 리뷰 작성 버튼 클릭 핸들러
-    const handleReviewClick = () => {
-        const accessToken = localStorage.getItem('accessToken'); // 인증 정보 확인
-        if (!accessToken) {
-            alert('로그인이 필요한 서비스입니다.'); // 경고창 표시
-            return;
-        }
-        // 인증된 사용자만 리뷰 작성 로직 실행
-        openModal(); // 모달 열기
-    };
+  };
 
 
     // Google Maps API를 로드하는 훅
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyAYc6jUgnI_Az0LTuoHvfS_Y-iTG4FX8dg',  // 발급받은 API 키 입력
+        googleMapsApiKey: 'AIzaSyDYcmeImkXId7f8bF5GT1N3bWEDAhnp-rM',  // 발급받은 API 키 입력
     });
 
     // 로딩 중일 경우
@@ -334,7 +323,7 @@ const AttractionDetail = () => {
                                 ))}
                         </ul>
                     ) : (
-                        <p className = "no-nearby-locations-message">주위에 여행지가 없습니다.</p>
+                        <p>태그가 포함되지 않은 장소가 없습니다.</p>
                     )}
 
                     {/* 태그가 포함된 근처 장소 */}
@@ -363,7 +352,7 @@ const AttractionDetail = () => {
                             ))}
                         </ul>
                     ) : (
-                        <p className = "no-nearby-locations-message">주위에 음식점이 없습니다.</p>
+                        <p>태그가 포함된 장소가 없습니다.</p>
                     )}
                 </div>
 
@@ -402,7 +391,7 @@ const AttractionDetail = () => {
                                     <div className="sort-divider"/>
                                 </div>
                                 {/* 우측: 리뷰 작성 버튼 */}
-                                <button className="review-header-button" onClick={handleReviewClick}>
+                                <button className="review-header-button" onClick={openModal}>
                                     리뷰 작성하기
                                 </button>
                             </div>
@@ -454,7 +443,7 @@ const AttractionDetail = () => {
                                     </div>
                                 ))
                             ) : (
-                                <p className = "no-nearby-locations-message" >작성된 리뷰가 없습니다.</p>
+                                <p>작성된 리뷰가 없습니다.</p>
                             )}
                         </div>
 
