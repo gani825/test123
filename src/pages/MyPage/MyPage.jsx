@@ -671,14 +671,17 @@ const MyPage = () => {
                       ⋮
                     </button>
                     {activeOptions === plan.plannerId && ( // 해당 카드의 옵션만 표시
-                      <div className="options-menu">
-                        <button >내용편집</button>
-                        <button
-                          onClick={() => handleDeletePlan(plan.plannerId)}
-                        >
-                          삭제
-                        </button>
-                      </div>
+                        <div className="options-menu">
+                            <button>
+                                내용편집
+                            </button>
+
+                            <button
+                                onClick={() => handleDeletePlan(plan.plannerId)}
+                            >
+                                삭제
+                            </button>
+                        </div>
                     )}
                   </div>
                 </div>
@@ -687,13 +690,13 @@ const MyPage = () => {
           </>
         )}
 
-        {activeTab === "reviews" && (
-          <>
-            {loading && <p>로딩 중...</p>}
-            {!loading && reviews.length === 0 && <p>작성한 리뷰가 없습니다.</p>}
+          {activeTab === "reviews" && (
+              <>
+                  {loading && <p>로딩 중...</p>}
+                  {!loading && reviews.length === 0 && <p>작성한 리뷰가 없습니다.</p>}
 
-            <div className="myPage-reviews">
-              {reviews.map((review, index) => (
+                  <div className="myPage-reviews">
+                      {reviews.map((review, index) => (
                 <div key={review.reviewId} className="review-card">
                   <div className="myPage-review-header">
                     <div className="myPage-review-header-left">
