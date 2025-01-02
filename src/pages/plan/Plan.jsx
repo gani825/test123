@@ -83,10 +83,10 @@ function Plan() {
                 </div>
             ))}
           </div>
-            <button
-                className="planButton"
-                onClick={() => navigate(`/planner-list`, {})}
-            >
+          <button
+              className="planButton"
+              onClick={() => navigate(`/planner-list`, {})}
+          >
             내 전체 계획 보기
           </button>
         </div>

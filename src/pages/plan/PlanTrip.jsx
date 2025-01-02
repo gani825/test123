@@ -79,13 +79,13 @@ function PlanTrip() {
 // 시작일과 종료일 사이의 날짜 생성 함수
   const generateDatesBetween = (startDate, endDate) => {
     const dates = [];
-    let currentDate = new Date(`${startDate}T00:00:00`); // 로컬 시간 기준으로 시작
-    const endDateObj = new Date(`${endDate}T00:00:00`); // 로컬 시간 기준으로 종료
+    let currentDate = new Date(`${startDate}T00:00:00`); // UTC 시간으로 고정
+    const endDateObj = new Date(`${endDate}T00:00:00`); // UTC 시간으로 고정
 
     while (currentDate <= endDateObj) {
+      // 시간 정보를 제거하고 날짜만 저장
       const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
       dates.push(dateStr);
-
       currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
     }
     return dates;

@@ -46,6 +46,10 @@ function Home() {
         navigate(`/attractions?search=${encodeURIComponent(searchTerm)}`);
     };
 
+    const handleTagClick = (tagId) => {
+      navigate(`/attractions?tagId=${tagId}`);
+    }
+
 
   const [recommendations, setRecommendations] = useState([]); // 추천 데이터를 저장할 상태
   const [title, setTitle] = useState(); // 제목 상태
@@ -80,7 +84,6 @@ function Home() {
         setTitle("추천 데이터를 불러오지 못했습니다.");
       });
   }, []);
-
   return (
     <div className="Home">
       {/* RandomPlaces를 모달로 렌더링 */}
@@ -184,7 +187,7 @@ function Home() {
           </span>
           <div className="category-container">
             <div className="category-card-large">
-              <img src={TouristAttraction} alt="TouristAttraction"/>
+              <img src={TouristAttraction} alt="TouristAttraction" onClick={() => handleTagClick(1)}/>
               <div className="overlay"></div>
               <div className="category-text">관광명소</div>
           </div>
@@ -192,25 +195,25 @@ function Home() {
             <div className="small-cards-container">
 
               <div className="category-card">
-                  <img src={Food} alt="Food"/>
+                  <img src={Food} alt="Food" onClick={() => handleTagClick(5)} />
                   <div className="overlay"></div>
                   <div className="category-text">음식</div>
               </div>
 
               <div className="category-card">
-                  <img src={Landmark} alt="Landmark"/>
+                  <img src={Landmark} alt="Landmark" onClick={() => handleTagClick(4)} />
                   <div className="overlay"></div>
                   <div className="category-text">랜드마크</div>
               </div>
 
               <div className="category-card">
-                  <img src={Culture} alt="Culture"/>
+                  <img src={Culture} alt="Culture" onClick={() => handleTagClick(2)}/>
                   <div className="overlay"></div>
                   <div className="category-text">문화</div>
               </div>
 
               <div className="category-card">
-                  <img src={Shopping} alt="Shopping"/>
+                  <img src={Shopping} alt="Shopping" onClick={() => handleTagClick(3)}/>
                   <div className="overlay"></div>
                   <div className="category-text">쇼핑</div>
               </div>

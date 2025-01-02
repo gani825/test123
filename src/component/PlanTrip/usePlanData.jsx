@@ -37,7 +37,6 @@ const usePlanData = (regionId, currentPage, searchTerm, categoryFilter) => {
         } else {
           setLocations((prev) => [...prev, ...fetchedLocations]); // 데이터 병합
         }
-
         setTotalPages(response.data.totalPages); // 총 페이지 수 업데이트
 
         // **검색 결과가 없으면 locations 상태 초기화**

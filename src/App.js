@@ -27,6 +27,7 @@ import MyPage from "./pages/MyPage/MyPage";
 import Footer from "./component/Footer";
 import FindId from "./pages/User/FindId";
 import FindPw from "./pages/User/FindPw";
+import OAuth2Callback from "./pages/User/OAuth2Callback";
 import RandomPlaces from "./component/RandomPlaces";
 
 // AuthContext 생성
@@ -69,11 +70,13 @@ function App() {
     return !!localStorage.getItem('accessToken') && Date.now() < tokenExpiry;
   });
 
+
   const saveUser = (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
-    setIsAuthenticated(true);
+    setIsAuthenticated(true); // 즉시 로그인 상태로 변경
   };
+
 
   const clearUser = () => {
     localStorage.removeItem('user');
@@ -124,6 +127,7 @@ function App() {
               <Route path="/find-id" element={<FindId />} />
               <Route path="/find-pw" element={<FindPw />} />
               <Route path="/random-places" element={<RandomPlaces />} />
+              <Route path="/oauth2/callback" element={<OAuth2Callback />} /> {/* OAuth2 콜백 */}
             </Routes>
           </div>
           {/* 특정 페이지 Footer 렌더링 제외 */}

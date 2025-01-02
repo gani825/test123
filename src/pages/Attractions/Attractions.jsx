@@ -32,7 +32,11 @@ const Attractions = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
+
     const urlSearchTerm = searchParams.get('search') || ''; // URL에서 가져온 검색어
+    const urlTagId = searchParams.get('tagId') || ''; // state에서 tagId를 추출
+    const arrayUrlTagId = [Number(urlTagId)];
+
 
     // 백엔드에서 지역정보(region) 가져옴
     useEffect(() => {
@@ -86,6 +90,11 @@ const Attractions = () => {
     // 태그 버튼 클릭 처리
     const handleTagButtonClick = (tagId) => {
         setSelectedTags((prev) => {
+
+            if(urlTagId){
+                navigate(`/attractions`);
+            }
+
             if (prev.includes(tagId)) {
                 // 태그 해제
                 return prev.filter((id) => id !== tagId);
@@ -102,9 +111,9 @@ const Attractions = () => {
     };
 
     // 각종 데이터 (tag 정보, 검색어, 페이지 등)을 요청 파라미터에 담아 백엔드로 요청을 보내고 데이터를 받음
-    const handleSubmit = async (pageNumber = 0, regionId = selectedRegion, urlSearchTerm = '')=>{
-        console.log("검색 요청:", { urlSearchTerm, regionId, pageNumber });
-        if (loading) return; // 중복 호출 방지
+    const handleSubmit = async (pageNumber = 0, regionId = selectedRegion, urlSearchTerm = '', urlTagId='')=>{
+
+        // if (loading) return; // 중복 호출 방지
         setLoading(true);  // 데이터 요청 시작 시 로딩 상태 true로 설정
 
         try {
@@ -112,7 +121,27 @@ const Attractions = () => {
                 .filter(tag => selectedTags.includes(tag.tagId)) // selectedTags에서 tagId와 일치하는 tag를 찾아
                 .map(tag => tag.tagName)                         // 해당 tag들의 tagName을 추출
 
-            const tagNamesString = selectedTagNames.join(',') || '';  // 선택된 태그 배열을 ,를 이용하여 문자열로 변환
+            // console.log("Selected Tags:", selectedTags);
+            // console.log("Tag IDs:", tags.map(tag => tag.tagId));
+            // console.log("selectedTags너 뭐냐냐",typeof selectedTags[0]);
+            // console.log("tagId 너 뭐냐 ",typeof tags[0].tagId);
+            // console.log("셀릭티드태그네임즈",selectedTagNames);
+
+            // 여러가지 방법 다 해봤는대 이게 제일 깔끔함
+            let tagNamesString
+            if(selectedTags == 1){
+                tagNamesString = '관광명소'
+            }else if(selectedTags == 2){
+                tagNamesString = '문화'
+            }else if(selectedTags == 3){
+                tagNamesString = '쇼핑'
+            }else if(selectedTags == 4){
+                tagNamesString = '랜드마크'
+            }else if(selectedTags == 5){
+                tagNamesString = '음식'
+            }else{
+                tagNamesString = selectedTagNames.join(',') || '';
+            }
 
 
             const response = await axios.get("http://localhost:5050/api/locations/searchLocation",{ //
@@ -157,8 +186,8 @@ const Attractions = () => {
 
     // 모든 조건에 따라 검색을 트리거하는 단일 useEffect
     useEffect(() => {
-        handleSubmit(0, selectedRegion, searchTerm || urlSearchTerm); // 검색 조건에 맞는 요청 실행
-    }, [urlSearchTerm, selectedRegion, selectedTags]);
+        handleSubmit(0, selectedRegion, searchTerm || urlSearchTerm, selectedTags); // 검색 조건에 맞는 요청 실행
+    }, [selectedTags , urlSearchTerm, selectedRegion]);
 
     // URL 검색어가 없을 때 초기화 처리
     useEffect(() => {
@@ -175,6 +204,14 @@ const Attractions = () => {
             navigate(`/attractions?search=${urlSearchTerm}`); // URL 유지 및 검색어 전달
         }
     }, []);
+
+    // 태그 UI 상태 반영
+    useEffect(() => {
+        if (urlTagId) {
+            setSelectedTags(arrayUrlTagId);
+        }
+    }, [urlTagId]);
+
 
 
     const handlePageChange = (newPage) => {
@@ -198,7 +235,6 @@ const Attractions = () => {
 
     // 검색 버튼 클릭 처리
     const handleSearchSubmit = () => {
-        console.log(searchTerm);
         if (!searchTerm.trim()) {
             // 검색어가 없을 때 태그만으로 검색
             setSearchTerm(''); // 검색어 초기화

@@ -73,6 +73,7 @@ const PlannerList = () => {
   };
 
   const calculateDays = (startDate, endDate) => {
+    // 날짜 문자열을 YYYYMMDD 형식으로 숫자로 변환
     const parseDate = (date) => {
       const [year, month, day] = date.split('-').map(Number);
       return new Date(Date.UTC(year, month - 1, day)); // UTC 시간대로 설정
@@ -85,7 +86,6 @@ const PlannerList = () => {
 
     return `${difference}박 ${difference + 1}일`;
   };
-
 
 
   const filteredPlanners =

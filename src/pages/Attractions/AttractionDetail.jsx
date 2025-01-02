@@ -124,7 +124,7 @@ const AttractionDetail = () => {
             const accessToken = localStorage.getItem('accessToken'); // 액세스 토큰 가져오기
             const response = await axios.get('http://localhost:5050/reviews/getReviewsWithUser', {
 
-                headers: { Authorization: `Bearer ${accessToken}` },
+                // headers: { Authorization: `Bearer ${accessToken}` },
                 params: {
                     locationId,
                     page: pageNumber,

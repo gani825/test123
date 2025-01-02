@@ -147,7 +147,6 @@ const SignUp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("handleSubmit 호출됨!"); // 디버깅용 로그
 
         // // 이메일 중복 체크여부 확인
         // if (!emailChecked || !isEmailValid) {

@@ -137,6 +137,7 @@ function EditPlan() {
     const endDateObj = new Date(`${endDate}T00:00:00`); // 로컬 시간 기준으로 종료
 
     while (currentDate <= endDateObj) {
+      // 시간 정보를 제거하고 날짜만 저장
       const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
       dates.push(dateStr);
 
