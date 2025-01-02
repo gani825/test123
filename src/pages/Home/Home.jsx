@@ -187,34 +187,34 @@ function Home() {
           </span>
           <div className="category-container">
             <div className="category-card-large">
-              <img src={TouristAttraction} alt="TouristAttraction" onClick={() => handleTagClick(1)}/>
-              <div className="overlay"></div>
+              <img src={TouristAttraction} alt="TouristAttraction" />
+              <div className="overlay" onClick={() => handleTagClick(1)}></div>
               <div className="category-text">관광명소</div>
           </div>
 
             <div className="small-cards-container">
 
               <div className="category-card">
-                  <img src={Food} alt="Food" onClick={() => handleTagClick(5)} />
-                  <div className="overlay"></div>
+                  <img src={Food} alt="Food"/>
+                  <div className="overlay"  onClick={() => handleTagClick(5)} ></div>
                   <div className="category-text">음식</div>
               </div>
 
               <div className="category-card">
-                  <img src={Landmark} alt="Landmark" onClick={() => handleTagClick(4)} />
-                  <div className="overlay"></div>
+                  <img src={Landmark} alt="Landmark"/>
+                  <div className="overlay"  onClick={() => handleTagClick(4)} ></div>
                   <div className="category-text">랜드마크</div>
               </div>
 
               <div className="category-card">
-                  <img src={Culture} alt="Culture" onClick={() => handleTagClick(2)}/>
-                  <div className="overlay"></div>
+                  <img src={Culture} alt="Culture"/>
+                  <div className="overlay" onClick={() => handleTagClick(2)}></div>
                   <div className="category-text">문화</div>
               </div>
 
               <div className="category-card">
-                  <img src={Shopping} alt="Shopping" onClick={() => handleTagClick(3)}/>
-                  <div className="overlay"></div>
+                  <img src={Shopping} alt="Shopping"/>
+                  <div className="overlay" onClick={() => handleTagClick(3)}></div>
                   <div className="category-text">쇼핑</div>
               </div>
              </div>
