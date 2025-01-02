@@ -16,16 +16,14 @@ function FindId() {
     };
 
     const [phoneNumber, setPhoneNumber] = useState('');  // 전화번호 상태
-    const [verificationCode, setVerificationCode] = useState('');  // 인증번호 상태
+    const [code, setCode] = useState('');  // 인증번호 상태
     const [isVerificationSent, setIsVerificationSent] = useState(false);  // 인증번호 발송 여부 상태
 
     const handleSendVerificationCode = async () => {
         // 실제 인증번호 보내는 API 호출 로직을 여기에 추가
         try {
-            const response = await axios.post("http://localhost:5050/send-one", {
-                params :{
+            const response = await axios.post("http://localhost:5050/api/phone/send-one", {
                     phoneNumber : phoneNumber
-                }
             });
             console.log(response);
             console.log('전화번호로 인증번호 전송:', phoneNumber);
@@ -37,9 +35,18 @@ function FindId() {
         }
     };
 
-    const handleVerifyCode = () => {
-        // 실제 인증번호 확인 로직을 여기에 추가
-        console.log('입력된 인증번호:', verificationCode);
+    const handleVerifyCode = async () => {
+        try {
+            const response = await axios.post("http://localhost:5050/api/phone/verify", {
+                phoneNumber: phoneNumber.trim(),
+                code: code
+            })
+            console.log(response);
+            // 실제 인증번호 확인 로직을 여기에 추가
+            console.log('입력된 인증번호:', code);
+        }catch (error){
+            console.log(error)
+        }
     };
 
     return (
@@ -66,8 +73,8 @@ function FindId() {
                     <input
                         type="text"
                         placeholder="인증번호 입력"
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
                         className="verification-input"
                     />
                     <button className="verify-button" onClick={handleVerifyCode}>
