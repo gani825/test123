@@ -31,6 +31,7 @@ function FindId() {
 
             const response = await axios.post("http://localhost:5050/api/phone/send-one", {
                 phoneNumber : phoneNumber
+
             });
             console.log(response);
             console.log('전화번호로 인증번호 전송:', phoneNumber);
@@ -73,6 +74,7 @@ function FindId() {
         return number
             .replace(/[^0-9]/g, '') // 숫자 이외의 문자를 제거
             .replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3'); // 010-1234-5678 형식으로 변환
+
     };
 
     const handleFindEmail = async () => {
@@ -176,6 +178,7 @@ function FindId() {
                     로그인 하기
                 </button>
             </div>
+
         </div>
     );
 }
