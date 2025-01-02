@@ -1,9 +1,10 @@
-/* 모달 창 */
 .FindId .findId-content {
     background: #fff;
     padding: 20px 40px;
     margin: 0 auto;
-    width: 450px;
+    max-width: 500px;
+    /*height: 660px;*/
+    position: relative;
 }
 
 /* 제목 스타일 */
@@ -23,7 +24,34 @@
     border-bottom: 1px solid #222;
 }
 
+.FindId .findid-number-container {
+    display: flex;
+    gap: 7px;
+}
+
+.FindId .findid-phone-input {
+    padding: 12px;
+    margin-bottom: 5px;
+    width: 100%;
+    height: 45px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+}
+
+.FindId .send-verification-button {
+    padding: 11px;
+    width: 140px;
+    height: 45px;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 .FindId .Join-back-button:hover {
     color: gray;
     border-bottom: 1px solid gray;
 }
+
+

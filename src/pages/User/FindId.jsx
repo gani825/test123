@@ -46,21 +46,24 @@ function FindId() {
         <div className="findId-content" onClick={(e) => e.stopPropagation()}>
             <h2 className="findId-title">아이디 찾기...</h2>
 
+
             {/* 전화번호 입력 */}
             {!isVerificationSent ? (
-                <div>
+                <div className="findid-number-container">
                     <input
                         type="text"
                         placeholder="전화번호 입력"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="phone-input"
+                        className="findid-phone-input"
                     />
                     <button className="send-verification-button" onClick={handleSendVerificationCode}>
                         인증번호 받기
                     </button>
                 </div>
             ) : (
+
+                // 인증번호 입력 필드 및 확인 버튼 (인증번호 받기 버튼 클릭 후 표시)
                 <div>
                     <input
                         type="text"
@@ -69,7 +72,7 @@ function FindId() {
                         onChange={(e) => setVerificationCode(e.target.value)}
                         className="verification-input"
                     />
-                    <button className="verify-button" onClick={handleVerifyCode}>
+                    <button className="findId-verify-button" onClick={handleVerifyCode}>
                         확인
                     </button>
                 </div>
