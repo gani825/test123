@@ -26,8 +26,17 @@ const MyPage = () => {
 
   // 사용자가 업로드한 이미지를 압축함
   const handleImageUpload = (file) => {
+
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
     if (!file) {
       console.log("업로드할 파일이 없습니다.");
+      return;
+    }
+
+      // 파일 타입 확인
+    if (!validImageTypes.includes(file.type)) {
+      console.error("허용되지 않은 파일 형식입니다.");
       return;
     }
   
@@ -49,7 +58,11 @@ const MyPage = () => {
     // 이미지 압축
     imageCompression(file, options)
       .then((compressedFile) => {
-        // 압축된 파일을 상태에 저장
+        // 압축된 파일 이름 복원
+        const compressedFile = new File([compressedBlob], file.name, {
+          type: file.type,
+          lastModified: Date.now(),
+        });
         setCompressedImage(compressedFile);
       })
       .catch((err) => {
