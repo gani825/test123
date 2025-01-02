@@ -37,7 +37,6 @@ const Attractions = () => {
     const urlTagId = searchParams.get('tagId') || ''; // state에서 tagId를 추출
     const arrayUrlTagId = [Number(urlTagId)];
 
-
     // 백엔드에서 지역정보(region) 가져옴
     useEffect(() => {
         const fetchRegions = async () => {
@@ -462,7 +461,7 @@ const Attractions = () => {
                                     <p>{location.regionName}</p>
                                     <p>
                                         <img src={starColor} alt="별 아이콘" className="star-icon"/>
-                                        <span>{location.googleRating}</span>
+                                        <span>구글리뷰 {location.googleRating}</span>
                                         ({location.userRatingsTotal})
                                     </p>
                                     <p>{'#' + location.tags.join(' #')}</p>

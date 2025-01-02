@@ -10,7 +10,8 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
   const [title,setTitle] = useState(initialData.title || '');
   const [rating, setRating] = useState(initialData.rating || 0);
   const [comment, setComment] = useState(initialData.comment || '');
-  const [imageUrls, setImageUrls] = useState(initialData.imageUrls || []); // 최대 3개의 이미지 URL
+  const [imageUrls, setImageUrls] = useState(initialData.imageUrls || []); // 실제 업로드하는 이미지 URL
+  const [prevImageUrls,setPrevImageUrls] = useState(initialData.imageUrls || []);
   const [imageFiles, setImageFiles] = useState([]); // 이미지 파일 상태 추가
 
   // 이미지 파일 선택 처리
@@ -26,7 +27,7 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
       return true;
     });
 
-    if (filteredFiles.length + imageFiles.length + imageUrls.length > 3) {
+    if (filteredFiles.length + imageUrls.length > 3) {
       alert('최대 3개의 이미지만 첨부할 수 있습니다.');
       return;
     }
@@ -62,41 +63,37 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
     }
 
     setImageFiles((prevFiles) => [...prevFiles, ...compressedFiles]);
-    // imageUrls 상태 업데이트 (편집 모드에서 기존 이미지에 새 이미지를 추가)
-    if (currentMode === 'edit') {
-      setImageUrls((prevUrls) => [
-        ...prevUrls,
-        ...filteredFiles.map(file => URL.createObjectURL(file))
-      ]);
-    }
-  };
 
-  const imageFilesRef = useRef(imageFiles);  // imageFiles의 최신 상태를 참조
-  useEffect(() => {
-    imageFilesRef.current = imageFiles; // imageFiles가 변경될 때마다 최신 값을 ref에 저장
-  }, [imageFiles]);
+    const newPreviewUrls = filteredFiles.map(file => URL.createObjectURL(file));
+    setPrevImageUrls((prevUrls) => [...prevUrls, ...newPreviewUrls]);
+
+  };
 
   useEffect(() => {
     console.log('Updated imageFiles:', imageFiles);
-  }, [imageFiles]);
+    console.log('Updated imageUrls:',imageUrls)
+    console.log('Updated prevImageUrls:',prevImageUrls)
+    console.log('Updated comment:',comment)
+  }, [imageFiles,imageUrls,comment]);
 
 
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem('accessToken');
 
-    console.log("현재 imageFiles 상태 확인:", imageFilesRef);
+    console.log("handleSubmit 호출 시 imageFiles 상태 :", imageFiles);
+    console.log("handleSubmit 호출 시 comment 상태 : ",comment)
 
       // 이미지 업로드가 필요할 때만 실행
       const formData = new FormData();
 
-      imageFilesRef.current.forEach((file) => {
+      imageFiles.forEach((file) => {
         formData.append('files', file);
       });
 
       let newImageUrls = [];
 
       // 이미지 업로드 요청
-      if (imageFilesRef.current.length > 0) {
+      if (imageFiles.length > 0) {
         try {
           const response = await axios.post('http://localhost:5050/reviews/uploadReviewImage', formData, {
             headers: {
@@ -157,7 +154,7 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
 
       // 부모로 상태 전달
       onSuccess(responseStatus);
-      onClose(); // 모달 닫기
+      // onClose(); // 모달 닫기
 
     } catch (error) {
         console.error('리뷰 작성 중 오류 발생:', error?.response || error.message || error);
@@ -167,12 +164,14 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
 
   // 기존 이미지 삭제
   const removeImageUrl = (index) => {
-    setImageUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
+    setPrevImageUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
+    setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setImageUrls((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   // 새 이미지 삭제
   const removeImageFile = (index) => {
-    setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    
   };
 
     return (
@@ -263,19 +262,7 @@ const ReviewCreateModal = ({mode, initialData = {}, locationId, onClose, onSucce
                             </div>
                           ))}
 
-                          {/* 새로 업로드한 이미지 미리보기 */}
-                          {imageFiles.map((file, index) => (
-                            <div className="image-preview-item" key={index + imageUrls.length}>
-                              <img
-                                src={URL.createObjectURL(file)}
-                                alt={`Preview ${index}`}
-                                style={{ width: '100px', height: '100px', margin: '5px' }}
-                              />
-                              <button className="remove-image-btn" onClick={() => removeImageFile(index)}>
-                                X
-                              </button>
-                            </div>
-                          ))}
+
                         </div>
                     </div>
                 </div>

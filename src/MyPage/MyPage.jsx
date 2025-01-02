@@ -692,7 +692,6 @@ const MyPage = () => {
                     </button>
                     {activeOptions === plan.plannerId && ( // 해당 카드의 옵션만 표시
                       <div className="options-menu">
-                        <button>공유하기</button>
                         <button>내용편집</button>
                         <button
                           onClick={() => handleDeletePlan(plan.plannerId)}

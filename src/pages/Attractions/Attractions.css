@@ -188,7 +188,6 @@
     width: 14px;
 }
 
-
 /* 지역 */
 .Attraction .location-info p:first-of-type {
     padding: 2px 0;
@@ -202,15 +201,14 @@
     align-items: center;
     gap: 5px;
     padding-bottom: 2px;
-
-    color: #939393;
+    color: #666;
 }
 
 /* 별점 점수 */
-.Attraction .location-info p:nth-of-type(2) span {
-    color: #666;
-    font-weight: 500;
-}
+/*.Attraction .location-info p:nth-of-type(2) span {*/
+/*    color: #666;*/
+/*    font-weight: 500;*/
+/*}*/
 
 /* 태그 */
 .Attraction .location-info p:nth-of-type(3) {
@@ -237,9 +235,6 @@
 }
 
 .Attraction .pagination button:disabled {
-    /*background-color: #D9D9D9;*/
-    /*border: none;*/
-    /*cursor: not-allowed;*/
     display: none;
 }
 

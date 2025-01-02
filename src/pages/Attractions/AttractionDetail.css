@@ -1,9 +1,3 @@
-.AttractionDetail {
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-}
-
 /* 기본 레이아웃 */
 .AttractionDetail .title-container,
 .AttractionDetail .overview-container .inner-wrap,
@@ -17,7 +11,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /*border-bottom: 1px solid #aaa;*/
 }
 
 .AttractionDetail .title-container .back {
@@ -137,7 +130,6 @@
 
 .AttractionDetail .content-container .info-item h4 {
     width: 15%;
-    /*margin-right: 0.5rem; !* 제목과 내용 간 간격 *!*/
     font-weight: 500;
 }
 
@@ -214,31 +206,20 @@
     align-items: center;
     gap: 5px;
     padding-bottom: 2px;
-    color: #939393;
+    /*color: #939393;*/
+    color: #666;
 }
 
 /* 별점 점수 */
-.AttractionDetail .nearby-location-item p:nth-of-type(2) span {
-    color: #666;
-    font-weight: 500;
-}
+/*.AttractionDetail .nearby-location-item p:nth-of-type(2) span {*/
+/*    color: #666;*/
+/*    font-weight: 500;*/
+/*}*/
 
 /* 거리 */
 .AttractionDetail .nearby-location-item p:nth-of-type(3) {
     color: #aaa;
 }
-
-  
-/* Description 텍스트 */
-/*.nearby-location-item .description {*/
-/*    overflow: hidden;*/
-/*    text-overflow: ellipsis;*/
-/*    display: -webkit-box;*/
-/*    -webkit-line-clamp: 2; !* 최대 2줄 *!*/
-/*    -webkit-box-orient: vertical;*/
-/*    line-height: 1.4; !* 줄 간격 설정 *!*/
-/*    margin-bottom: 10px;*/
-/*}*/
   
 /* 호버 효과 */
 .nearby-location-item:hover {
@@ -263,13 +244,6 @@
 .AttractionDetail .review-container {
     margin-bottom: 40px;
 }
-/* 리뷰 섹션 */
-/*.review-section {*/
-/*    width: 100%;*/
-/*    max-width: 1150px; !* 최대 가로 크기 *!*/
-/*    border-radius: 8px;*/
-/*}*/
-
 
 /* 리뷰 헤더 스타일 */
 .AttractionDetail .review-header {
@@ -326,12 +300,6 @@
 .AttractionDetail .sort-button.active {
     font-weight: bold;
 }
-/* 구분선 스타일 */
-/*.sort-divider {*/
-/*    width: 1px;*/
-/*    height: 16px;*/
-/*    background-color: #ccc; !* 회색 구분선 *!*/
-/*}*/
 
 /* 리뷰 컨테이너 */
 .AttractionDetail .review-main {
@@ -463,9 +431,6 @@
 }
 
 .AttractionDetail .pagination-button:disabled {
-    /*background-color: #e9e9e9;*/
-    /*color: #999;*/
-    /*cursor: not-allowed;*/
     display: none;
 }
 

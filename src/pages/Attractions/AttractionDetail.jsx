@@ -323,12 +323,6 @@ const AttractionDetail = () => {
                                             ({nearbyLocation.userRatingsTotal})
                                         </p>
                                         <p>거리 {nearbyLocation.distanceInMeters} m</p>
-                                        {/*<p className="description">*/}
-                                        {/*    {nearbyLocation.description.length > 50*/}
-                                        {/*        ? `${nearbyLocation.description.substring(0, 50)}...`*/}
-                                        {/*        : nearbyLocation.description}*/}
-                                        {/*</p>*/}
-                                        {/*</Link>*/}
                                     </a>
                                 </li>
                                 ))}
@@ -353,11 +347,6 @@ const AttractionDetail = () => {
                                             ({nearbyLocation.userRatingsTotal})
                                         </p>
                                         <p>거리 {nearbyLocation.distanceInMeters} m</p>
-                                        {/*<p className="description">*/}
-                                        {/*    {nearbyLocation.description.length > 50*/}
-                                        {/*        ? `${nearbyLocation.description.substring(0, 50)}...`*/}
-                                        {/*        : nearbyLocation.description}*/}
-                                        {/*</p>*/}
                                     </Link>
                                 </li>
                             ))}
