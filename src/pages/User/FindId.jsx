@@ -23,10 +23,9 @@ function FindId() {
         // 실제 인증번호 보내는 API 호출 로직을 여기에 추가
         try {
             const response = await axios.post("http://localhost:5050/send-one", {
-                params :{
-                    phoneNumber : phoneNumber
-                }
+                phoneNumber: phoneNumber  // requestBody로 phoneNumber 전달
             });
+
             console.log(response);
             console.log('전화번호로 인증번호 전송:', phoneNumber);
             setIsVerificationSent(true);  // 인증번호 발송 후 상태 업데이트
