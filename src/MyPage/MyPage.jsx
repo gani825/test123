@@ -57,17 +57,18 @@ const MyPage = () => {
   
     // 이미지 압축
     imageCompression(file, options)
-      .then((compressedFile) => {
-        // 압축된 파일 이름 복원
-        const compressedFile = new File([compressedBlob], file.name, {
-          type: file.type,
-          lastModified: Date.now(),
-        });
-        setCompressedImage(compressedFile);
-      })
-      .catch((err) => {
-        console.error("이미지 압축 실패: ", err);
+    .then((compressedBlob) => {
+      // 압축된 파일 이름 복원
+      const restoredFile = new File([compressedBlob], file.name, {
+        type: file.type,
+        lastModified: Date.now(),
       });
+  
+      setCompressedImage(restoredFile); // 복원된 파일 설정
+    })
+    .catch((err) => {
+      console.error("이미지 압축 실패: ", err);
+    });
   };
 
   // 유저 프로필 데이터
