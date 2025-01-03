@@ -20,14 +20,14 @@
 }
 
 .Footer .footer-logo {
+	width: 22%;
 	font-size: 35px;
-	font-weight: bold;
-	color: #AAA;
 	/* 임시 값 */
 	text-align: left;
 	margin-top: 0;
 
-	margin-bottom: 10px;
+	filter: grayscale(100%) brightness(1.1); /* 이미지를 흑백, 밝기 조정 */
+	margin-bottom: 20px;
 }
 
 .Footer .footer-contact {

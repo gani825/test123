@@ -1,17 +1,16 @@
 .active-link {
   font-weight: bold;
-  text-decoration: underline;
 }
 
 .MenuBar {
-  height: 83px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
   padding: 10px 20px;
+  height: 83px;
   border-bottom: 1px solid #d6d6d6;
-  font-size: 19px;
+  font-size: 17px;
 }
 
 .MenuBar .navigation {
@@ -25,14 +24,19 @@
   width: auto; /* 비율 유지 */
 }
 
+.MainLogo img {
+    height: 45px; /* 로고 크기 조정 */
+    width: auto; /* 비율 유지 */
+}
+
 .profile {
   position: relative;
   display: inline-block;
 }
 
 .profile-icon {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
   border-radius: 50%;
 }

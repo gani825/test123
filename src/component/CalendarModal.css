@@ -7,7 +7,7 @@
 }
 
 /* 모달창 오버레이 스타일 */
-.modal-overlay {
+.calendar-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -17,10 +17,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 }
 
 /* 모달창 내용 스타일 */
-.modal-content {
+.calendar-modal-content {
     background: #fff;
     padding: 20px;
     border-radius: 10px;

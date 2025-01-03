@@ -5,33 +5,39 @@ import Tokyo from '../../img/Tokyo.jpg';
 import Osaka from '../../img/Osaka.jpg';
 import KyotoCity from '../../img/KyotoCity.jpg';
 import Fukuoka from '../../img/Fukuoka.jpg';
+import {useNavigate} from "react-router-dom";
 
 function Plan() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCity, setSelectedCity] = useState('');
+  const navigate = useNavigate();
 
   const cities = [
     {
       id: 1,
       name: '도쿄',
+      englishName: 'TOKYO',
       image: Tokyo,
       description: '도쿄는 현대와 전통이 공존하는 일본의 수도입니다.',
     },
     {
       id: 3,
       name: '오사카',
+      englishName: 'OSAKA',
       image: Osaka,
       description: '오사카는 활기찬 거리와 먹거리로 유명합니다.',
     },
     {
       id: 4,
       name: '교토',
+      englishName: 'KYOTO CITY',
       image: KyotoCity,
       description: '교토는 아름다운 사찰과 정원이 가득한 도시입니다.',
     },
     {
       id: 2,
       name: '후쿠오카',
+      englishName: 'FUKU OKA',
       image: Fukuoka,
       description: '후쿠오카는 역사적 명소와 현대가 어우러진 곳입니다.',
     },
@@ -41,6 +47,12 @@ function Plan() {
     console.log('선택된 도시:', city);
     setSelectedCity({ name: city.name, id: city.id });
     setShowModal(true);
+
+    const selectedCities = JSON.parse(localStorage.getItem('selectedCities')) || [];
+    if (!selectedCities.some((c) => c.id === city.id)) {
+      selectedCities.push(city); // 선택된 도시 중복 저장 방지
+      localStorage.setItem('selectedCities', JSON.stringify(selectedCities));
+    }
   };
 
   const closeModal = () => {
@@ -59,12 +71,24 @@ function Plan() {
                     className="cityCard"
                     onClick={() => openModal(city)}
                 >
-                  <img src={city.image} alt={city.name} className="City-img" />
-                  <span>{city.name}</span>
-                  <div className="tooltip">{city.description}</div>
+                    <img src={city.image} alt={city.name} className="City-img"/>
+                    <span
+                        className={`city-name ${
+                            city.name === 'TOKYO' || city.name === 'OSAKA' ? 'adjusted' : ''
+                        }`}
+                    >
+                       {city.englishName}
+                    </span>
+                    <div className="tooltip">{city.description}</div>
                 </div>
             ))}
           </div>
+          <button
+              className="planButton"
+              onClick={() => navigate(`/planner-list`, {})}
+          >
+            내 전체 계획 보기
+          </button>
         </div>
         <CalendarModal
             show={showModal}

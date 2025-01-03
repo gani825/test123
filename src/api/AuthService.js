@@ -32,6 +32,7 @@ export const fetchProtectedResource = async (url) => {
 // **로그인 요청**
 export const login = async (credentials) => {
     try {
+        
         const response = await axios.post('/login', {
             userEmail: credentials.userEmail,
             userPassword: credentials.userPassword,
@@ -80,6 +81,7 @@ export const handleSessionExpired = () => {
         isSessionExpired = true;
         alert('세션이 만료되었습니다. 다시 로그인하세요.');
         localStorage.clear();
+        isSessionExpired = false; // 리디렉션 전에 플래그 초기화
         window.location.href = '/signin'; // 모든 리디렉션을 /signin으로 통일
     }
 };

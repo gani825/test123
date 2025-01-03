@@ -1,13 +1,14 @@
 import './Footer.css';
 import youtube from '../img/icons/youtube.png';
 import instagram from '../img/icons/Instagram.png';
+import Logo from "../img/MainLogo.png";
 
 const Footer = () => {
 	return (
 		<div className="Footer">
 			<div className="inner-wrap">
 				<div className="footer-content">
-					<h2 className="footer-logo">LOGO</h2>
+					<img src={Logo} alt="Logo" className="footer-logo"/>
 					<p className="footer-contact">Contact to : ssw123c@gmail.com<br/>
 						위 웹페이지는 비상업적 포트폴리오 목적으로 제작된 사이트입니다.
 					</p>

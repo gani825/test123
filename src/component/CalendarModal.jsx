@@ -171,23 +171,32 @@ const CalendarModal = ({ show, onClose, cityName, regionId }) => {
         if (selectedRange.length === 2) {
             const [start, end] = selectedRange;
 
+            // 날짜를 로컬 시간 기준으로 포맷
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
             if (regionId) {
                 console.log('전달할 regionId:', regionId); // regionId 값 확인
                 navigate('/plan-trip', {
                     state: {
                         cityName,
                         regionId, // 전달할 regionId
-                        startDate: start.toISOString().split('T')[0],
-                        endDate: end.toISOString().split('T')[0],
+                        startDate: formatDate(start), // 로컬 시간 기준
+                        endDate: formatDate(end),   // 로컬 시간 기준
                     },
                 });
             } else {
                 console.error('regionId가 설정되지 않았습니다.');
             }
         } else {
-            console.error('날짜 범위가 올바르지 않습니다.');
+            alert('여행 날짜를 선택해 주세요.');
         }
     };
+
 
     // 이전 월로 이동
     const handlePrevMonth = () => {
@@ -204,8 +213,8 @@ const CalendarModal = ({ show, onClose, cityName, regionId }) => {
     if (!show) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="calendar-modal-overlay" onClick={onClose}>
+            <div className="calendar-modal-content" onClick={(e) => e.stopPropagation()}>
                 <h3>{cityName} 여행 날짜를 선택하세요</h3>
                 <div className="month-navigation">
                     <button onClick={handlePrevMonth}>◀</button>

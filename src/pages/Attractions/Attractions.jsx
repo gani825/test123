@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios'
 import { debounce } from 'lodash';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Attractions.css';  // CSS import
 import starColor from '../../img/icons/starColor.png';
 import angleDoubleSmallLeft from '../../img/icons/angleDoubleSmallLeft.png';
@@ -28,6 +28,14 @@ const Attractions = () => {
     const [likedLocations, setLikedLocations] = useState([]); // 좋아요 상태 관리
 
     const [loading, setLoading] = useState(false);  // 로딩 상태
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    const searchParams = new URLSearchParams(location.search);
+
+    const urlSearchTerm = searchParams.get('search') || ''; // URL에서 가져온 검색어
+    const urlTagId = searchParams.get('tagId') || ''; // state에서 tagId를 추출
+    const arrayUrlTagId = [Number(urlTagId)];
 
     // 백엔드에서 지역정보(region) 가져옴
     useEffect(() => {
@@ -56,7 +64,6 @@ const Attractions = () => {
 
                 setTags(response.data); // 가져온 데이터를 상태에 저장
 
-                console.log(response);
             } catch (error) {
                 console.error('Error fetching tags:', error);
             }
@@ -66,59 +73,92 @@ const Attractions = () => {
     }, []);
 
     // 지역 버튼 클릭 처리
+    // const handleRegionClick = (regionId) => {
+    //     setSelectedRegion((prev) => {
+    //         const newRegion = prev === regionId ? null : regionId;
+    //         handleSubmit(0, newRegion); // 지역 변경 시 데이터 바로 요청
+    //         return newRegion;
+    //     });
+    // };
+
     const handleRegionClick = (regionId) => {
-        setSelectedRegion((prev) => {
-            const newRegion = prev === regionId ? null : regionId;
-            handleSubmit(0, newRegion); // 지역 변경 시 데이터 바로 요청
-            return newRegion;
-        });
+        setSelectedRegion((prev) => (prev === regionId ? null : regionId)); // 지역 상태만 변경
+        handleSubmit(0, regionId, searchTerm || urlSearchTerm); // 검색어는 그대로 유지
     };
 
     // 태그 버튼 클릭 처리
     const handleTagButtonClick = (tagId) => {
         setSelectedTags((prev) => {
+
+            if(urlTagId){
+                navigate(`/attractions`);
+            }
+
             if (prev.includes(tagId)) {
-                return prev.filter((id) => id !== tagId); // 이미 선택된 태그는 해제
+                // 태그 해제
+                return prev.filter((id) => id !== tagId);
             }
+
             if (prev.length < 3) {
-                return [...prev, tagId];  // 최대 3개 선택 가능
+                // 태그가 3개 미만일 경우 추가 가능
+                return [...prev, tagId];
             }
+
+            alert("최대 3개의 태그만 선택할 수 있습니다.");
             return prev; // 3개 초과 시 선택 불가
         });
     };
 
     // 각종 데이터 (tag 정보, 검색어, 페이지 등)을 요청 파라미터에 담아 백엔드로 요청을 보내고 데이터를 받음
-    const handleSubmit = async (pageNumber = 0, regionId = selectedRegion)=>{
-        if (loading) return; // 중복 호출 방지
+    const handleSubmit = async (pageNumber = 0, regionId = selectedRegion, urlSearchTerm = '', urlTagId='')=>{
+
+        // if (loading) return; // 중복 호출 방지
         setLoading(true);  // 데이터 요청 시작 시 로딩 상태 true로 설정
 
         try {
             const selectedTagNames = tags   // 선택된 태그들을 배열로 저장함
-            .filter(tag => selectedTags.includes(tag.tagId)) // selectedTags에서 tagId와 일치하는 tag를 찾아
-            .map(tag => tag.tagName)                         // 해당 tag들의 tagName을 추출
+                .filter(tag => selectedTags.includes(tag.tagId)) // selectedTags에서 tagId와 일치하는 tag를 찾아
+                .map(tag => tag.tagName)                         // 해당 tag들의 tagName을 추출
 
-            const tagNamesString = selectedTagNames.join(',');  // 선택된 태그 배열을 ,를 이용하여 문자열로 변환
+            // console.log("Selected Tags:", selectedTags);
+            // console.log("Tag IDs:", tags.map(tag => tag.tagId));
+            // console.log("selectedTags너 뭐냐냐",typeof selectedTags[0]);
+            // console.log("tagId 너 뭐냐 ",typeof tags[0].tagId);
+            // console.log("셀릭티드태그네임즈",selectedTagNames);
 
-            // console.log('regionId:', regionId);
+            // 여러가지 방법 다 해봤는대 이게 제일 깔끔함
+            let tagNamesString
+            if(selectedTags == 1){
+                tagNamesString = '관광명소'
+            }else if(selectedTags == 2){
+                tagNamesString = '문화'
+            }else if(selectedTags == 3){
+                tagNamesString = '쇼핑'
+            }else if(selectedTags == 4){
+                tagNamesString = '랜드마크'
+            }else if(selectedTags == 5){
+                tagNamesString = '음식'
+            }else{
+                tagNamesString = selectedTagNames.join(',') || '';
+            }
+
 
             const response = await axios.get("http://localhost:5050/api/locations/searchLocation",{ //
                 params : {
                     regionId : regionId, // 현재 선택된 지역 ID
                     tagNames : tagNamesString,  // 선택된 Tag데이터
-                    keyword : searchTerm,
+                    keyword : urlSearchTerm,
                     page : pageNumber,  //현재 페이지 (0부터 시작함)
                     pageSize: 16,           // 페이지 크기 (한페이지에 몇개의 데이터를 나타낼것인지)
                     // sortValue: "userRatingsTotal",
                     // sortValue : 정렬 기준( "googleRating"와 같은 실수타입만 가능) - default googleRating기준
                     // sortDirection : 정렬 방향 ( "desc" (내림차순) 또는 "asc" (오름차순) ) - default desc기준
                 }
-
             });
-            
+
             // 서버에서 받은 응답을 처리
             if (response && response.data) {
                 setLocations(response.data.content);   //지역정보 데이터 저장
-                // console.log(response.data);
                 setTotalPages(response.data.totalPages); // 전체 페이지 수 저장
                 setCurrentPage(pageNumber)  // 현재 페이지가 어딘지 저장
                 setTotalElements(response.data.totalElements); // 총 여행지 개수 저장
@@ -136,15 +176,42 @@ const Attractions = () => {
             // setSelectedTags([]);  // 선택된 태그를 초기화
             setLocations([]);  // 지역 정보도 초기화
             // setSelectedRegion(null); // 선택된 지역 초기화
+            setTotalElements(0); // 총 여행지 개수 초기화
         } finally {
             setLoading(false); // 다 끝나면 로딩상태 false로 변경
         }
     };
 
-    // 페이지가 처음 로드될 때, 태그나 검색어 없이 전체 로케이션 데이터를 요청
+
+    // 모든 조건에 따라 검색을 트리거하는 단일 useEffect
     useEffect(() => {
-        handleSubmit(); // 초기 데이터 요청
-    }, [selectedRegion]); // selectedRegion 변경 시 자동으로 요청
+        handleSubmit(0, selectedRegion, searchTerm || urlSearchTerm, selectedTags); // 검색 조건에 맞는 요청 실행
+    }, [selectedTags , urlSearchTerm, selectedRegion]);
+
+    // URL 검색어가 없을 때 초기화 처리
+    useEffect(() => {
+        if (!urlSearchTerm) {
+            setSearchTerm(''); // 검색어 초기화
+        } else if (!searchTerm) {
+            setSearchTerm(urlSearchTerm); // URL 검색어를 상태에 반영
+        }
+    }, [urlSearchTerm]);
+
+    // 컴포넌트가 마운트될 때 URL에서 불필요한 search 파라미터 제거
+    useEffect(() => {
+        if (urlSearchTerm) {
+            navigate(`/attractions?search=${urlSearchTerm}`); // URL 유지 및 검색어 전달
+        }
+    }, []);
+
+    // 태그 UI 상태 반영
+    useEffect(() => {
+        if (urlTagId) {
+            setSelectedTags(arrayUrlTagId);
+        }
+    }, [urlTagId]);
+
+
 
     const handlePageChange = (newPage) => {
         // 페이지 번호가 숫자여야만 처리하도록 확인
@@ -158,21 +225,124 @@ const Attractions = () => {
         });
     };
 
-    // 선택된 태그가 변경될 때마다 자동으로 결과 요청
-    useEffect(() => {
-        if (selectedTags.length > 0) {
-            handleSubmit(); // 선택된 태그에 맞는 첫 번째 페이지 데이터 요청
-        }
-    }, [selectedTags]);
 
     // 검색어 변경 처리 (입력 후 버튼 클릭으로 전송)
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);  // 검색어를 상태에 저장
     };
 
+
     // 검색 버튼 클릭 처리
     const handleSearchSubmit = () => {
-        handleSubmit(0); // 검색어로 첫 번째 페이지 데이터 요청
+        if (!searchTerm.trim()) {
+            // 검색어가 없을 때 태그만으로 검색
+            setSearchTerm(''); // 검색어 초기화
+            navigate(`/attractions`); // URL에서 검색어를 제거
+            handleSubmit(0, selectedRegion, ''); // 빈 검색어로 검색 요청
+        } else {
+            // 검색어가 있을 때
+            navigate(`/attractions?search=${encodeURIComponent(searchTerm)}`); // URL에 검색어 추가
+            handleSubmit(0, selectedRegion, searchTerm); // 검색어로 검색 요청
+        }
+    };
+
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);  // 로그인 상태 체크
+    // 로그인 상태를 확인하는 함수
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            setIsLoggedIn(true); // 토큰이 있으면 로그인 상태로 간주
+
+            // 로그인 상태일 경우 사용자 즐겨찾기 목록을 백엔드에서 받아옵니다.
+            getUserFavoriteLocations();
+        }
+    }, []);
+
+    // 좋아요 아이콘 클릭 처리
+    const handleLikeClick = (locationId) => {
+
+        if (!isLoggedIn) {
+            // 로그인되지 않은 상태 이용불가
+            alert("로그인이 필요한 서비스입니다.");
+            return;
+        }
+
+
+        setLikedLocations((prevLikedLocations) => {
+            let newLikedLocations;
+
+            if (prevLikedLocations.includes(locationId)) {
+                // 이미 좋아요가 눌려 있다면, 좋아요 취소, 좋아요 정보 삭제
+                newLikedLocations = prevLikedLocations.filter((id) => id !== locationId);
+                deleteFavorite(locationId);
+            } else {
+                // 좋아요 추가, 좋아요 정보 저장
+                newLikedLocations = [...prevLikedLocations, locationId];
+                addFavorite(locationId)
+            }
+
+            return newLikedLocations;
+        });
+    };
+
+
+    // 사용자의 즐겨찾기 목록을 가져오는 함수
+    const getUserFavoriteLocations = async () => {
+        try {
+            const response = await axios.get("http://localhost:5050/api/locationFavorite/userFavorites", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+                params: {
+                    page: 0, // 페이징 기본값 (필요시 수정)
+                    pageSize: 100, // 페이징 기본값 (필요시 수정)
+                    sortValue: 'createdAt', // 정렬 기준
+                    sortDirection: 'ASC', // 정렬 방향
+                },
+            });
+            const favoriteLocations = response.data.content.map(location => location.locationId); // 반환된 즐겨찾기 목록에서 locationId만 추출
+            setLikedLocations(favoriteLocations);
+        } catch (error) {
+            console.error("즐겨찾기 목록 조회 실패", error);
+        }
+    };
+
+    // 좋아요 정보 저장 요청
+    const addFavorite = async (locationId) => {
+        try {
+
+            const response = await axios.post(
+                "http://localhost:5050/api/locationFavorite/add",
+                { locationId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,  // token 사용
+                    },
+                }
+            );
+
+        } catch (error) {
+            console.error("좋아요 추가 실패", error);
+        }
+    };
+
+    // 좋아요 정보 삭제 요청
+    const deleteFavorite = async (locationId) => {
+        try {
+            const response = await axios.delete(
+                "http://localhost:5050/api/locationFavorite/delete",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,  // token 사용
+                    },
+                    data: { locationId },
+                }
+            );
+
+        } catch (error) {
+            console.error("좋아요 삭제 실패", error);
+        }
     };
 
     // 페이지관련 설정
@@ -195,18 +365,9 @@ const Attractions = () => {
         return pages;
     };
 
-    // 좋아요 아이콘 클릭 처리
-    const handleLikeClick = (locationId) => {
-        setLikedLocations((prevLikedLocations) => {
-            if (prevLikedLocations.includes(locationId)) {
-                // 이미 좋아요가 눌려 있다면, 좋아요 취소
-                return prevLikedLocations.filter((id) => id !== locationId);
-            } else {
-                // 좋아요 추가
-                return [...prevLikedLocations, locationId];
-            }
-        });
-    };
+
+
+
 
     return (
         <div className="Attraction">
@@ -300,7 +461,7 @@ const Attractions = () => {
                                     <p>{location.regionName}</p>
                                     <p>
                                         <img src={starColor} alt="별 아이콘" className="star-icon"/>
-                                        <span>{location.googleRating}</span>
+                                        <span>구글리뷰 {location.googleRating}</span>
                                         ({location.userRatingsTotal})
                                     </p>
                                     <p>{'#' + location.tags.join(' #')}</p>

@@ -11,12 +11,12 @@
 
 .Attraction .title-container {
     padding: 45px 0 30px 0;
-    border-bottom: 1px solid #aaa;
+    /*border-bottom: 1px solid #aaa;*/
 }
 
 .Attraction .title-container h2 {
     font-size: 30px;
-    text-align: left;
+    text-align: center
 }
 
 /* 지역버튼 및 태그버튼 */
@@ -118,7 +118,7 @@
 .Attraction .card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);  /* 4개 열 */
-    gap: 26px;  /* 카드 사이의 간격 */
+    gap: 24px;  /* 카드 사이의 간격 */
     width: 100%;
     max-width: 1200px;  
     margin: 0 auto;  
@@ -182,14 +182,13 @@
 /* 카드 내용 */
 .Attraction .location-info p {
     font-size: 14px;
-    color: #939393;
 }
 
 .Attraction .location-info .star-icon {
     width: 14px;
 }
 
-/* 장소 */
+/* 지역 */
 .Attraction .location-info p:first-of-type {
     padding: 2px 0;
     font-size: 16px;
@@ -202,16 +201,20 @@
     align-items: center;
     gap: 5px;
     padding-bottom: 2px;
-}
-
-.Attraction .location-info p:nth-of-type(2) span {
     color: #666;
 }
+
+/* 별점 점수 */
+/*.Attraction .location-info p:nth-of-type(2) span {*/
+/*    color: #666;*/
+/*    font-weight: 500;*/
+/*}*/
 
 /* 태그 */
 .Attraction .location-info p:nth-of-type(3) {
     color: #aaa;
 }
+
 
 /* 페이지 정보 관련 css */
 .Attraction .pagination {
@@ -232,9 +235,6 @@
 }
 
 .Attraction .pagination button:disabled {
-    /*background-color: #D9D9D9;*/
-    /*border: none;*/
-    /*cursor: not-allowed;*/
     display: none;
 }
 
